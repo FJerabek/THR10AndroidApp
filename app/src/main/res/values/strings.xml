@@ -3,4 +3,10 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="bluetooth_scan_button">Bluetooth scan devices</string>
+    <string name="main_panel">Main panel</string>
+    <string name="compressor">Compressor</string>
+    <string name="delay">Delay</string>
+    <string name="effect">Effect</string>
+    <string name="gate">Gate</string>
+    <string name="reverb">Reverb</string>
 </resources>

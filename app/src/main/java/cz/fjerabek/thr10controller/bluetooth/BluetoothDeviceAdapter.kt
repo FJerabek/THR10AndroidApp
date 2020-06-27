@@ -1,21 +1,22 @@
-package cz.fjerabek.thr10controller
+package cz.fjerabek.thr10controller.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
+import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
 
 class BluetoothDeviceAdapter(
     context: Context,
     var devices : ArrayList<BluetoothDevice>
-) : ArrayAdapter<BluetoothDevice>(context, R.layout.bluetooth_list_row_layout) {
-    val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+) : ArrayAdapter<BluetoothDevice>(context,
+    R.layout.bluetooth_list_row_layout
+) {
+    private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int = devices.size
 

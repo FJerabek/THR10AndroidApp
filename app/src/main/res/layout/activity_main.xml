@@ -5,7 +5,7 @@
     <data>
         <variable
             name="btnCallbacks"
-            type="cz.fjerabek.thr10controller.FullscreenActivity.ButtonCallbacks" />
+            type="cz.fjerabek.thr10controller.MainActivity.ButtonCallbacks" />
     </data>
 
  <RelativeLayout
@@ -17,6 +17,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:indeterminate="false"
+         android:visibility="gone"
          android:indeterminateTint="@color/colorPrimary"
          style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
 
