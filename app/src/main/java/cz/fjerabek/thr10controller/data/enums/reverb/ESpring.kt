@@ -1,11 +1,12 @@
 package cz.fjerabek.thr10controller.data.enums.reverb
 
+import cz.fjerabek.thr10controller.data.controls.IDReverb
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
 enum class ESpring(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
     IControlProperty {
-    REVERB(0x41, 0x64, 0x00, 210),
-    FILTER(0x42, 0x64, 0x00, 211);
+    REVERB(IDReverb.IDSpring.REVERB, 0x64, 0x00, 210),
+    FILTER(IDReverb.IDSpring.FILTER, 0x64, 0x00, 211);
 
     override fun getPropertyId(): Byte {
         return this.id

@@ -1,5 +1,6 @@
 package cz.fjerabek.thr10controller.data.controls
 
+import cz.fjerabek.thr10controller.data.Property
 import cz.fjerabek.thr10controller.data.enums.mainpanel.EAmpType
 import cz.fjerabek.thr10controller.data.enums.mainpanel.ECabinetType
 import cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel
