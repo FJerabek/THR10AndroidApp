@@ -1,6 +1,6 @@
-package cz.fjerabek.thr10.controls.compressor
+package cz.fjerabek.thr10controller.data.controls.compressor
 
-import cz.fjerabek.thr10.enums.compressor.ECompressorType
+import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 
 interface CompressorSpecific {
     val type : ECompressorType

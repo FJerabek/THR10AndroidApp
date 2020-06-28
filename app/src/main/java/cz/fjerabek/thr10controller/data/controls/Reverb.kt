@@ -1,9 +1,9 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.controls.reverb.*
-import cz.fjerabek.thr10.enums.EStatus
-import cz.fjerabek.thr10.enums.reverb.EReverb
-import cz.fjerabek.thr10.enums.reverb.EReverbType
+import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.reverb.EReverb
+import cz.fjerabek.thr10controller.data.enums.reverb.EReverbType
+import cz.fjerabek.thr10controller.data.controls.reverb.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -12,7 +12,7 @@ import kotlinx.serialization.json.JsonParametricSerializer
 @Serializable
 class Reverb(
     val status : EStatus,
-    @Serializable(with = ReverbSerializer::class) val type : ReverbSpecific ?
+    @Serializable(with = ReverbSerializer::class) val type : ReverbSpecific?
 ) : IControl {
 
 //    var status = status

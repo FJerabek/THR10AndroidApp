@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums
+package cz.fjerabek.thr10controller.data.enums
 
 interface IControlProperty {
     fun getPropertyId() : Byte

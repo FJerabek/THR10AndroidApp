@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10.midi.message
+package cz.fjerabek.thr10controller.data.message.midi
 
-import cz.fjerabek.thr10.IMessage
-import cz.fjerabek.thr10.Preset
+import cz.fjerabek.thr10controller.data.message.IMessage
+import cz.fjerabek.thr10controller.data.Preset
 import kotlinx.serialization.Serializable
 
 @Serializable

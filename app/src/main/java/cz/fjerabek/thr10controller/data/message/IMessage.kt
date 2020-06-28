@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10
+package cz.fjerabek.thr10controller.data.message
 
-import cz.fjerabek.thr10.midi.message.ChangeMessage
-import cz.fjerabek.thr10.midi.message.PresetMessage
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
+import cz.fjerabek.thr10controller.data.message.midi.PresetMessage
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonParametricSerializer

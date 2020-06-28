@@ -1,6 +1,6 @@
-package cz.fjerabek.thr10
+package cz.fjerabek.thr10controller.data
 
-import cz.fjerabek.thr10.controls.*
+import cz.fjerabek.thr10controller.data.controls.*
 import kotlinx.serialization.Serializable
 import java.nio.charset.Charset
 

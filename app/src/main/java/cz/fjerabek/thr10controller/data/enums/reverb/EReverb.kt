@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.reverb
+package cz.fjerabek.thr10controller.data.enums.reverb
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EReverb (val id : Byte, val max : Byte, val min : Byte, val dumpPosition: Int) : IControlProperty{
+enum class EReverb (val id : Byte, val max : Byte, val min : Byte, val dumpPosition: Int) :
+    IControlProperty {
     STATUS(0x4F, 0x7F, 0x00, 224),
     TYPE(0x40, 0x03, 0x00, 209);
 

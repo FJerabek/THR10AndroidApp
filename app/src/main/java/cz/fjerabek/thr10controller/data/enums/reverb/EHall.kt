@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.reverb
+package cz.fjerabek.thr10controller.data.enums.reverb
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EHall(val id : Byte, val max : Short, val min : Short, val dumpPosition : Pair<Int, Int>) : IControlProperty {
+enum class EHall(val id : Byte, val max : Short, val min : Short, val dumpPosition : Pair<Int, Int>) :
+    IControlProperty {
     TIME(0x41, 0xC8, 0x03, Pair(210, 211)),
     PRE_DELAY(0x43, 2000,  1, Pair(212, 213)),
     LOW_CUT(0x45, 8000,  21, Pair(214, 215)),

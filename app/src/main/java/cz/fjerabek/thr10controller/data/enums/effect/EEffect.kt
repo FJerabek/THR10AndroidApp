@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.effect
+package cz.fjerabek.thr10controller.data.enums.effect
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EEffect(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty {
+enum class EEffect(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     STATUS(0x2F, 0x7F, 0x00, 192),
     TYPE(0x20, 0x03, 0x00, 177);
 

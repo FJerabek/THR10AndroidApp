@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.compressor
+package cz.fjerabek.thr10controller.data.enums.compressor
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class ERack(val id : Byte, val max : Int, val min : Byte, val dumpPosition: Pair<Int, Int>) : IControlProperty {
+enum class ERack(val id : Byte, val max : Int, val min : Byte, val dumpPosition: Pair<Int, Int>) :
+    IControlProperty {
     THRESHOLD(0x11, 0x258, 0x00, Pair(162, 163)),
     ATTACK(0x13, 0x64, 0x00, Pair(164, -1)),
     RELEASE(0x14, 0x64, 0x00, Pair(165, -1)),

@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.enums.EStatus
-import cz.fjerabek.thr10.enums.gate.EGate
+import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.gate.EGate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -39,7 +39,8 @@ class Gate(
 
     companion object {
         fun fromDump(dump : ByteArray) : Gate {
-            return Gate(EStatus.fromValue(dump[EGate.STATUS.dumpPosition])!!,
+            return Gate(
+                EStatus.fromValue(dump[EGate.STATUS.dumpPosition])!!,
                 dump[EGate.THRESHOLD.dumpPosition],
                 dump[EGate.RELEASE.dumpPosition])
         }

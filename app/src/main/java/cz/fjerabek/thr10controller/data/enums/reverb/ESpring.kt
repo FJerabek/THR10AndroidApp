@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.reverb
+package cz.fjerabek.thr10controller.data.enums.reverb
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class ESpring(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty{
+enum class ESpring(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     REVERB(0x41, 0x64, 0x00, 210),
     FILTER(0x42, 0x64, 0x00, 211);
 

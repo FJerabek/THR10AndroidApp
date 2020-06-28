@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums.effect
+package cz.fjerabek.thr10controller.data.enums.effect
 
 enum class EEffectType(val id : Byte) {
     CHORUS(0x00),

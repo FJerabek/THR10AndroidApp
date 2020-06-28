@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.serial.message
+package cz.fjerabek.thr10controller.data.message.serial
 
 class ButtonMessage(var id : Int,
                     var pressed : Boolean,

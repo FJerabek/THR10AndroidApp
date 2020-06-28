@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.delay
+package cz.fjerabek.thr10controller.data.enums.delay
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EDelay(val id : Byte, val max : Short, val min : Short, val dumpPosition : Pair<Int, Int>) : IControlProperty {
+enum class EDelay(val id : Byte, val max : Short, val min : Short, val dumpPosition : Pair<Int, Int>) :
+    IControlProperty {
     STATUS(0x3F, 0x7F, 0x00, Pair(208, -1)),
     TIME(0x31, 0x270f, 0x01, Pair(194, 195)),
     FEEDBACK(0x33, 0x64, 0x00, Pair(196, -1)),

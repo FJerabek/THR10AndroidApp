@@ -1,9 +1,9 @@
-package cz.fjerabek.thr10.bluetooth.messages
+package cz.fjerabek.thr10controller.data.message.bluetooth
 
-import cz.fjerabek.thr10.Preset
-import cz.fjerabek.thr10.midi.message.ChangeMessage
-import cz.fjerabek.thr10.serial.message.FirmwareVersionMessage
-import cz.fjerabek.thr10.serial.message.StatusMessage
+import cz.fjerabek.thr10controller.data.Preset
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
+import cz.fjerabek.thr10controller.data.message.serial.FirmwareVersionMessage
+import cz.fjerabek.thr10controller.data.message.serial.StatusMessage
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -28,10 +28,12 @@ data class BtStatusChangeMessage(override val type: EMessageType, val status : B
 data class BtPresetChangeMessage(override val type: EMessageType, val index : Int) : BtMessage
 
 @Serializable
-data class BtUartStatusMessage(override val type: EMessageType, val status : StatusMessage) : BtMessage
+data class BtUartStatusMessage(override val type: EMessageType, val status : StatusMessage) :
+    BtMessage
 
 @Serializable
-data class BtFirmwareStatusMessage(override val type: EMessageType, val firmware : FirmwareVersionMessage) : BtMessage
+data class BtFirmwareStatusMessage(override val type: EMessageType, val firmware : FirmwareVersionMessage) :
+    BtMessage
 
 object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::class) {
     override fun selectSerializer(element: JsonElement): KSerializer<out BtMessage> {

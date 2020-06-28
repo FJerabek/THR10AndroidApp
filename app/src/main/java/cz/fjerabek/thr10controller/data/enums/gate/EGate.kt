@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.gate
+package cz.fjerabek.thr10controller.data.enums.gate
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EGate(val id : Byte,val max : Byte,val min : Byte, val dumpPosition : Int) : IControlProperty {
+enum class EGate(val id : Byte,val max : Byte,val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     STATUS (0x5F, 0x7F, 0x00, 240),
     THRESHOLD(0x51, 0x64, 0x00, 226),
     RELEASE(0x52, 0x64, 0x00, 227);

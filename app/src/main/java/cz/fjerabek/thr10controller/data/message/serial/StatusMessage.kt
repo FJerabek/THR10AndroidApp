@@ -1,6 +1,6 @@
-package cz.fjerabek.thr10.serial.message
+package cz.fjerabek.thr10controller.data.message.serial
 
-import cz.fjerabek.thr10.serial.ECharging
+import cz.fjerabek.thr10controller.data.enums.ECharging
 import kotlinx.serialization.Serializable
 
 @Serializable

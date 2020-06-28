@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10.controls.reverb
+package cz.fjerabek.thr10controller.data.controls.reverb
 
-import cz.fjerabek.thr10.enums.reverb.EReverbType
-import cz.fjerabek.thr10.enums.reverb.ESpring
+import cz.fjerabek.thr10controller.data.enums.reverb.EReverbType
+import cz.fjerabek.thr10controller.data.enums.reverb.ESpring
 import kotlinx.serialization.Serializable
 
 @Serializable

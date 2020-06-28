@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums.compressor
+package cz.fjerabek.thr10controller.data.enums.compressor
 
 enum class ECompressorType (val id : Byte) {
     STOMP(0x00),

@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums.reverb
+package cz.fjerabek.thr10controller.data.enums.reverb
 
 enum class EReverbType(val id : Byte) {
     HALL(0x00),

@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums.mainpanel
+package cz.fjerabek.thr10controller.data.enums.mainpanel
 
 enum class EAmpType (val id : Byte) {
     CLEAN(0x00),

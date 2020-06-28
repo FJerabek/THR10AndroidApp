@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.mainpanel
+package cz.fjerabek.thr10controller.data.enums.mainpanel
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EMainPanel (val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty {
+enum class EMainPanel (val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     AMP(0x00, 0x07, 0x00, 145),
     GAIN(0x01, 0x64, 0x00, 146),
     MASTER(0x02, 0x64, 0x00, 147),

@@ -1,9 +1,9 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.controls.effect.*
-import cz.fjerabek.thr10.enums.EStatus
-import cz.fjerabek.thr10.enums.effect.EEffect
-import cz.fjerabek.thr10.enums.effect.EEffectType
+import cz.fjerabek.thr10controller.data.controls.effect.*
+import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.effect.EEffect
+import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement

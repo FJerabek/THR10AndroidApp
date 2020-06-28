@@ -1,11 +1,11 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.controls.compressor.CompressorSpecific
-import cz.fjerabek.thr10.controls.compressor.Rack
-import cz.fjerabek.thr10.controls.compressor.Stomp
-import cz.fjerabek.thr10.enums.EStatus
-import cz.fjerabek.thr10.enums.compressor.ECompressor
-import cz.fjerabek.thr10.enums.compressor.ECompressorType
+import cz.fjerabek.thr10controller.data.controls.compressor.CompressorSpecific
+import cz.fjerabek.thr10controller.data.controls.compressor.Rack
+import cz.fjerabek.thr10controller.data.controls.compressor.Stomp
+import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.compressor.ECompressor
+import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement

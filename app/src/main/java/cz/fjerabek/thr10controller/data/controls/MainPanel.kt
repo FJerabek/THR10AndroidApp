@@ -1,8 +1,8 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.enums.mainpanel.EAmpType
-import cz.fjerabek.thr10.enums.mainpanel.ECabinetType
-import cz.fjerabek.thr10.enums.mainpanel.EMainPanel
+import cz.fjerabek.thr10controller.data.enums.mainpanel.EAmpType
+import cz.fjerabek.thr10controller.data.enums.mainpanel.ECabinetType
+import cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel
 import kotlinx.serialization.Serializable
 
 @Serializable

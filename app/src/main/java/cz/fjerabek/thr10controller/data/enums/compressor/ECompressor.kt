@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.compressor
+package cz.fjerabek.thr10controller.data.enums.compressor
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class ECompressor(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty {
+enum class ECompressor(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     STATUS(0x1F, 0x7F, 0x00, 176),
     TYPE(0x10, 0x01,0x00, 161);
 

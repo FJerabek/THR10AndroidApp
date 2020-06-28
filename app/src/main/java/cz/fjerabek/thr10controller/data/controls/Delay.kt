@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10.controls
+package cz.fjerabek.thr10controller.data.controls
 
-import cz.fjerabek.thr10.enums.EStatus
-import cz.fjerabek.thr10.enums.delay.EDelay
+import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.delay.EDelay
 import kotlinx.serialization.Serializable
 
 @Serializable

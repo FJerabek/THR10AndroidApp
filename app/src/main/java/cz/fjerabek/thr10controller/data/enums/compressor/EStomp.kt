@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.compressor
+package cz.fjerabek.thr10controller.data.enums.compressor
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EStomp(val id : Byte, val  max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty{
+enum class EStomp(val id : Byte, val  max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     SUSTAIN(0x11, 0x64, 0x00, 162),
     OUTPUT(0x12, 0x64, 0x00, 163);
 

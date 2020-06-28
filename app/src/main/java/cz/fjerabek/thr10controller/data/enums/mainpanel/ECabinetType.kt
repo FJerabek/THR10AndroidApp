@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.enums.mainpanel
+package cz.fjerabek.thr10controller.data.enums.mainpanel
 
 enum class ECabinetType(val id : Byte) {
     AMERICAN_4X12(0x00),

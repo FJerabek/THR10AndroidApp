@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10.controls.effect
+package cz.fjerabek.thr10controller.data.controls.effect
 
-import cz.fjerabek.thr10.enums.effect.EEffectType
-import cz.fjerabek.thr10.enums.effect.ETremolo
+import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
+import cz.fjerabek.thr10controller.data.enums.effect.ETremolo
 import kotlinx.serialization.Serializable
 
 @Serializable

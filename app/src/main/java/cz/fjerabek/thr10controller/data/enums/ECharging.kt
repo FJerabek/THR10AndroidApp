@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.serial
+package cz.fjerabek.thr10controller.data.enums
 
 enum class ECharging(val value : String) {
     DISCHARGING("dis"),

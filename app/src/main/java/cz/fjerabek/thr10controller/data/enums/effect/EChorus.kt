@@ -1,8 +1,9 @@
-package cz.fjerabek.thr10.enums.effect
+package cz.fjerabek.thr10controller.data.enums.effect
 
-import cz.fjerabek.thr10.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
-enum class EChorus(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) : IControlProperty {
+enum class EChorus(val id : Byte, val max : Byte, val min : Byte, val dumpPosition : Int) :
+    IControlProperty {
     SPEED(0x21, 0x64, 0x00, 178),
     DEPTH(0x22, 0x64, 0x00, 179),
     MIX(0x23, 0x64, 0x00, 180);

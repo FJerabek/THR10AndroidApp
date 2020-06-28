@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10.serial.message
+package cz.fjerabek.thr10controller.data.message.serial
 
 import kotlinx.serialization.Serializable
 

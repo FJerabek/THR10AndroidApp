@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.MainPanelFragment">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+        <variable
+            name="strings"
+            type="String[]" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        tools:context=".ui.MainPanelFragment">
 
-</FrameLayout>
+        <it.beppi.knoblibrary.Knob
+            android:id="@+id/knob"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:kIndicatorWidth="2dp"
+            app:kKnobCenterColor="@color/colorAccent"
+            app:kKnobCenterRelativeRadius="0.7"
+            app:kKnobColor="@color/colorPrimary"
+            app:kStateMarkersColor="@color/knob_ticks"
+            app:kStateMarkersRelativeLength="0.13"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.025"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.025" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/knobValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/knob"
+            app:layout_constraintEnd_toEndOf="@+id/knob"
+            app:layout_constraintStart_toStartOf="@+id/knob"
+            app:layout_constraintTop_toTopOf="@+id/knob" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
