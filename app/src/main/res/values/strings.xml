@@ -9,4 +9,6 @@
     <string name="effect">Effect</string>
     <string name="gate">Gate</string>
     <string name="reverb">Reverb</string>
+    <string name="add_preset">Add preset</string>
+    <string name="content_description_add_preset">Adds new settings preset</string>
 </resources>

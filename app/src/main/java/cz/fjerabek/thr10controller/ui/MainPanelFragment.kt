@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.R
+import cz.fjerabek.thr10controller.data.message.MessageSender
+import cz.fjerabek.thr10controller.data.message.bluetooth.BtRequestMessage
+import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
 import cz.fjerabek.thr10controller.databinding.MainPanelFragmentBinding
+import timber.log.Timber
 
-class MainPanelFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = MainPanelFragment()
-    }
+class MainPanelFragment(val sender : MessageSender) : Fragment() {
 
     private lateinit var viewModel: MainPanelViewModel
     private lateinit var binding : MainPanelFragmentBinding
@@ -28,6 +28,8 @@ class MainPanelFragment : Fragment() {
 
         binding.knob.setOnStateChanged {
             binding.knobValue.text = it.toString()
+            Timber.d("Test logger test $it")
+            sender.sendMessage(BtRequestMessage(EMessageType.GET_STATUS))
         }
 
         binding.strings = listOf("Test", "Test1", "Test2", "Test3").toTypedArray()

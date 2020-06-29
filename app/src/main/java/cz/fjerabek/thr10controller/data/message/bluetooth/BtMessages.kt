@@ -51,12 +51,16 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
             EMessageType.ADD_PRESET,
             EMessageType.SET_PRESET -> BtPresetMessage.serializer()
 
+            EMessageType.PRESETS_STATUS,
             EMessageType.SET_PRESETS -> BtPresetsMessage.serializer()
 
             EMessageType.LAMP,
             EMessageType.WIDE_STEREO -> BtStatusChangeMessage.serializer()
 
-            else -> TODO("BT message $type not yet implemented")
+            EMessageType.PRESET_CHANGE -> BtPresetChangeMessage.serializer()
+            EMessageType.FIRMWARE_STATUS -> BtFirmwareStatusMessage.serializer()
+            EMessageType.UART_STATUS -> BtUartStatusMessage.serializer()
+            EMessageType.MIDI_DISCONNECTED -> TODO("implement midi disconnected blueotooth message")
         }
     }
 

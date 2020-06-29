@@ -2,6 +2,7 @@ package cz.fjerabek.thr10controller.data.message.bluetooth
 
 enum class EMessageType {
     GET_PRESETS,
+    PRESETS_STATUS,
     ADD_PRESET,
     SET_PRESET,
     CHANGE,

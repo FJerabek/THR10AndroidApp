@@ -8,6 +8,7 @@ import android.util.Log
 import me.aflak.bluetooth.Bluetooth
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import me.aflak.bluetooth.interfaces.DiscoveryCallback
+import timber.log.Timber
 
 /**
  * Android service managing bluetooth and its connections
@@ -19,7 +20,7 @@ class BluetoothService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("", "onStart: Bluetooth service")
+        Timber.d("onStart: Bluetooth service")
         bluetooth = Bluetooth(this)
         bluetooth.onStart()
     }
@@ -55,7 +56,9 @@ class BluetoothService : Service() {
      * Sends string message to connected device
      * @param message string message to send
      */
-    fun send(message: String) = bluetooth.send(message)
+    fun send(message: String) {
+        bluetooth.send(message)
+    }
 
     override fun onBind(intent: Intent): IBinder = Binder()
 

@@ -23,7 +23,7 @@
             app:kKnobCenterColor="@color/colorAccent"
             app:kKnobCenterRelativeRadius="0.7"
             app:kKnobColor="@color/colorPrimary"
-            app:kStateMarkersColor="@color/knob_ticks"
+            app:kStateMarkersColor="@color/colorPrimary"
             app:kStateMarkersRelativeLength="0.13"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fbc02d</color>
-    <color name="colorPrimaryDark">#c49000</color>
-    <color name="colorAccent">#212121</color>
-
-    <color name="black_overlay">#66000000</color>
-
-    <color name="knob_ticks">#9EA1A3</color>
+    <color name="colorPrimary">#424242</color>
+    <color name="colorPrimaryDark">#1b1b1b</color>
+    <color name="colorAccent">#fbc02d</color>
 </resources>

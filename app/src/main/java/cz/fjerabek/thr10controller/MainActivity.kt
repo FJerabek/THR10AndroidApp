@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +17,7 @@ import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityMainBinding
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import me.aflak.bluetooth.interfaces.DiscoveryCallback
+import timber.log.Timber
 
 
 /**
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             /* Set bluetooth service */
             bluetoothService.setDeviceCallback(object : DeviceCallback {
                 override fun onDeviceDisconnected(device: BluetoothDevice?, message: String?) {
-                    Log.d("Bluetooth", "Device disconnected  $message")
+                    Timber.d("Device disconnected  $message")
                 }
 
                 override fun onDeviceConnected(device: BluetoothDevice?) {
@@ -62,11 +62,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onMessage(message: ByteArray?) {
-                    Log.e("Bluetooth", "Bluetooth message  $message")
+                    Timber.e("Bluetooth message  $message")
                 }
 
                 override fun onError(errorCode: Int) {
-                    Log.e("Bluetooth", "Device error. Error code: $errorCode")
+                    Timber.e("Device error. Error code: $errorCode")
                 }
             })
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onDeviceUnpaired(device: BluetoothDevice?) {}
 
                 override fun onDiscoveryStarted() {
-                    Log.d("Bluetooth", "Scan started")
+                    Timber.d("Scan started")
                     binding.bluetoothProgressBar.isIndeterminate = true
                     binding.bluetoothProgressBar.visibility = View.VISIBLE
                     btDevices.clear()
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onError(errorCode: Int) {
-                    Log.e("Bluetooth", "Bluetooth discovery error error code: $errorCode")
+                    Timber.e("Bluetooth discovery error error code: $errorCode")
                 }
 
                 override fun onDiscoveryFinished() {
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     device?.let {
                         btDevices.forEach { paired ->
                             if(it.address == paired.address) {
-                                Log.d("Bluetooth", "Device: ${it.name} is already in paired devices")
+                                Timber.d("Device: ${it.name} is already in paired devices")
                                 return
                             }
                         }
@@ -133,6 +133,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.plant(Timber.DebugTree())
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 
