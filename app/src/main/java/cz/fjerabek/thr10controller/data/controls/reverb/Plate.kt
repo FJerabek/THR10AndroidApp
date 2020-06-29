@@ -1,18 +1,27 @@
 package cz.fjerabek.thr10controller.data.controls.reverb
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDReverb
 import cz.fjerabek.thr10controller.data.enums.reverb.EPlate
 import cz.fjerabek.thr10controller.data.enums.reverb.EReverbType
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Plate(
-    val time: Int,
-    val preDelay: Int,
-    val lowCut: Int,
-    val highCut: Int,
-    val highRatio: Byte,
-    val lowRatio: Byte,
-    val level: Byte
+    @Property(IDReverb.IDPlate.TIME)
+    var time: Int,
+    @Property(IDReverb.IDPlate.PRE_DELAY)
+    var preDelay: Int,
+    @Property(IDReverb.IDPlate.LOW_CUT)
+    var lowCut: Int,
+    @Property(IDReverb.IDPlate.HIGH_CUT)
+    var highCut: Int,
+    @Property(IDReverb.IDPlate.HIGH_RATIO)
+    var highRatio: Byte,
+    @Property(IDReverb.IDPlate.LOW_RATIO)
+    var lowRatio: Byte,
+    @Property(IDReverb.IDPlate.LEVEL)
+    var level: Byte
 ) : ReverbSpecific {
 
     override val type: EReverbType = EReverbType.PLATE
@@ -60,16 +69,16 @@ class Plate(
 
     override fun toDump(dump: ByteArray): ByteArray {
         dump[EPlate.TIME.dumpPosition.first] = (time / 128).toByte()
-        dump[EPlate.TIME.dumpPosition.second] = (time % 128).toByte()
+        dump[EPlate.TIME.dumpPosition.second!!] = (time % 128).toByte()
 
         dump[EPlate.PRE_DELAY.dumpPosition.first] = (preDelay / 128).toByte()
-        dump[EPlate.PRE_DELAY.dumpPosition.second] = (preDelay % 128).toByte()
+        dump[EPlate.PRE_DELAY.dumpPosition.second!!] = (preDelay % 128).toByte()
 
         dump[EPlate.LOW_CUT.dumpPosition.first] = (lowCut / 128).toByte()
-        dump[EPlate.LOW_CUT.dumpPosition.second] = (lowCut % 128).toByte()
+        dump[EPlate.LOW_CUT.dumpPosition.second!!] = (lowCut % 128).toByte()
 
         dump[EPlate.HIGH_CUT.dumpPosition.first] = (highCut / 128).toByte()
-        dump[EPlate.HIGH_CUT.dumpPosition.second] = (highCut % 128).toByte()
+        dump[EPlate.HIGH_CUT.dumpPosition.second!!] = (highCut % 128).toByte()
 
         dump[EPlate.HIGH_RATIO.dumpPosition.first] = highRatio
         dump[EPlate.LOW_RATIO.dumpPosition.first] = lowRatio
@@ -80,10 +89,10 @@ class Plate(
 
     companion object {
         fun fromDump(dump : ByteArray) : Plate {
-            return Plate((dump[EPlate.TIME.dumpPosition.first] * 128) + dump[EPlate.TIME.dumpPosition.second],
-                (dump[EPlate.PRE_DELAY.dumpPosition.first] * 128) + dump[EPlate.PRE_DELAY.dumpPosition.second],
-                (dump[EPlate.LOW_CUT.dumpPosition.first] * 128) + dump[EPlate.LOW_CUT.dumpPosition.second],
-                (dump[EPlate.HIGH_CUT.dumpPosition.first] * 128) + dump[EPlate.HIGH_CUT.dumpPosition.second],
+            return Plate((dump[EPlate.TIME.dumpPosition.first] * 128) + dump[EPlate.TIME.dumpPosition.second!!],
+                (dump[EPlate.PRE_DELAY.dumpPosition.first] * 128) + dump[EPlate.PRE_DELAY.dumpPosition.second!!],
+                (dump[EPlate.LOW_CUT.dumpPosition.first] * 128) + dump[EPlate.LOW_CUT.dumpPosition.second!!],
+                (dump[EPlate.HIGH_CUT.dumpPosition.first] * 128) + dump[EPlate.HIGH_CUT.dumpPosition.second!!],
                 dump[EPlate.HIGH_RATIO.dumpPosition.first],
                 dump[EPlate.LOW_RATIO.dumpPosition.first],
                 dump[EPlate.LEVEL.dumpPosition.first])

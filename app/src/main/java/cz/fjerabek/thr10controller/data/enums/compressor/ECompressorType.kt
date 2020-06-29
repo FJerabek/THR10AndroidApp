@@ -7,6 +7,6 @@ enum class ECompressorType (val id : Byte) {
     companion object {
         private val map = values().associateBy(ECompressorType::id)
 
-        fun fromId(id: Byte) = map[id]
+        fun fromId(id: Byte) = map.getValue(id)
     }
 }

@@ -1,13 +1,17 @@
 package cz.fjerabek.thr10controller.data.controls.reverb
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDReverb
 import cz.fjerabek.thr10controller.data.enums.reverb.EReverbType
 import cz.fjerabek.thr10controller.data.enums.reverb.ESpring
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Spring(
-    val reverb : Byte,
-    val filter : Byte
+    @Property(IDReverb.IDSpring.REVERB)
+    var reverb : Byte,
+    @Property(IDReverb.IDSpring.FILTER)
+    var filter : Byte
 ) : ReverbSpecific {
     override val type: EReverbType = EReverbType.SPRING
 

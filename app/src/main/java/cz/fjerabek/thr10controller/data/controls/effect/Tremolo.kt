@@ -1,13 +1,17 @@
 package cz.fjerabek.thr10controller.data.controls.effect
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import cz.fjerabek.thr10controller.data.enums.effect.ETremolo
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Tremolo (
-    val freq : Byte,
-    val depth : Byte
+    @Property(IDEffect.IDTremolo.FREQ)
+    var freq : Byte,
+    @Property(IDEffect.IDTremolo.DEPTH)
+    var depth : Byte
 ) : EffectSpecific {
     override val type: EEffectType = EEffectType.TREMOLO
     //    var freq = freq

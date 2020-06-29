@@ -9,7 +9,7 @@ enum class EReverbType(val id : Byte) {
     companion object {
         private val map = values().associateBy(EReverbType::id)
 
-        fun fromId(id: Byte) = map[id]
+        fun fromId(id: Byte) = map.getValue(id)
     }
 
 }

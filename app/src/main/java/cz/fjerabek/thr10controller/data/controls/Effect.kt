@@ -1,9 +1,14 @@
 package cz.fjerabek.thr10controller.data.controls
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.compressor.Rack
+import cz.fjerabek.thr10controller.data.controls.compressor.Stomp
 import cz.fjerabek.thr10controller.data.controls.effect.*
 import cz.fjerabek.thr10controller.data.enums.EStatus
+import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 import cz.fjerabek.thr10controller.data.enums.effect.EEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
@@ -11,8 +16,11 @@ import kotlinx.serialization.json.JsonParametricSerializer
 
 @Serializable
 class Effect(
-    val status : EStatus,
-    @Serializable(with = EffectSerializer::class) val specific : EffectSpecific?) : IControl {
+    @Property(IDEffect.STATUS)
+    var status : EStatus,
+    @Property(IDEffect.TYPE)
+    @Serializable(with = EffectSerializer::class)
+    var specific : EffectSpecific?) : IControl {
 
 //    var status = status
 //        set(value) {
@@ -27,6 +35,29 @@ class Effect(
 //            }
 //            field = value
 //        }
+
+    override fun processChangeMessage(message: ChangeMessage): Boolean {
+        //Handle compressor type change
+        if(message.property == IDEffect.TYPE) {
+            specific?.let {
+                val effectSpecificDump = it.toDump(ByteArray(274))
+                specific = when (EEffectType.fromId(message.value.toByte())) {
+                    EEffectType.CHORUS -> Chorus.fromDump(effectSpecificDump)
+                    EEffectType.FLANGER -> Flanger.fromDump(effectSpecificDump)
+                    EEffectType.TREMOLO -> Tremolo.fromDump(effectSpecificDump)
+                    EEffectType.PHASER -> Phaser.fromDump(effectSpecificDump)
+                }
+            }
+            return true
+        } else {
+            return if(message.property != IDCompressor.STATUS) {
+                specific!!.processChangeMessage(message)
+            } else {
+                status = EStatus.fromValue(message.value.toByte())
+                true
+            }
+        }
+    }
 
     override fun toDump(dump: ByteArray): ByteArray {
         dump[EEffect.STATUS.dumpPosition] = status.value

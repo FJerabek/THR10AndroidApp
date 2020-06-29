@@ -1,14 +1,21 @@
 package cz.fjerabek.thr10controller.data.controls
 
+import cz.fjerabek.thr10controller.data.Property
 import cz.fjerabek.thr10controller.data.enums.EStatus
 import cz.fjerabek.thr10controller.data.enums.gate.EGate
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 @Serializable
 class Gate(
-    val status : EStatus,
-    val threshold : Byte,
-    val release : Byte
+    @Property(IDGate.STATUS)
+    var status : EStatus,
+    @Property(IDGate.THRESHOLD)
+    var threshold : Byte,
+    @Property(IDGate.RELEASE)
+    var release : Byte
 ) : IControl {
 
 //    var status = status
@@ -28,7 +35,6 @@ class Gate(
 //            require(EGate.RELEASE.min <= value && EGate.RELEASE.max >= value)
 //            field = value
 //        }
-
 
     override fun toDump(dump: ByteArray): ByteArray {
         dump[EGate.STATUS.dumpPosition] = status.value

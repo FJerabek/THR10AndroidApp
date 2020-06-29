@@ -1,18 +1,27 @@
 package cz.fjerabek.thr10controller.data.controls.reverb
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDReverb
 import cz.fjerabek.thr10controller.data.enums.reverb.EHall
 import cz.fjerabek.thr10controller.data.enums.reverb.EReverbType
 import kotlinx.serialization.Serializable
 
 @Serializable
 class Hall(
-    val time: Int,
-    val preDelay: Int,
-    val lowCut: Int,
-    val highCut: Int,
-    val highRatio: Byte,
-    val lowRatio: Byte,
-    val level: Byte
+    @Property(IDReverb.IDHall.TIME)
+    var time: Int,
+    @Property(IDReverb.IDHall.PRE_DELAY)
+    var preDelay: Int,
+    @Property(IDReverb.IDHall.LOW_CUT)
+    var lowCut: Int,
+    @Property(IDReverb.IDHall.HIGH_CUT)
+    var highCut: Int,
+    @Property(IDReverb.IDHall.HIGH_RATIO)
+    var highRatio: Byte,
+    @Property(IDReverb.IDHall.LOW_RATIO)
+    var lowRatio: Byte,
+    @Property(IDReverb.IDHall.LEVEL)
+    var level: Byte
 ) : ReverbSpecific {
     override val type: EReverbType = EReverbType.HALL
 //    var time = time
@@ -60,16 +69,16 @@ class Hall(
 
     override fun toDump(dump: ByteArray): ByteArray {
         dump[EHall.TIME.dumpPosition.first] = (time / 128).toByte()
-        dump[EHall.TIME.dumpPosition.second] = (time % 128).toByte()
+        dump[EHall.TIME.dumpPosition.second!!] = (time % 128).toByte()
 
         dump[EHall.PRE_DELAY.dumpPosition.first] = (preDelay / 128).toByte()
-        dump[EHall.PRE_DELAY.dumpPosition.second] = (preDelay % 128).toByte()
+        dump[EHall.PRE_DELAY.dumpPosition.second!!] = (preDelay % 128).toByte()
 
         dump[EHall.LOW_CUT.dumpPosition.first] = (lowCut / 128).toByte()
-        dump[EHall.LOW_CUT.dumpPosition.second] = (lowCut % 128).toByte()
+        dump[EHall.LOW_CUT.dumpPosition.second!!] = (lowCut % 128).toByte()
 
         dump[EHall.HIGH_CUT.dumpPosition.first] = (highCut / 128).toByte()
-        dump[EHall.HIGH_CUT.dumpPosition.second] = (highCut % 128).toByte()
+        dump[EHall.HIGH_CUT.dumpPosition.second!!] = (highCut % 128).toByte()
 
         dump[EHall.HIGH_RATIO.dumpPosition.first] = highRatio
         dump[EHall.LOW_RATIO.dumpPosition.first] = lowRatio
@@ -80,10 +89,10 @@ class Hall(
 
     companion object {
         fun fromDump(dump : ByteArray) : Hall {
-            return Hall((dump[EHall.TIME.dumpPosition.first] * 128) + dump[EHall.TIME.dumpPosition.second],
-                (dump[EHall.PRE_DELAY.dumpPosition.first] * 128) + dump[EHall.PRE_DELAY.dumpPosition.second],
-                (dump[EHall.LOW_CUT.dumpPosition.first] * 128) + dump[EHall.LOW_CUT.dumpPosition.second],
-                (dump[EHall.HIGH_CUT.dumpPosition.first] * 128) + dump[EHall.HIGH_CUT.dumpPosition.second],
+            return Hall((dump[EHall.TIME.dumpPosition.first] * 128) + dump[EHall.TIME.dumpPosition.second!!],
+                (dump[EHall.PRE_DELAY.dumpPosition.first] * 128) + dump[EHall.PRE_DELAY.dumpPosition.second!!],
+                (dump[EHall.LOW_CUT.dumpPosition.first] * 128) + dump[EHall.LOW_CUT.dumpPosition.second!!],
+                (dump[EHall.HIGH_CUT.dumpPosition.first] * 128) + dump[EHall.HIGH_CUT.dumpPosition.second!!],
                 dump[EHall.HIGH_RATIO.dumpPosition.first],
                 dump[EHall.LOW_RATIO.dumpPosition.first],
                 dump[EHall.LEVEL.dumpPosition.first])

@@ -1,8 +1,10 @@
 package cz.fjerabek.thr10controller.data
 
 import cz.fjerabek.thr10controller.data.controls.*
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import kotlinx.serialization.Serializable
 import java.nio.charset.Charset
+import kotlin.reflect.full.memberProperties
 
 @Serializable
 class Preset(
@@ -13,6 +15,14 @@ class Preset(
     var delay: Delay? = null,
     var reverb: Reverb? = null,
     var gate: Gate? = null) : IControl {
+
+    override fun processChangeMessage(message : ChangeMessage) : Boolean =
+        mainPanel.processChangeMessage(message) ||
+                compressor?.processChangeMessage(message) ?: false ||
+                effect?.processChangeMessage(message) ?: false ||
+                delay?.processChangeMessage(message) ?: false ||
+                reverb?.processChangeMessage(message) ?: false ||
+                gate?.processChangeMessage(message) ?: false
 
     override fun toDump(dump: ByteArray): ByteArray {
         mainPanel.toDump(dump)

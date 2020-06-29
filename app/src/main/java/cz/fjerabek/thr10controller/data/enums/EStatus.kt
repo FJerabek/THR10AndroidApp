@@ -7,6 +7,6 @@ enum class EStatus (val value : Byte){
     companion object {
         private val map = values().associateBy(EStatus::value)
 
-        fun fromValue(value: Byte) = map[value]
+        fun fromValue(value: Byte) = map.getValue(value)
     }
 }

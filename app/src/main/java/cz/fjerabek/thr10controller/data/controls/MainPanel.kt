@@ -8,13 +8,20 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class MainPanel(
-    val amp : EAmpType,
-    val gain : Byte,
-    val master : Byte,
-    val bass : Byte,
-    val middle : Byte,
-    val treble : Byte,
-    val cabinet : ECabinetType?
+    @Property(IDMainPanel.AMP)
+    var amp : EAmpType,
+    @Property(IDMainPanel.GAIN)
+    var gain : Byte,
+    @Property(IDMainPanel.MASTER)
+    var master : Byte,
+    @Property(IDMainPanel.BASS)
+    var bass : Byte,
+    @Property(IDMainPanel.MIDDLE)
+    var middle : Byte,
+    @Property(IDMainPanel.TREBLE)
+    var treble : Byte,
+    @Property(IDMainPanel.CABINET)
+    var cabinet : ECabinetType?
 ) : IControl {
 
 //    var amp = amp

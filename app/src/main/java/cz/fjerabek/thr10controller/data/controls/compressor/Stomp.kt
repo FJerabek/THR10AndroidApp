@@ -1,12 +1,18 @@
 package cz.fjerabek.thr10controller.data.controls.compressor
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDCompressor
 import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 import cz.fjerabek.thr10controller.data.enums.compressor.EStomp
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Stomp (val sustain : Byte,
-             val output : Byte): CompressorSpecific {
+class Stomp (
+    @Property(IDCompressor.IDStomp.SUSTAIN)
+    var sustain : Byte,
+    @Property(IDCompressor.IDStomp.OUTPUT)
+    var output : Byte
+): CompressorSpecific {
     override val type: ECompressorType = ECompressorType.STOMP
 
 //    var sustain  = sustain
@@ -22,10 +28,10 @@ class Stomp (val sustain : Byte,
 //        }
 
 
-    override fun toDump(data: ByteArray): ByteArray {
-        data[EStomp.SUSTAIN.dumpPosition] = sustain
-        data[EStomp.OUTPUT.dumpPosition] = output
-        return data
+    override fun toDump(dump: ByteArray): ByteArray {
+        dump[EStomp.SUSTAIN.dumpPosition] = sustain
+        dump[EStomp.OUTPUT.dumpPosition] = output
+        return dump
     }
 
     companion object {

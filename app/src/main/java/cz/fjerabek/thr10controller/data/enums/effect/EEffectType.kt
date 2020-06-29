@@ -9,6 +9,6 @@ enum class EEffectType(val id : Byte) {
     companion object {
         private val map = values().associateBy(EEffectType::id)
 
-        fun fromId(id: Byte) = map[id]
+        fun fromId(id: Byte) = map.getValue(id)
     }
 }

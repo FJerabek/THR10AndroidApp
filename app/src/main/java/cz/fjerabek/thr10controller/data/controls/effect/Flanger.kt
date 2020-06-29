@@ -1,15 +1,27 @@
 package cz.fjerabek.thr10controller.data.controls.effect
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import cz.fjerabek.thr10controller.data.enums.effect.EFlanger
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 @Serializable
-class Flanger(val speed : Byte,
-              val manual : Byte,
-              val depth : Byte,
-              val feedback : Byte,
-              val spread : Byte) : EffectSpecific {
+class Flanger(
+    @Property(IDEffect.IDFlanger.SPEED)
+    var speed : Byte,
+    @Property(IDEffect.IDFlanger.MANUAL)
+    var manual : Byte,
+    @Property(IDEffect.IDFlanger.DEPTH)
+    var depth : Byte,
+    @Property(IDEffect.IDFlanger.FEEDBACK)
+    var feedback : Byte,
+    @Property(IDEffect.IDFlanger.SPREAD)
+    var spread : Byte
+) : EffectSpecific {
     override val type: EEffectType = EEffectType.FLANGER
 
 //    var speed = speed
@@ -41,7 +53,6 @@ class Flanger(val speed : Byte,
 //            require(EFlanger.SPREAD.min <= value  && EFlanger.SPREAD.max >= value) {"Spread value out of range"}
 //            field = value
 //        }
-
 
     override fun toDump(dump: ByteArray): ByteArray {
         dump[EFlanger.SPEED.dumpPosition] = speed

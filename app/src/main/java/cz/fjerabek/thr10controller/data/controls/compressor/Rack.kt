@@ -1,16 +1,30 @@
 package cz.fjerabek.thr10controller.data.controls.compressor
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDCompressor
 import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 import cz.fjerabek.thr10controller.data.enums.compressor.ERack
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import kotlinx.serialization.Serializable
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
 
 @Serializable
-class Rack(val threshold : Int,
-           val attack: Byte,
-           val release : Byte,
-           val ratio : Byte,
-           val knee : Byte,
-           val output : Int) : CompressorSpecific {
+class Rack(
+    @Property(IDCompressor.IDRack.THRESHOLD)
+    var threshold : Int,
+    @Property(IDCompressor.IDRack.ATTACK)
+    var attack: Byte,
+    @Property(IDCompressor.IDRack.RELEASE)
+    var release : Byte,
+    @Property(IDCompressor.IDRack.RATIO)
+    var ratio : Byte,
+    @Property(IDCompressor.IDRack.KNEE)
+    var knee : Byte,
+    @Property(IDCompressor.IDRack.OUTPUT)
+    var output : Int
+) : CompressorSpecific {
+
     override val type: ECompressorType = ECompressorType.RACK
 
 //    var threshold  = threshold
@@ -49,31 +63,32 @@ class Rack(val threshold : Int,
 //            field = value
 //        }
 
-    override fun toDump(data: ByteArray): ByteArray {
-        data[ERack.THRESHOLD.dumpPosition.first] = (threshold / 128).toByte()
-        data[ERack.THRESHOLD.dumpPosition.second] = (threshold % 128).toByte()
+    override fun toDump(dump: ByteArray): ByteArray {
+        dump[ERack.THRESHOLD.dumpPosition.first] = (threshold / 128).toByte()
+        dump[ERack.THRESHOLD.dumpPosition.second!!] = (threshold % 128).toByte()
 
-        data[ERack.ATTACK.dumpPosition.first] = attack
-        data[ERack.RELEASE.dumpPosition.first] = release
-        data[ERack.RATIO.dumpPosition.first] = ratio
+        dump[ERack.ATTACK.dumpPosition.first] = attack
+        dump[ERack.RELEASE.dumpPosition.first] = release
+        dump[ERack.RATIO.dumpPosition.first] = ratio
 
-        data[ERack.KNEE.dumpPosition.first] = knee
-        data[ERack.OUTPUT.dumpPosition.first] = (output / 128).toByte()
-        data[ERack.OUTPUT.dumpPosition.second] = (output % 128).toByte()
+        dump[ERack.KNEE.dumpPosition.first] = knee
+        dump[ERack.OUTPUT.dumpPosition.first] = (output / 128).toByte()
+        dump[ERack.OUTPUT.dumpPosition.second!!] = (output % 128).toByte()
 
-        return data
+        return dump
     }
+
 
     companion object {
 
         fun fromDump(dump: ByteArray) : Rack {
             return Rack(
-                (dump[ERack.THRESHOLD.dumpPosition.first] * 128) + dump[ERack.THRESHOLD.dumpPosition.second],
+                (dump[ERack.THRESHOLD.dumpPosition.first] * 128) + dump[ERack.THRESHOLD.dumpPosition.second!!],
                 dump[ERack.ATTACK.dumpPosition.first],
                 dump[ERack.RELEASE.dumpPosition.first],
                 dump[ERack.RATIO.dumpPosition.first],
                 dump[ERack.KNEE.dumpPosition.first],
-                (dump[ERack.OUTPUT.dumpPosition.first] * 128) + dump[ERack.OUTPUT.dumpPosition.second])
+                (dump[ERack.OUTPUT.dumpPosition.first] * 128) + dump[ERack.OUTPUT.dumpPosition.second!!])
         }
     }
 }

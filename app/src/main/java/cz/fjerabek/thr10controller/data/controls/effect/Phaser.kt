@@ -1,14 +1,21 @@
 package cz.fjerabek.thr10controller.data.controls.effect
 
+import cz.fjerabek.thr10controller.data.Property
+import cz.fjerabek.thr10controller.data.controls.IDEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import cz.fjerabek.thr10controller.data.enums.effect.EPhaser
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Phaser (val speed : Byte,
-              val manual : Byte,
-              val depth : Byte,
-              val feedback : Byte) : EffectSpecific {
+class Phaser (
+    @Property(IDEffect.IDPhaser.SPEED)
+    var speed : Byte,
+    @Property(IDEffect.IDPhaser.MANUAL)
+    var manual : Byte,
+    @Property(IDEffect.IDPhaser.DEPTH)
+    var depth : Byte,
+    @Property(IDEffect.IDPhaser.SPEED)
+    var feedback : Byte) : EffectSpecific {
     override val type: EEffectType = EEffectType.PHASER
 
 //    var speed = speed
