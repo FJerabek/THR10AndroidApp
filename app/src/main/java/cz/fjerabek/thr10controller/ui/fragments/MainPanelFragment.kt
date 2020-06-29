@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10controller.ui
+package cz.fjerabek.thr10controller.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,8 +14,18 @@ import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
 import cz.fjerabek.thr10controller.databinding.MainPanelFragmentBinding
 import timber.log.Timber
 
-class MainPanelFragment(val sender : MessageSender) : Fragment() {
+class MainPanelFragment : Fragment() {
 
+    companion object {
+        fun getInstance(sender : MessageSender): MainPanelFragment {
+            val instance =
+                MainPanelFragment()
+            instance.sender = sender
+            return instance
+        }
+    }
+
+    private lateinit var sender : MessageSender
     private lateinit var viewModel: MainPanelViewModel
     private lateinit var binding : MainPanelFragmentBinding
 

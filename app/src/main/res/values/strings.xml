@@ -11,4 +11,6 @@
     <string name="reverb">Reverb</string>
     <string name="add_preset">Add preset</string>
     <string name="content_description_add_preset">Adds new settings preset</string>
+    <string name="preset_rearrange_description">Drag and drop rearrange presets</string>
+    <string name="preset_remove_description">Preset remove button</string>
 </resources>

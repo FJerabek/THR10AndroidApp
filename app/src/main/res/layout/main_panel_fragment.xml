@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.MainPanelFragment">
+        tools:context=".ui.fragments.MainPanelFragment">
 
         <it.beppi.knoblibrary.Knob
             android:id="@+id/knob"

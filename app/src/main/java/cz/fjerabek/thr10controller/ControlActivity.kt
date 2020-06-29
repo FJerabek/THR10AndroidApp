@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.PlatformVpnProfile
 import android.os.Bundle
 import android.os.IBinder
 import androidx.databinding.DataBindingUtil
@@ -14,29 +15,58 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
+import cz.fjerabek.thr10controller.data.Preset
+import cz.fjerabek.thr10controller.data.controls.MainPanel
+import cz.fjerabek.thr10controller.data.enums.mainpanel.EAmpType
+import cz.fjerabek.thr10controller.data.message.MessageHandler
 import cz.fjerabek.thr10controller.data.message.MessageSender
-import cz.fjerabek.thr10controller.data.message.bluetooth.BtMessage
-import cz.fjerabek.thr10controller.data.message.bluetooth.BtMessageSerializer
-import cz.fjerabek.thr10controller.data.message.bluetooth.BtRequestMessage
-import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
-import cz.fjerabek.thr10controller.data.message.serial.MessageHandler
+import cz.fjerabek.thr10controller.data.message.bluetooth.*
+import cz.fjerabek.thr10controller.data.message.serial.MessageReceiver
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
-import cz.fjerabek.thr10controller.ui.MainPanelFragment
+import cz.fjerabek.thr10controller.ui.PresetAdapter
+import cz.fjerabek.thr10controller.ui.fragments.*
 import kotlinx.android.synthetic.main.activity_control.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
+import java.util.*
+import kotlin.collections.ArrayList
 
-private const val NUM_PAGES = 2
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
 
-class ControlActivity : FragmentActivity(), MessageSender, MessageHandler {
+class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
     private lateinit var bluetoothService : BluetoothService
     private lateinit var binding : ActivityControlBinding
+    private lateinit var presetAdapter: PresetAdapter
 
-    private val json = Json(JsonConfiguration.Default)
+    private var presets : List<Preset> = ArrayList()
+    private val json = Json(JsonConfiguration.Stable)
+
+    private val messageHandler = object : MessageHandler {
+        override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
+            presetAdapter.presets = message.presets
+            Timber.d("Presets received: ${presets}")
+            runOnUiThread {
+                presetAdapter.notifyDataSetChanged()
+            }
+
+        }
+
+        override fun handleChangeMessage(message: BtChangeMessage) {
+            Timber.d("Change message received: ${message}")
+        }
+
+        override fun handleUartStatusMessage(message: BtUartStatusMessage) {
+            Timber.d("Uart status message received: ${message}")
+        }
+
+        override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
+            Timber.d("Preset change received: ${message}")
+        }
+
+    }
 
     private val deviceCallback = object : DeviceCallback {
         override fun onDeviceDisconnected(device: BluetoothDevice?, message: String?) {
@@ -71,7 +101,6 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageHandler {
 
             bluetoothService.send(json.stringify(BtMessageSerializer, BtRequestMessage(EMessageType.GET_PRESETS)).plus("\n"))
 
-            /* Set bluetooth service */
             bluetoothService.setDeviceCallback(deviceCallback)
 
         }
@@ -91,8 +120,20 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageHandler {
         }
 
         topAppBar.outlineProvider = null
-        topBar.outlineProvider = null
+        appBarLayout.outlineProvider = null
 
+//        presets = arrayListOf(
+//            Preset("Test1", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+//            Preset("Test2", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+//            Preset("Test3", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+//            Preset("Test4", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+//            Preset("Test5", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null))
+//
+//        )
+
+        presetAdapter = PresetAdapter(this, presets)
+
+        binding.presetList.adapter = presetAdapter
 
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
         sheetBehavior.isFitToContents = false
@@ -110,12 +151,17 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageHandler {
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 
         override fun getItemCount(): Int {
-            return NUM_PAGES
+            return pageTitles.size
         }
 
         override fun createFragment(position: Int): Fragment = when(position) {
-            1 -> MainPanelFragment(this@ControlActivity)
-            else -> MainPanelFragment(this@ControlActivity)
+            0 -> MainPanelFragment.getInstance(this@ControlActivity)
+            1 -> CompressorFragment.getInstance(this@ControlActivity)
+            2 -> DelayFragment.getInstance(this@ControlActivity)
+            3 -> ReverbFragment.getInstance(this@ControlActivity)
+            4-> EffectFragment.getInstance(this@ControlActivity)
+            5 -> GateFragment.getInstance(this@ControlActivity)
+            else -> error("Invalid fragment position")
         }
 
     }
@@ -126,10 +172,10 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageHandler {
 
     override fun receiveMessage(message: BtMessage) {
         when (message.type) {
-            EMessageType.PRESETS_STATUS -> Timber.d("Presets message received: ${message}}")
-            EMessageType.CHANGE -> Timber.d("Change message received: ${message}")
-            EMessageType.UART_STATUS -> Timber.d("Uart status message received: ${message}")
-            EMessageType.PRESET_CHANGE -> Timber.d("Preset change received: ${message}")
+            EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
+            EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
+            EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
+            EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
             else -> Timber.e("Unsupported message received ${message.type}")
         }
     }
