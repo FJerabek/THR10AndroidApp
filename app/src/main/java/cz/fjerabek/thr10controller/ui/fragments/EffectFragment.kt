@@ -21,7 +21,6 @@ class EffectFragment : Fragment() {
     }
 
     private lateinit var sender: MessageSender
-    private lateinit var viewModel: EffectViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +31,6 @@ class EffectFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EffectViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

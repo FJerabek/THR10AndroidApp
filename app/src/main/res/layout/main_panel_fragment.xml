@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="strings"
             type="String[]" />
@@ -12,34 +12,112 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.fragments.MainPanelFragment">
+        android:layout_height="match_parent">
 
-        <it.beppi.knoblibrary.Knob
-            android:id="@+id/knob"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            app:kIndicatorWidth="2dp"
-            app:kKnobCenterColor="@color/colorAccent"
-            app:kKnobCenterRelativeRadius="0.7"
-            app:kKnobColor="@color/colorPrimary"
-            app:kStateMarkersColor="@color/colorPrimary"
-            app:kStateMarkersRelativeLength="0.13"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.025"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.025" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/knobValue"
+        <LinearLayout
+            android:id="@+id/linearLayoutAmpTypeKnob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/knob"
-            app:layout_constraintEnd_toEndOf="@+id/knob"
-            app:layout_constraintStart_toStartOf="@+id/knob"
-            app:layout_constraintTop_toTopOf="@+id/knob" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayoutGainKnob"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/ampType"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutGainKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAmpTypeKnob"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                android:id="@+id/gain"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMasterKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/linearLayoutBassKnob"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGainKnob">
+
+            <include
+                android:id="@+id/master"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutBassKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayoutMasterKnob"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGainKnob">
+
+            <include
+                android:id="@+id/bass"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMiddleKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayoutBassKnob"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBassKnob">
+
+            <include
+                android:id="@+id/middle"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutTrebleKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayoutMiddleKnob"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBassKnob">
+
+            <include
+                android:id="@+id/treble"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCabinetKnob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTrebleKnob">
+
+            <include
+                android:id="@+id/cabinet"
+                layout="@layout/knob_layout" />
+        </LinearLayout>
+
+        <!--        <include-->
+        <!--            layout="@layout/knob_layout"-->
+        <!--            android:id="@+id/middleKnob"/>-->
+
+        <!--        <include-->
+        <!--            layout="@layout/knob_layout"-->
+        <!--            android:id="@+id/trebleKnob"/>-->
+
+        <!--        <include-->
+        <!--            layout="@layout/knob_layout"-->
+        <!--            android:id="@+id/cabinetKnob"/>-->
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

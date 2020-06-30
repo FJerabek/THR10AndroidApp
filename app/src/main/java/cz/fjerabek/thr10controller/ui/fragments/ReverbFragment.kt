@@ -21,7 +21,7 @@ class ReverbFragment : Fragment() {
     }
 
     private lateinit var sender: MessageSender
-    private lateinit var viewModel: ReverbViewModel
+    private lateinit var viewModel: PresetViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class ReverbFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ReverbViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(PresetViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

@@ -21,7 +21,6 @@ class GateFragment : Fragment() {
     }
 
     private lateinit var sender: MessageSender
-    private lateinit var viewModel: GateViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +31,6 @@ class GateFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(GateViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

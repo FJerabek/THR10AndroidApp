@@ -114,22 +114,23 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
         TabLayoutMediator(binding.tabs, binding.viewPager) {
                 tab, position -> tab.text = pageTitles[position]
         }.attach()
+        binding.lifecycleOwner = this
 
-        Intent(this, BluetoothService::class.java).also { intent ->
-            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        }
+//        Intent(this, BluetoothService::class.java).also { intent ->
+//            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+//        }
 
         topAppBar.outlineProvider = null
         appBarLayout.outlineProvider = null
 
-//        presets = arrayListOf(
-//            Preset("Test1", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-//            Preset("Test2", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-//            Preset("Test3", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-//            Preset("Test4", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-//            Preset("Test5", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null))
-//
-//        )
+        presets = arrayListOf(
+            Preset("Test1", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+            Preset("Test2", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+            Preset("Test3", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+            Preset("Test4", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
+            Preset("Test5", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null))
+
+        )
 
         presetAdapter = PresetAdapter(this, presets)
 

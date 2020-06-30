@@ -21,7 +21,6 @@ class DelayFragment : Fragment() {
     }
 
     private lateinit var sender: MessageSender
-    private lateinit var viewModel: DelayViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +31,6 @@ class DelayFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(DelayViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
