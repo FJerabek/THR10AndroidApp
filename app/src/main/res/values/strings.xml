@@ -13,4 +13,5 @@
     <string name="content_description_add_preset">Adds new settings preset</string>
     <string name="preset_rearrange_description">Drag and drop rearrange presets</string>
     <string name="preset_remove_description">Preset remove button</string>
+    <string name="no_preset">No preset</string>
 </resources>

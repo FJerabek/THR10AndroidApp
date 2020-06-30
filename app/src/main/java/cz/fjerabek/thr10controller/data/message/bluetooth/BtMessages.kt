@@ -49,6 +49,7 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
             EMessageType.POWER_OFF -> BtRequestMessage.serializer()
 
             EMessageType.ADD_PRESET,
+            EMessageType.DUMP_RESPONSE,
             EMessageType.SET_PRESET -> BtPresetMessage.serializer()
 
             EMessageType.PRESETS_STATUS,

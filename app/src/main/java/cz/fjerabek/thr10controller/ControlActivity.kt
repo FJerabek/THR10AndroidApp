@@ -5,9 +5,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.net.PlatformVpnProfile
 import android.os.Bundle
 import android.os.IBinder
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -30,32 +30,28 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
-import java.util.*
 import kotlin.collections.ArrayList
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
 
 class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
-    private lateinit var bluetoothService : BluetoothService
-    private lateinit var binding : ActivityControlBinding
+    private lateinit var bluetoothService: BluetoothService
+    private lateinit var binding: ActivityControlBinding
     private lateinit var presetAdapter: PresetAdapter
+    private val viewModel: PresetViewModel by viewModels()
 
-    private var presets : List<Preset> = ArrayList()
     private val json = Json(JsonConfiguration.Stable)
 
     private val messageHandler = object : MessageHandler {
         override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
-            presetAdapter.presets = message.presets
-            Timber.d("Presets received: ${presets}")
-            runOnUiThread {
-                presetAdapter.notifyDataSetChanged()
-            }
+            viewModel.presets.postValue(message.presets as ArrayList<Preset>)
 
         }
 
         override fun handleChangeMessage(message: BtChangeMessage) {
-            Timber.d("Change message received: ${message}")
+            viewModel.dumpPreset.value!!.processChangeMessage(message.change)
+            viewModel.activePresetIndex.postValue(-1)
         }
 
         override fun handleUartStatusMessage(message: BtUartStatusMessage) {
@@ -64,6 +60,11 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
         override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
             Timber.d("Preset change received: ${message}")
+        }
+
+        override fun handleDumpMessage(message: BtPresetMessage) {
+            viewModel.dumpPreset.postValue(message.preset)
+            viewModel.activePresetIndex.postValue(-1)
         }
 
     }
@@ -92,14 +93,20 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
-
+            finishActivity(0)
         }
 
         override fun onServiceConnected(p0: ComponentName?, binder: IBinder?) {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
 
-            bluetoothService.send(json.stringify(BtMessageSerializer, BtRequestMessage(EMessageType.GET_PRESETS)).plus("\n"))
+            bluetoothService.send(
+                json.stringify(
+                    BtMessageSerializer,
+                    BtRequestMessage(EMessageType.GET_PRESETS)
+                ).plus("\n")
+            )
+
 
             bluetoothService.setDeviceCallback(deviceCallback)
 
@@ -109,59 +116,77 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.plant(Timber.DebugTree())
+
+        // Remove appbar shadow
         binding = DataBindingUtil.setContentView(this, R.layout.activity_control)
         binding.viewPager.adapter = ViewPagerAdapter(this)
-        TabLayoutMediator(binding.tabs, binding.viewPager) {
-                tab, position -> tab.text = pageTitles[position]
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text = pageTitles[position]
         }.attach()
         binding.lifecycleOwner = this
 
-//        Intent(this, BluetoothService::class.java).also { intent ->
-//            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-//        }
+        bindBluetoothService()
 
         topAppBar.outlineProvider = null
         appBarLayout.outlineProvider = null
 
-        presets = arrayListOf(
-            Preset("Test1", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-            Preset("Test2", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-            Preset("Test3", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-            Preset("Test4", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null)),
-            Preset("Test5", MainPanel(EAmpType.ACO, 10, 10, 10, 10, 10, null))
-
-        )
-
-        presetAdapter = PresetAdapter(this, presets)
+        presetAdapter = PresetAdapter(this, ArrayList())
 
         binding.presetList.adapter = presetAdapter
 
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
         sheetBehavior.isFitToContents = false
-        sheetBehavior.isHideable = false //prevents the boottom sheet from completely hiding off the screen
+        sheetBehavior.isHideable =
+            false //prevents the bottom sheet from completely hiding off the screen
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        viewModel.presets.observe(this, androidx.lifecycle.Observer { presets ->
+            presetAdapter.presets = presets
+            presetAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.sender = this
+
+        binding.presetList.setOnItemClickListener { _, _, index, _ ->
+            run {
+                viewModel.activePresetIndex.value = index
+            }
+        }
+
+        binding.noPresetSelector.setOnClickListener {
+            this.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
+        }
     }
 
 
+    private fun bindBluetoothService() {
+        Intent(this, BluetoothService::class.java).also { intent ->
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
+        bluetoothService.deviceDisconnect()
         unbindService(serviceConnection)
     }
 
-    inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+    inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
+        FragmentStateAdapter(fragmentActivity) {
 
         override fun getItemCount(): Int {
             return pageTitles.size
         }
 
-        override fun createFragment(position: Int): Fragment = when(position) {
-            0 -> MainPanelFragment.getInstance(this@ControlActivity)
-            1 -> CompressorFragment.getInstance(this@ControlActivity)
-            2 -> DelayFragment.getInstance(this@ControlActivity)
-            3 -> ReverbFragment.getInstance(this@ControlActivity)
-            4-> EffectFragment.getInstance(this@ControlActivity)
-            5 -> GateFragment.getInstance(this@ControlActivity)
+        override fun createFragment(position: Int): Fragment = when (position) {
+
+            0 -> MainPanelFragment.getInstance()
+            1 -> CompressorFragment.getInstance()
+            2 -> DelayFragment.getInstance()
+            3 -> ReverbFragment.getInstance()
+            4 -> EffectFragment.getInstance()
+            5 -> GateFragment.getInstance()
             else -> error("Invalid fragment position")
         }
 
@@ -177,6 +202,7 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
             EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
             EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
             EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
+            EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
             else -> Timber.e("Unsupported message received ${message.type}")
         }
     }

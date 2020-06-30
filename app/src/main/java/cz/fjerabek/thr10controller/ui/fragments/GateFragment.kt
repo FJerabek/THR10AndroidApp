@@ -10,22 +10,20 @@ import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class GateFragment : Fragment() {
+    private lateinit var viewModel: PresetViewModel
 
     companion object {
-        fun getInstance(sender : MessageSender): GateFragment {
-            val instance =
-                GateFragment()
-            instance.sender = sender
-            return instance
+        fun getInstance(): GateFragment {
+            return GateFragment()
         }
-    }
 
-    private lateinit var sender: MessageSender
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
         return inflater.inflate(R.layout.gate_fragment, container, false)
     }
 

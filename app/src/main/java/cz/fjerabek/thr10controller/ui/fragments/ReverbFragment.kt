@@ -10,29 +10,25 @@ import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class ReverbFragment : Fragment() {
+    private lateinit var viewModel: PresetViewModel
+
 
     companion object {
-        fun getInstance(sender : MessageSender): ReverbFragment {
-            val instance =
-                ReverbFragment()
-            instance.sender = sender
-            return instance
+        fun getInstance(): ReverbFragment {
+            return ReverbFragment()
         }
     }
-
-    private lateinit var sender: MessageSender
-    private lateinit var viewModel: PresetViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
         return inflater.inflate(R.layout.reverb_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PresetViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

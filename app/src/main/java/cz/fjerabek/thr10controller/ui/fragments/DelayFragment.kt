@@ -10,22 +10,22 @@ import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class DelayFragment : Fragment() {
+    private lateinit var viewModel: PresetViewModel
+
 
     companion object {
-        fun getInstance(sender : MessageSender): DelayFragment {
+        fun getInstance(): DelayFragment {
             val instance =
                 DelayFragment()
-            instance.sender = sender
             return instance
         }
     }
-
-    private lateinit var sender: MessageSender
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
         return inflater.inflate(R.layout.delay_fragment, container, false)
     }
 

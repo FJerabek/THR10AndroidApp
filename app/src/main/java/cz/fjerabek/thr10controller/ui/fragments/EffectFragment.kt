@@ -7,25 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.R
-import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class EffectFragment : Fragment() {
+    private lateinit var viewModel: PresetViewModel
 
     companion object {
-        fun getInstance(sender : MessageSender): EffectFragment {
-            val instance =
-                EffectFragment()
-            instance.sender = sender
-            return instance
+        fun getInstance(): EffectFragment {
+            return EffectFragment()
         }
     }
-
-    private lateinit var sender: MessageSender
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
         return inflater.inflate(R.layout.effect_fragment, container, false)
     }
 

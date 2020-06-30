@@ -38,6 +38,17 @@
                 android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
+                <Button
+                    android:id="@+id/noPresetSelector"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="17sp"
+                    android:text="@string/no_preset"/>
+
+                <View style="@style/Divider"/>
+
                 <ListView
                     android:id="@+id/presetList"
                     android:layout_width="match_parent"

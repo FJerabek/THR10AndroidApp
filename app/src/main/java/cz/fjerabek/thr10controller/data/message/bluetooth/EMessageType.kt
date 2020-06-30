@@ -13,6 +13,7 @@ enum class EMessageType {
     LAMP,
     WIDE_STEREO,
     DUMP_REQUEST,
+    DUMP_RESPONSE,
     FIRMWARE_STATUS,
     MIDI_DISCONNECTED,
     UART_STATUS

@@ -7,25 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.R
-import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class CompressorFragment : Fragment() {
+    private lateinit var viewModel: PresetViewModel
 
     companion object {
-        fun getInstance(sender : MessageSender): CompressorFragment {
-            val instance =
-                CompressorFragment()
-            instance.sender = sender
-            return instance
+        fun getInstance(): CompressorFragment {
+            return CompressorFragment()
         }
     }
 
-    private lateinit var sender: MessageSender
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
+
         return inflater.inflate(R.layout.compressor_fragment, container, false)
     }
 

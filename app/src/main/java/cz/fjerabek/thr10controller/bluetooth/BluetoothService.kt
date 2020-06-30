@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import me.aflak.bluetooth.Bluetooth
+import me.aflak.bluetooth.interfaces.BluetoothCallback
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import me.aflak.bluetooth.interfaces.DiscoveryCallback
 import timber.log.Timber
@@ -49,8 +50,14 @@ class BluetoothService : Service() {
 
     /**
      * Connects to device
+     * @param device device to connect to
      */
     fun deviceConnect(device: BluetoothDevice) = bluetooth.connectToDevice(device)
+
+    /**
+     * Disconnects from device
+     */
+    fun deviceDisconnect() = bluetooth.disconnect()
 
     /**
      * Sends string message to connected device
