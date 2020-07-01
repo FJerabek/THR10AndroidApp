@@ -18,7 +18,7 @@ class CustomKnob(context: Context, attributeSet: AttributeSet) :
         set(value) {
             field = value
             binding.knob.numberOfStates =
-                (property?.getMaximumValue() ?: 100) - (property?.getMinimumValue() ?: 0)
+                1 + (property?.getMaximumValue() ?: 100) - (property?.getMinimumValue() ?: 0)
         }
 
     var textSize: Float

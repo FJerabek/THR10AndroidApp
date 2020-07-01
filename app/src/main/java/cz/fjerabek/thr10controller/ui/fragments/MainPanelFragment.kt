@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.Preset
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
@@ -42,6 +43,11 @@ class MainPanelFragment : Fragment() {
 
         val defaultListener: (value : Int, knob: CustomKnob) -> Unit = { value, knob ->
             handleChange(knob.property!!, value)
+        }
+
+        viewModel.activePreset.observe(viewLifecycleOwner) {
+            Timber.d("Active preset change")
+            binding.preset = it
         }
 
         binding.gain.valueChangeListener = defaultListener

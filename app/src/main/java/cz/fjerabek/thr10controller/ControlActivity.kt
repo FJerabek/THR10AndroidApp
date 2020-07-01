@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.observe
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,6 +29,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
+import kotlin.concurrent.timer
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
 
@@ -54,11 +56,11 @@ class ControlActivity : FragmentActivity() {
         }
 
         override fun handleUartStatusMessage(message: BtUartStatusMessage) {
-            Timber.d("Uart status message received: ${message}")
+            viewModel.uartStatus.postValue(message.status)
         }
 
         override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
-            Timber.d("Preset change received: ${message}")
+            Timber.tag("Bluetooth").d("Preset change received: ${message}")
         }
 
         override fun handleDumpMessage(message: BtPresetMessage) {
@@ -76,6 +78,7 @@ class ControlActivity : FragmentActivity() {
         }
 
         override fun onConnectError(device: BluetoothDevice?, message: String?) {
+            Timber.tag("Bluetooth").e("Bluetooth connection error")
         }
 
         override fun onMessage(message: ByteArray?) {
@@ -85,7 +88,7 @@ class ControlActivity : FragmentActivity() {
         }
 
         override fun onError(errorCode: Int) {
-            Timber.e("Device error. Error code: $errorCode")
+            Timber.tag("Bluetooth").e("Device error. Error code: $errorCode")
         }
     }
 
@@ -104,9 +107,11 @@ class ControlActivity : FragmentActivity() {
                     BtRequestMessage(EMessageType.GET_PRESETS)
                 ).plus("\n")
             )
-
-
             bluetoothService.setDeviceCallback(deviceCallback)
+
+            timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
+                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_STATUS))
+            }
 
         }
 
@@ -161,11 +166,6 @@ class ControlActivity : FragmentActivity() {
             false //prevents the bottom sheet from completely hiding off the screen
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-        viewModel.presets.observe(this, androidx.lifecycle.Observer { presets ->
-            presetAdapter.presets = presets
-            presetAdapter.notifyDataSetChanged()
-        })
-
         viewModel.sender = messageSender
 
         binding.presetList.setOnItemClickListener { _, _, index, _ ->
@@ -177,8 +177,21 @@ class ControlActivity : FragmentActivity() {
         binding.noPresetSelector.setOnClickListener {
             messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
         }
+
+        setViewModelObservers()
     }
 
+
+    fun setViewModelObservers() {
+        viewModel.presets.observe(this) {
+            presetAdapter.presets = it
+            presetAdapter.notifyDataSetChanged()
+        }
+
+        viewModel.uartStatus.observe(this) {
+            binding.uartStatus = it
+        }
+    }
 
     private fun bindBluetoothService() {
         Intent(this, BluetoothService::class.java).also { intent ->

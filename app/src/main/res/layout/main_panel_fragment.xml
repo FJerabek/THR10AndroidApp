@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="cz.fjerabek.thr10controller.ui.fragments.PresetViewModel" />
+            name="preset"
+            type="cz.fjerabek.thr10controller.data.Preset" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.AMP}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.amp.id}"
+            app:value="@{preset.mainPanel.amp.id}"
             app:name="Amp type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/gain"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.GAIN}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.gain}"
+            app:value="@{preset.mainPanel.gain}"
             app:name="Gain"
             app:layout_constraintEnd_toStartOf="@+id/amp"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.MASTER}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.master}"
+            app:value="@{preset.mainPanel.master}"
             app:name="Master"
             app:layout_constraintEnd_toStartOf="@id/bass"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.BASS}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.bass}"
+            app:value="@{preset.mainPanel.bass}"
             app:name="Bass"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/master"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.MIDDLE}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.middle}"
+            app:value="@{preset.mainPanel.middle}"
             app:name="Middle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/bass"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.TREBLE}"
             app:textSize="12"
-            app:value="@{viewModel.activePreset.mainPanel.treble}"
+            app:value="@{preset.mainPanel.treble}"
             app:name="Treble"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/middle"
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.CABINET}"
             app:textSize="10"
-            app:value="@{viewModel.activePreset.mainPanel.cabinet.id}"
+            app:value="@{preset.mainPanel.cabinet.id}"
             app:name="Cabinet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

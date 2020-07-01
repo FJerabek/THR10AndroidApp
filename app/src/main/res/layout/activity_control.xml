@@ -3,6 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="uartStatus"
+            type="cz.fjerabek.thr10controller.data.message.serial.StatusMessage"/>
+
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,30 +51,74 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:text="@string/no_preset"
                     android:textColor="@color/colorAccent"
-                    android:textSize="17sp"
-                    android:text="@string/no_preset"/>
+                    android:textSize="17sp" />
 
-                <View style="@style/Divider"/>
+                <View style="@style/Divider" />
 
                 <ListView
                     android:id="@+id/presetList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-                </ListView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="@dimen/sheet_peek_distance">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/battery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_battery_24"
+                        android:drawablePadding="2dp"
+                        android:drawableTint="@color/colorAccent"
+                        android:text="@{String.valueOf(uartStatus.battery) + `%`}"
+                        android:textColor="@color/textColorOnDark"
+                        app:layout_constraintEnd_toStartOf="@+id/uptime"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/uptime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_timer_24"
+                        android:drawablePadding="2dp"
+                        android:drawableTint="@color/colorAccent"
+                        android:text="@{String.valueOf(uartStatus.uptime) + ` s`}"
+                        android:textColor="@color/textColorOnDark"
+                        app:layout_constraintEnd_toStartOf="@id/current"
+                        app:layout_constraintStart_toEndOf="@+id/battery"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/current"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_flash_on_24"
+                        android:drawablePadding="2dp"
+                        android:drawableTint="@color/colorAccent"
+                        android:text="@{String.valueOf(uartStatus.current) + ` mAh`}"
+                        android:textColor="@color/textColorOnDark"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/uptime"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
-            <!--This is the backdrop's content with a BottomSheetBehaviour applied to it-->
             <LinearLayout
                 android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:behavior_peekHeight="56dp"
+                app:behavior_peekHeight="@dimen/sheet_peek_distance"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-                <!--This is the backdrop's header with a title and icon-->
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -75,12 +127,12 @@
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabs"
+                        style="@style/Widget.MaterialComponents.TabLayout.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/round_corners"
                         android:backgroundTint="@color/colorPrimaryDark"
                         android:paddingHorizontal="10dp"
-                        style="@style/Widget.MaterialComponents.TabLayout.Colored"
                         app:layout_constraintTop_toTopOf="parent"
                         app:tabMode="scrollable" />
 
