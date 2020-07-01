@@ -67,6 +67,10 @@ class ControlActivity : FragmentActivity() {
             viewModel.activePreset.postValue(message.preset)
         }
 
+        override fun handleFwVersionMessage(message: BtFirmwareStatusMessage) {
+            viewModel.fwVersion.postValue(message.firmware)
+        }
+
     }
 
     private val deviceCallback = object : DeviceCallback {
@@ -113,6 +117,7 @@ class ControlActivity : FragmentActivity() {
                 messageSender.sendMessage(BtRequestMessage(EMessageType.UART_STATUS))
             }
 
+            messageSender.sendMessage(BtRequestMessage(EMessageType.FIRMWARE_REQUEST))
         }
 
     }
@@ -133,6 +138,7 @@ class ControlActivity : FragmentActivity() {
                 EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
                 EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
                 EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
+                EMessageType.FIRMWARE_RESPONSE -> messageHandler.handleFwVersionMessage(message as BtFirmwareStatusMessage)
                 else -> Timber.e("Unsupported message received ${message.type}")
             }
         }
@@ -182,7 +188,7 @@ class ControlActivity : FragmentActivity() {
     }
 
 
-    fun setViewModelObservers() {
+    private fun setViewModelObservers() {
         viewModel.presets.observe(this) {
             presetAdapter.presets = it
             presetAdapter.notifyDataSetChanged()
@@ -190,6 +196,10 @@ class ControlActivity : FragmentActivity() {
 
         viewModel.uartStatus.observe(this) {
             binding.uartStatus = it
+        }
+
+        viewModel.fwVersion.observe(this) {
+            binding.firmwareVersion = it
         }
     }
 

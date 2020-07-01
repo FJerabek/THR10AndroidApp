@@ -45,7 +45,7 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
 
             EMessageType.DUMP_REQUEST,
             EMessageType.GET_PRESETS,
-            EMessageType.GET_STATUS,
+            EMessageType.FIRMWARE_REQUEST,
             EMessageType.POWER_OFF -> BtRequestMessage.serializer()
 
             EMessageType.ADD_PRESET,
@@ -59,7 +59,7 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
             EMessageType.WIDE_STEREO -> BtStatusChangeMessage.serializer()
 
             EMessageType.PRESET_CHANGE -> BtPresetChangeMessage.serializer()
-            EMessageType.FIRMWARE_STATUS -> BtFirmwareStatusMessage.serializer()
+            EMessageType.FIRMWARE_RESPONSE -> BtFirmwareStatusMessage.serializer()
             EMessageType.UART_STATUS -> BtUartStatusMessage.serializer()
             EMessageType.MIDI_DISCONNECTED -> TODO("implement midi disconnected blueotooth message")
         }

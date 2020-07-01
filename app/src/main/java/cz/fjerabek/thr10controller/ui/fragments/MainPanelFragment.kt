@@ -46,7 +46,6 @@ class MainPanelFragment : Fragment() {
         }
 
         viewModel.activePreset.observe(viewLifecycleOwner) {
-            Timber.d("Active preset change")
             binding.preset = it
         }
 
