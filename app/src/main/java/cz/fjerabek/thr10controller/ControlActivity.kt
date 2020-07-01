@@ -16,12 +16,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.data.Preset
-import cz.fjerabek.thr10controller.data.controls.MainPanel
-import cz.fjerabek.thr10controller.data.enums.mainpanel.EAmpType
-import cz.fjerabek.thr10controller.data.message.MessageHandler
-import cz.fjerabek.thr10controller.data.message.MessageSender
+import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageHandler
+import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageSender
 import cz.fjerabek.thr10controller.data.message.bluetooth.*
-import cz.fjerabek.thr10controller.data.message.serial.MessageReceiver
+import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageReceiver
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
 import cz.fjerabek.thr10controller.ui.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
@@ -30,28 +28,29 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
-import kotlin.collections.ArrayList
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
 
-class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
+class ControlActivity : FragmentActivity() {
 
     private lateinit var bluetoothService: BluetoothService
     private lateinit var binding: ActivityControlBinding
     private lateinit var presetAdapter: PresetAdapter
+
     private val viewModel: PresetViewModel by viewModels()
-
     private val json = Json(JsonConfiguration.Stable)
-
-    private val messageHandler = object : MessageHandler {
+    private val messageHandler = object :
+        IBtMessageHandler {
         override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
             viewModel.presets.postValue(message.presets as ArrayList<Preset>)
 
         }
 
         override fun handleChangeMessage(message: BtChangeMessage) {
-            viewModel.dumpPreset.value!!.processChangeMessage(message.change)
-            viewModel.activePresetIndex.postValue(-1)
+            viewModel.activePreset.value!!.processChangeMessage(message.change)
+
+            //Call value change on observers
+            viewModel.activePreset.postValue(viewModel.activePreset.value)
         }
 
         override fun handleUartStatusMessage(message: BtUartStatusMessage) {
@@ -63,8 +62,7 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
         }
 
         override fun handleDumpMessage(message: BtPresetMessage) {
-            viewModel.dumpPreset.postValue(message.preset)
-            viewModel.activePresetIndex.postValue(-1)
+            viewModel.activePreset.postValue(message.preset)
         }
 
     }
@@ -82,7 +80,7 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
         override fun onMessage(message: ByteArray?) {
             message?.let {
-                receiveMessage(json.parse(BtMessageSerializer, String(it)))
+                messageReceiver.receiveMessage(json.parse(BtMessageSerializer, String(it)))
             }
         }
 
@@ -110,6 +108,28 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
 
             bluetoothService.setDeviceCallback(deviceCallback)
 
+        }
+
+    }
+
+    private val messageSender : IBtMessageSender = object :
+        IBtMessageSender {
+        override fun sendMessage(message: BtMessage) {
+            bluetoothService.send(json.stringify(BtMessageSerializer, message).plus("\n"))
+        }
+    }
+
+    private val messageReceiver : IBtMessageReceiver = object :
+        IBtMessageReceiver {
+        override fun receiveMessage(message: BtMessage) {
+            when (message.type) {
+                EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
+                EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
+                EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
+                EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
+                EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
+                else -> Timber.e("Unsupported message received ${message.type}")
+            }
         }
 
     }
@@ -146,16 +166,16 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
             presetAdapter.notifyDataSetChanged()
         })
 
-        viewModel.sender = this
+        viewModel.sender = messageSender
 
         binding.presetList.setOnItemClickListener { _, _, index, _ ->
             run {
-                viewModel.activePresetIndex.value = index
+                viewModel.activePreset.value = viewModel.presets.value!![index]
             }
         }
 
         binding.noPresetSelector.setOnClickListener {
-            this.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
+            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
         }
     }
 
@@ -190,20 +210,5 @@ class ControlActivity : FragmentActivity(), MessageSender, MessageReceiver {
             else -> error("Invalid fragment position")
         }
 
-    }
-
-    override fun sendMessage(message: BtMessage) {
-        bluetoothService.send(json.stringify(BtMessageSerializer, message).plus("\n"))
-    }
-
-    override fun receiveMessage(message: BtMessage) {
-        when (message.type) {
-            EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
-            EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
-            EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
-            EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
-            EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
-            else -> Timber.e("Unsupported message received ${message.type}")
-        }
     }
 }

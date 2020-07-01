@@ -5,17 +5,14 @@ import androidx.lifecycle.ViewModel
 import cz.fjerabek.thr10controller.data.Preset
 import cz.fjerabek.thr10controller.data.controls.MainPanel
 import cz.fjerabek.thr10controller.data.enums.mainpanel.EAmpType
-import cz.fjerabek.thr10controller.data.message.MessageSender
+import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageSender
 
 class PresetViewModel : ViewModel() {
     val presets: MutableLiveData<ArrayList<Preset>> by lazy {
         MutableLiveData<ArrayList<Preset>>(ArrayList())
     }
-    val activePresetIndex: MutableLiveData<Int> by lazy {
-        MutableLiveData(-1)
-    }
 
-    val dumpPreset: MutableLiveData<Preset> by lazy {
+    val activePreset: MutableLiveData<Preset> by lazy {
         MutableLiveData<Preset>(
             Preset(
                 "Dump preset",
@@ -24,5 +21,5 @@ class PresetViewModel : ViewModel() {
         )
     }
 
-    var sender: MessageSender? = null
+    var sender: IBtMessageSender? = null
 }

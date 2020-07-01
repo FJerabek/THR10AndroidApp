@@ -1,123 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="strings"
-            type="String[]" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.ui.fragments.PresetViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutAmpTypeKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/amp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.AMP}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.amp.id}"
+            app:name="Amp type"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayoutGainKnob"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@+id/gain"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-            <include
-                android:id="@+id/ampType"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutGainKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/gain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutAmpTypeKnob"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.GAIN}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.gain}"
+            app:name="Gain"
+            app:layout_constraintEnd_toStartOf="@+id/amp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <include
-                android:id="@+id/gain"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutMasterKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/master"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/linearLayoutBassKnob"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.MASTER}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.master}"
+            app:name="Master"
+            app:layout_constraintEnd_toStartOf="@id/bass"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGainKnob">
+            app:layout_constraintTop_toBottomOf="@+id/gain">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
 
-            <include
-                android:id="@+id/master"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutBassKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/bass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.BASS}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.bass}"
+            app:name="Bass"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayoutMasterKnob"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutGainKnob">
-
-            <include
-                android:id="@+id/bass"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
+            app:layout_constraintStart_toEndOf="@+id/master"
+            app:layout_constraintTop_toBottomOf="@+id/gain">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
 
 
-        <LinearLayout
-            android:id="@+id/linearLayoutMiddleKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/middle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.MIDDLE}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.middle}"
+            app:name="Middle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/linearLayoutBassKnob"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBassKnob">
+            app:layout_constraintEnd_toStartOf="@+id/bass"
+            app:layout_constraintTop_toBottomOf="@+id/bass">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
 
-            <include
-                android:id="@+id/middle"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutTrebleKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/treble"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.TREBLE}"
+            app:textSize="12"
+            app:value="@{viewModel.activePreset.mainPanel.treble}"
+            app:name="Treble"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/linearLayoutMiddleKnob"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutBassKnob">
+            app:layout_constraintStart_toEndOf="@+id/middle"
+            app:layout_constraintTop_toBottomOf="@+id/bass">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
 
-            <include
-                android:id="@+id/treble"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutCabinetKnob"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/cabinet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:property="@{cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel.CABINET}"
+            app:textSize="10"
+            app:value="@{viewModel.activePreset.mainPanel.cabinet.id}"
+            app:name="Cabinet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutTrebleKnob">
-
-            <include
-                android:id="@+id/cabinet"
-                layout="@layout/knob_layout" />
-        </LinearLayout>
-
-        <!--        <include-->
-        <!--            layout="@layout/knob_layout"-->
-        <!--            android:id="@+id/middleKnob"/>-->
-
-        <!--        <include-->
-        <!--            layout="@layout/knob_layout"-->
-        <!--            android:id="@+id/trebleKnob"/>-->
-
-        <!--        <include-->
-        <!--            layout="@layout/knob_layout"-->
-        <!--            android:id="@+id/cabinetKnob"/>-->
-
+            app:layout_constraintTop_toBottomOf="@+id/treble">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

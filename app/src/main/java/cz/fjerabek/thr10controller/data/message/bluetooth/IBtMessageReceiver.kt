@@ -1,7 +1,7 @@
-package cz.fjerabek.thr10controller.data.message.serial
+package cz.fjerabek.thr10controller.data.message.bluetooth
 
 import cz.fjerabek.thr10controller.data.message.bluetooth.BtMessage
 
-interface MessageReceiver {
+interface IBtMessageReceiver {
     fun receiveMessage(message : BtMessage)
 }

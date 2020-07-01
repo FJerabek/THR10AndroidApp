@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.R
-import cz.fjerabek.thr10controller.data.message.MessageSender
 
 class DelayFragment : Fragment() {
     private lateinit var viewModel: PresetViewModel

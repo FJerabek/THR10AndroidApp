@@ -1,8 +1,8 @@
-package cz.fjerabek.thr10controller.data.message
+package cz.fjerabek.thr10controller.data.message.bluetooth
 
 import cz.fjerabek.thr10controller.data.message.bluetooth.*
 
-interface MessageHandler {
+interface IBtMessageHandler {
     fun handlePresetsStatusMessage(message : BtPresetsMessage)
     fun handleChangeMessage(message : BtChangeMessage)
     fun handleUartStatusMessage(message : BtUartStatusMessage)
