@@ -24,7 +24,6 @@ import timber.log.Timber
 class MainPanelFragment : Fragment() {
     private lateinit var viewModel: PresetViewModel
     private lateinit var binding: MainPanelFragmentBinding
-    private var messageSend = true
 
     companion object {
         fun getInstance(): MainPanelFragment {
@@ -49,10 +48,11 @@ class MainPanelFragment : Fragment() {
             binding.preset = it
         }
 
+
         binding.gain.valueChangeListener = defaultListener
 
         binding.amp.valueChangeListener = defaultListener
-        binding.amp.stringConverter = {
+        binding.amp.valueStringConverter = {
             EAmpType.fromId(it.toByte()).toString()
         }
 
@@ -62,7 +62,7 @@ class MainPanelFragment : Fragment() {
         binding.treble.valueChangeListener = defaultListener
 
         binding.cabinet.valueChangeListener = defaultListener
-        binding.cabinet.stringConverter = {
+        binding.cabinet.valueStringConverter = {
             ECabinetType.fromId(it.toByte()).toString().replace("_", "\n")
         }
         return view
@@ -72,15 +72,12 @@ class MainPanelFragment : Fragment() {
         val changeMessage = ChangeMessage(property.getPropertyId(), property.getMinimumValue() + value)
 
         viewModel.activePreset.value?.processChangeMessage(changeMessage)
-
-        if (messageSend) {
-            viewModel.sender?.sendMessage(
-                BtChangeMessage(
-                    EMessageType.CHANGE,
-                    changeMessage
-                )
+        viewModel.sender?.sendMessage(
+            BtChangeMessage(
+                EMessageType.CHANGE,
+                changeMessage
             )
-        }
+        )
     }
 
 }

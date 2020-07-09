@@ -1,13 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.CompressorFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+        <import type="cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType"/>
+        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Rack"/>
+        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Stomp"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.compressor.ERack"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.compressor.EStomp"/>
+        <import type="android.view.View" />
+
+        <variable
+            name="preset"
+            type="cz.fjerabek.thr10controller.data.Preset" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:paddingTop="10dp"
+        tools:context=".ui.fragments.CompressorFragment">
 
-</FrameLayout>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:id="@+id/compressorTypeSelect"
+            app:layout_constraintEnd_toStartOf="@id/compressorStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="10dp"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/compressorStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBaseline_toBaselineOf="@id/compressorTypeSelect"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+
+<!--            android:id="@+id/threshold"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="10dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/attack"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/compressorStatus"-->
+<!--            app:value="@{(preset.compressor.specific.type == ECompressorType.RACK)? ((Rack)preset.compressor.specific).threshold : ((Stomp)preset.compressor.specific).output}"-->
+<!--            app:property="@{(preset.compressor.specific.type == ECompressorType.RACK)? ERack.THRESHOLD : EStomp.OUTPUT}"-->
+<!--            app:name="@{(preset.compressor.specific.type == ECompressorType.RACK)? `Threshold` : `Output`}"-->
+<!--            app:textSize="12" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/attack"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="10dp"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/threshold"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"-->
+<!--            app:value="@{(preset.compressor.specific.type == ECompressorType.RACK)? ((Rack)preset.compressor.specific).attack : ((Stomp)preset.compressor.specific).sustain}"-->
+<!--            app:property="@{(preset.compressor.specific.type == ECompressorType.RACK)? ERack.ATTACK : EStomp.SUSTAIN}"-->
+<!--            app:name="@{(preset.compressor.specific.type == ECompressorType.RACK)? `Attack` : `Sustain`}"-->
+<!--            app:textSize="12" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/release"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:property="@{ERack.RELEASE}"-->
+<!--            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/ratio"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/attack"-->
+<!--            app:name="Release"-->
+<!--            app:textSize="12" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/ratio"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:property="@{ERack.RATIO}"-->
+<!--            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/release"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/attack"-->
+<!--            app:name="Ratio"-->
+<!--            app:textSize="12" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/knee"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"-->
+<!--            app:property="@{ERack.KNEE}"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/ratio"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/ratio"-->
+<!--            app:name="Knee"-->
+<!--            app:textSize="12" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/output"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"-->
+<!--            app:property="@{ERack.OUTPUT}"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/knee"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/ratio"-->
+<!--            app:continuous = "true"-->
+<!--            app:name="Output"-->
+<!--            app:textSize="12" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

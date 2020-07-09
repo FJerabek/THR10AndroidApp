@@ -1,13 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.DelayFragment">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.delay.EDelay" />
+        <variable
+            name="preset"
+            type="cz.fjerabek.thr10controller.data.Preset" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        tools:context=".ui.fragments.DelayFragment">
 
-</FrameLayout>
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/time"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/feedback"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:name="Time"-->
+<!--            app:continuous = "true"-->
+<!--            app:property="@{EDelay.TIME}"-->
+<!--            app:textSize="12"-->
+<!--            app:value="@{preset.delay.time}" />-->
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/feedback"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/time"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:name="Feedback"-->
+<!--            app:continuous = "true"-->
+<!--            app:property="@{EDelay.FEEDBACK}"-->
+<!--            app:textSize="12"-->
+<!--            app:value="@{preset.delay.feedback}" />-->
+
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/high_cut"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/feedback"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/feedback"-->
+<!--            app:name="High cut"-->
+<!--            app:continuous = "true"-->
+<!--            app:property="@{EDelay.HIGH_CUT}"-->
+<!--            app:textSize="12"-->
+<!--            app:value="@{preset.delay.highCut}" />-->
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/low_cut"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/high_cut"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/feedback"-->
+<!--            app:name="Low cut"-->
+<!--            app:continuous = "true"-->
+<!--            app:property="@{EDelay.LOW_CUT}"-->
+<!--            app:textSize="12"-->
+<!--            app:value="@{preset.delay.lowCut}" />-->
+
+<!--        <cz.fjerabek.thr10controller.ui.CustomKnob-->
+<!--            android:id="@+id/level"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingTop="6dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/low_cut"-->
+<!--            app:name="Level"-->
+<!--            app:continuous = "true"-->
+<!--            app:property="@{EDelay.LEVEL}"-->
+<!--            app:textSize="10"-->
+<!--            app:value="@{preset.delay.level}" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="CustomKnob">
-        <attr name="value" format="integer" />
-        <attr name="textSize" format="float" />
+    <declare-styleable name="Knob">
+        <attr name="outer_color" format="color" />
+        <attr name="outer_relative_size" format="float" />
+        <attr name="inner_color" format="color" />
+        <attr name="inner_relative_size" format="float" />
+        <attr name="pointer_color" format="color" />
+        <attr name="pointer_relative_length" format="float" />
+        <attr name="pointer_width" format="float"/>
+        <attr name="name_text_size" format="dimension" />
+        <attr name="value_text_size" format="dimension" />
+        <attr name="value_text_color" format="color" />
+        <attr name="name_text_color" format="color" />
         <attr name="name"   format="string"/>
+        <attr name="min_value" format="integer"/>
+        <attr name="max_value" format="integer"/>
+
+        <attr name="marker_relative_padding" format="float"/>
+        <attr name="marker_color" format="color"/>
+        <attr name="marker_width" format="float"/>
+        <attr name="marker_relative_length" format="float"/>
+
+        <attr name="min_angle" format="integer"/>
+        <attr name="max_angle" format="integer"/>
+        <attr name="relative_move" format="boolean"/>
+
+        <attr name="value" format="integer"/>
+        <attr name="continuous" format="boolean"/>
+
+        <attr name="selected_color" format="color"/>
+
+        <attr name="name_padding" format="dimension"/>
     </declare-styleable>
 </resources>
