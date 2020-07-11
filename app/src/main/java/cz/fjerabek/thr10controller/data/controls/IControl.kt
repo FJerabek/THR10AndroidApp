@@ -21,6 +21,7 @@ interface IControl {
 
         return if (property is KMutableProperty<*>) {
             property.setter.call(this, when(property.setter.parameters[1].type) {
+                //Check property type and convert value to that type
                 EAmpType::class
                     .createType() -> EAmpType.fromId(message.value.toByte())
 

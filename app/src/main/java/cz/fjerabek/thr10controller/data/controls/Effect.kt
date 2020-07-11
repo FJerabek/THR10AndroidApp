@@ -1,11 +1,8 @@
 package cz.fjerabek.thr10controller.data.controls
 
 import cz.fjerabek.thr10controller.data.Property
-import cz.fjerabek.thr10controller.data.controls.compressor.Rack
-import cz.fjerabek.thr10controller.data.controls.compressor.Stomp
 import cz.fjerabek.thr10controller.data.controls.effect.*
 import cz.fjerabek.thr10controller.data.enums.EStatus
-import cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType
 import cz.fjerabek.thr10controller.data.enums.effect.EEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
@@ -37,7 +34,7 @@ class Effect(
 //        }
 
     override fun processChangeMessage(message: ChangeMessage): Boolean {
-        //Handle compressor type change
+        //Handle effect type change
         if(message.property == IDEffect.TYPE) {
             specific?.let {
                 val effectSpecificDump = it.toDump(ByteArray(274))
@@ -50,7 +47,7 @@ class Effect(
             }
             return true
         } else {
-            return if(message.property != IDCompressor.STATUS) {
+            return if(message.property != IDEffect.STATUS) {
                 specific!!.processChangeMessage(message)
             } else {
                 status = EStatus.fromValue(message.value.toByte())

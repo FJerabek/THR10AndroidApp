@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EPhaser" />
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType" />
+        <import type="cz.fjerabek.thr10controller.data.controls.effect.Phaser" />
+
+        <variable
+            name="effect"
+            type="cz.fjerabek.thr10controller.data.controls.effect.EffectSpecific" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+
+            android:id="@+id/speed"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/manual"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).speed : EPhaser.SPEED.min}"
+            app:property="@{EPhaser.SPEED}"
+            app:name="Speed" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/manual"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/speed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).manual : EPhaser.MANUAL.min}"
+            app:property="@{EPhaser.DEPTH}"
+            app:name="Manual" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+
+            android:id="@+id/depth"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/manual"
+            app:layout_constraintTop_toTopOf="@id/feedback"
+            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).depth : EPhaser.DEPTH.min}"
+            app:property="@{EPhaser.DEPTH}"
+            app:name="Depth" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/feedback"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/speed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/speed"
+            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).feedback : EPhaser.FEEDBACK.min}"
+            app:property="@{EPhaser.FEEDBACK}"
+            app:name="Feedback" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

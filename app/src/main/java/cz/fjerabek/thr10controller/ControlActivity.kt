@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.data.Preset
+import cz.fjerabek.thr10controller.data.enums.effect.EEffect
 import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageHandler
 import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageSender
 import cz.fjerabek.thr10controller.data.message.bluetooth.*
@@ -32,11 +33,11 @@ import timber.log.Timber
 import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
-private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Reverb", "Gate")
+private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
 
 class ControlActivity : FragmentActivity() {
 
-    private lateinit var bluetoothService: BluetoothService
+    private var bluetoothService: BluetoothService? = null
     private lateinit var binding: ActivityControlBinding
     private lateinit var presetAdapter: PresetAdapter
 
@@ -74,6 +75,9 @@ class ControlActivity : FragmentActivity() {
         override fun handleBulkChangeMessage(message: BtBulkChangeMessage) {
             message.changes.forEach {
                 viewModel.activePreset.value?.processChangeMessage(it)
+                if(it.property == EEffect.STATUS.id) {
+                    Timber.d("Effect status changed ${it.value} : ${viewModel.activePreset.value?.effect?.status}")
+                }
             }
             //Call value change on observers
             viewModel.activePreset.postValue(viewModel.activePreset.value)
@@ -112,13 +116,13 @@ class ControlActivity : FragmentActivity() {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
 
-            bluetoothService.send(
+            bluetoothService!!.send(
                 json.stringify(
                     BtMessageSerializer,
                     BtRequestMessage(EMessageType.GET_PRESETS)
                 ).plus("\n")
             )
-            bluetoothService.setDeviceCallback(deviceCallback)
+            bluetoothService!!.setDeviceCallback(deviceCallback)
 
             timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
                 messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
@@ -132,7 +136,10 @@ class ControlActivity : FragmentActivity() {
     private val messageSender : IBtMessageSender = object :
         IBtMessageSender {
         override fun sendMessage(message: BtMessage) {
-            bluetoothService.send(json.stringify(BtMessageSerializer, message).plus("\n"))
+            bluetoothService?.send(json.stringify(BtMessageSerializer, message).plus("\n"))
+            if(bluetoothService == null) {
+                Timber.e("Trying to send messagen when bluetooth service is null")
+            }
         }
     }
 
@@ -219,7 +226,7 @@ class ControlActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothService.deviceDisconnect()
+        bluetoothService?.deviceDisconnect()
         unbindService(serviceConnection)
     }
 

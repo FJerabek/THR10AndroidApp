@@ -72,6 +72,7 @@ class CompressorFragment : Fragment() {
 
         viewModel.activePreset.observe(viewLifecycleOwner) {
             binding.compressor = it.compressor ?: Compressor(EStatus.OFF, Stomp(0, 0))
+            binding.compressorTypeSelect.setSelection(items.indexOf(it.compressor?.specific?.type), true)
         }
 
 

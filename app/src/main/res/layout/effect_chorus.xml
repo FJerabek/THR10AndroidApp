@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EChorus" />
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType" />
+        <import type="cz.fjerabek.thr10controller.data.controls.effect.Chorus" />
+
+        <variable
+            name="effect"
+            type="cz.fjerabek.thr10controller.data.controls.effect.EffectSpecific" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+
+            android:id="@+id/speed"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/depth"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.CHORUS? ((Chorus) effect).speed : EChorus.SPEED.min}"
+            app:property="@{EChorus.SPEED}"
+            app:name="Speed" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/depth"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/speed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.CHORUS? ((Chorus) effect).speed : EChorus.DEPTH.min}"
+            app:property="@{EChorus.DEPTH}"
+            app:name="Depth" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/mix"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="6dp"
+            app:property="@{EChorus.MIX}"
+            app:value="@{effect.type == EEffectType.CHORUS? ((Chorus) effect).mix : EChorus.MIX.min}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/depth"
+            app:name="Mix" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

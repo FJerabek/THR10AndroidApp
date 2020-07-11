@@ -53,6 +53,7 @@ class GateFragment : Fragment() {
                 EGate.STATUS,
                 if (checked) EStatus.ON.value.toInt() else EStatus.OFF.value.toInt()
             )
+            viewModel.activePreset.value?.gate?.status = if (checked) EStatus.ON else EStatus.OFF
         }
 
         return binding.root

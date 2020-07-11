@@ -1,13 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragments.EffectFragment">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <data>
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType"/>
+        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Rack"/>
+        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Stomp"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.compressor.ERack"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.compressor.EStomp"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.EStatus"/>
+        <import type="android.view.View" />
+
+        <variable
+            name="effect"
+            type="cz.fjerabek.thr10controller.data.controls.Effect" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        tools:context=".ui.fragments.CompressorFragment">
 
-</FrameLayout>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:id="@+id/effectSelect"
+            app:layout_constraintEnd_toStartOf="@id/effectStatus"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="10dp"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/effectStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/effectSelect"
+            app:layout_constraintTop_toTopOf="@+id/effectSelect"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:checked="@{effect.status == EStatus.ON}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/chorus"
+            layout="@layout/effect_chorus"
+            bind:effect = "@{effect.specific}"
+            android:visibility="@{(effect.specific.type == EEffectType.CHORUS)? View.VISIBLE : View.GONE}"/>
+
+        <include
+            android:id="@+id/flanger"
+            layout="@layout/effect_flanger"
+            bind:effect = "@{effect.specific}"
+            android:visibility="@{(effect.specific.type == EEffectType.FLANGER)? View.VISIBLE : View.GONE}"/>
+
+        <include
+            android:id="@+id/phaser"
+            layout="@layout/effect_phaser"
+            bind:effect = "@{effect.specific}"
+            android:visibility="@{(effect.specific.type == EEffectType.PHASER)? View.VISIBLE : View.GONE}"/>
+
+        <include
+            android:id="@+id/tremolo"
+            layout="@layout/effect_tremolo"
+            bind:effect = "@{effect.specific}"
+            android:visibility="@{(effect.specific.type == EEffectType.TREMOLO)? View.VISIBLE : View.GONE}"/>
+
+    </LinearLayout>
+</layout>

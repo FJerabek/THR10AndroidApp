@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.ETremolo" />
+        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType" />
+        <import type="cz.fjerabek.thr10controller.data.controls.effect.Tremolo" />
+
+        <variable
+            name="effect"
+            type="cz.fjerabek.thr10controller.data.controls.effect.EffectSpecific" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+
+            android:id="@+id/freq"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/depth"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.TREMOLO? ((Tremolo) effect).freq : ETremolo.FREQ.min}"
+            app:property="@{ETremolo.FREQ}"
+            app:name="Freq" />
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/depth"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/freq"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:value="@{effect.type == EEffectType.TREMOLO? ((Tremolo) effect).depth : ETremolo.DEPTH.min}"
+            app:property="@{ETremolo.DEPTH}"
+            app:name="Depth" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
