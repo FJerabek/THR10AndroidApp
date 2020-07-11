@@ -53,6 +53,7 @@ class Compressor(
         }
     }
 
+
     object CompressorSerializer : JsonParametricSerializer<CompressorSpecific>(CompressorSpecific::class) {
         override fun selectSerializer(element: JsonElement): KSerializer<out CompressorSpecific> {
             val type = element.jsonObject.getPrimitive("type").content

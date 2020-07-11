@@ -34,6 +34,10 @@ class Preset(
         return dump
     }
 
+    override fun toString(): String {
+        return "Preset(name='$name', mainPanel=$mainPanel, compressor=$compressor, effect=$effect, delay=$delay, reverb=$reverb, gate=$gate)"
+    }
+
     companion object {
         fun fromDump(dump: ByteArray) : Preset {
             return Preset(
@@ -46,5 +50,6 @@ class Preset(
                 Gate.fromDump(dump))
         }
     }
+
 
 }

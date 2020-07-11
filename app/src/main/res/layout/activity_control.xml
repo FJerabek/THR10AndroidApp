@@ -105,7 +105,7 @@
                         android:drawableStart="@drawable/ic_flash_on_24"
                         android:drawablePadding="2dp"
                         android:drawableTint="@color/colorAccent"
-                        android:text="@{String.valueOf(uartStatus.current) + ` mAh`}"
+                        android:text="@{String.valueOf(uartStatus.current) + ` mA`}"
                         android:textColor="@color/textColorOnDark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/uptime"

@@ -1,6 +1,5 @@
 package cz.fjerabek.thr10controller.ui
 
-import android.R.attr
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -8,7 +7,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Build
-import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -40,7 +38,18 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
     var markerRelativePadding = 0.1f
     var markerRelativeLength = 0.12f
     var markerWidth = 2f
-    var value = 0
+
+    private var _value = 0
+    var value: Int
+        set(value) {
+            if(!swipe) {
+                angle = valueToAngle(value)
+            }
+            _value = value
+            postInvalidate()
+        }
+        get() = _value
+
     var minValue = 0
         set(value) {
             field = value
@@ -104,7 +113,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
             markerWidth = it.getDimension(R.styleable.Knob_marker_width, markerWidth)
             minAngle = Math.toRadians(it.getFloat(R.styleable.Knob_min_angle, 25f).toDouble())
             maxAngle = Math.toRadians(it.getFloat(R.styleable.Knob_max_angle, 335f).toDouble())
-            value = it.getInt(R.styleable.Knob_value, 0)
+            _value = it.getInt(R.styleable.Knob_value, 0)
             continuous = it.getBoolean(R.styleable.Knob_continuous, false)
             selectedColor = it.getColor(R.styleable.Knob_selected_color, selectedColor)
             namePadding = it.getDimension(R.styleable.Knob_name_padding, namePadding)
@@ -148,6 +157,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         paint.isAntiAlias = true
         paint.color = nameTextColor
         paint.textSize = nameTextSize
+        paint.style = Paint.Style.FILL
         paint.textAlign = Paint.Align.CENTER
         paint.strokeWidth = 2f
 
@@ -323,15 +333,15 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
                 MotionEvent.ACTION_UP -> {
                     if (!swipe) {
                         this.performClick()
-                        value++
+                        _value++
                         Timber.d("Value: $value Max: $maxValue Min: $minValue")
                         if (value > maxValue)
-                            value = maxValue
+                            _value = maxValue
 
                         if (value < minValue)
-                            value = minValue
+                            _value = minValue
 
-                        animateValue(value)
+                        animateValue(_value)
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             view.requestPointerCapture()
@@ -339,6 +349,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
                     } else {
                         animateValue(value)
                     }
+                    swipe = false
                     return@setOnTouchListener true
                 }
                 else -> {
@@ -378,21 +389,21 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
             (minValue + (((angle - maxAngle) + (anglePerMarker / 2)) / anglePerMarker)).toInt()
 
         if (value != newValue) {
-            value = newValue
+            _value = newValue
             onValueChangeListener(value)
         }
 
     }
 
     fun animateValue(value: Int) {
+        animator?.cancel()
         animator = ValueAnimator.ofFloat(angle.toFloat(), valueToAngle(value).toFloat())
         animator?.addUpdateListener {
             angle = (it.animatedValue as Float).toDouble()
-            postInvalidate()
+            angleToValue()
+            invalidate()
         }
         animator?.duration = 100
         animator?.start()
-
     }
-
 }

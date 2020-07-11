@@ -2,8 +2,6 @@ package cz.fjerabek.thr10controller.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
 
 

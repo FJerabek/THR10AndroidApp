@@ -13,6 +13,9 @@ import kotlinx.serialization.json.JsonParametricSerializer
 data class BtChangeMessage(override val type: EMessageType, val change : ChangeMessage) : BtMessage
 
 @Serializable
+data class BtBulkChangeMessage(override val type: EMessageType, val changes: List<ChangeMessage> ) : BtMessage
+
+@Serializable
 data class BtPresetMessage(override val type: EMessageType, val preset : Preset) : BtMessage
 
 @Serializable
@@ -46,6 +49,7 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
             EMessageType.DUMP_REQUEST,
             EMessageType.GET_PRESETS,
             EMessageType.FIRMWARE_REQUEST,
+            EMessageType.UART_REQUEST,
             EMessageType.POWER_OFF -> BtRequestMessage.serializer()
 
             EMessageType.ADD_PRESET,
@@ -60,7 +64,11 @@ object BtMessageSerializer : JsonParametricSerializer<BtMessage>(BtMessage::clas
 
             EMessageType.PRESET_CHANGE -> BtPresetChangeMessage.serializer()
             EMessageType.FIRMWARE_RESPONSE -> BtFirmwareStatusMessage.serializer()
-            EMessageType.UART_STATUS -> BtUartStatusMessage.serializer()
+            EMessageType.UART_RESPONSE -> BtUartStatusMessage.serializer()
+
+            EMessageType.BULK_CHANGE -> BtBulkChangeMessage.serializer()
+
+
             EMessageType.MIDI_DISCONNECTED -> TODO("implement midi disconnected blueotooth message")
         }
     }

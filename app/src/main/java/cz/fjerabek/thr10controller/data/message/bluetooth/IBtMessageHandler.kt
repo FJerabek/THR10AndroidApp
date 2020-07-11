@@ -7,4 +7,5 @@ interface IBtMessageHandler {
     fun handlePresetChangeMessage(message : BtPresetChangeMessage)
     fun handleDumpMessage(message : BtPresetMessage)
     fun handleFwVersionMessage(message: BtFirmwareStatusMessage)
+    fun handleBulkChangeMessage(message : BtBulkChangeMessage)
 }

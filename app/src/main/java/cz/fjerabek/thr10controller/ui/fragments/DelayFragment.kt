@@ -15,6 +15,11 @@ import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
 import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import cz.fjerabek.thr10controller.databinding.DelayFragmentBinding
 import cz.fjerabek.thr10controller.ui.CustomKnob
+import timber.log.Timber
+import java.time.Instant
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.system.measureNanoTime
 
 class DelayFragment : Fragment() {
     private lateinit var viewModel: PresetViewModel
@@ -33,25 +38,25 @@ class DelayFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
-        val view = inflater.inflate(R.layout.delay_fragment, container, false)
-        binding = DataBindingUtil.bind(view)!!
+        binding = DelayFragmentBinding.inflate(inflater, container, false)
 
 
         viewModel.activePreset.observe(viewLifecycleOwner) {
             binding.preset = it
         }
 
+
         val defaultListener: (value : Int, knob: CustomKnob) -> Unit = { value, knob ->
             handleChange(knob.property!!, value)
         }
 
-//        binding.feedback.valueChangeListener = defaultListener
-//        binding.highCut.valueChangeListener = defaultListener
-//        binding.level.valueChangeListener = defaultListener
-//        binding.lowCut.valueChangeListener = defaultListener
-//        binding.time.valueChangeListener = defaultListener
+        binding.feedback.valueChangeListener = defaultListener
+        binding.highCut.valueChangeListener = defaultListener
+        binding.level.valueChangeListener = defaultListener
+        binding.lowCut.valueChangeListener = defaultListener
+        binding.time.valueChangeListener = defaultListener
 
-        return view
+        return binding.root
     }
 
     fun handleChange(property: IControlProperty, value: Int) {
@@ -62,11 +67,6 @@ class DelayFragment : Fragment() {
                 changeMessage
             )
         )
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        // TODO: Use the ViewModel
     }
 
 }

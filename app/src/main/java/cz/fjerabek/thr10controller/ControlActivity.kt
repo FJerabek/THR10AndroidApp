@@ -29,6 +29,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
+import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
@@ -50,7 +51,6 @@ class ControlActivity : FragmentActivity() {
 
         override fun handleChangeMessage(message: BtChangeMessage) {
             viewModel.activePreset.value!!.processChangeMessage(message.change)
-
             //Call value change on observers
             viewModel.activePreset.postValue(viewModel.activePreset.value)
         }
@@ -71,6 +71,13 @@ class ControlActivity : FragmentActivity() {
             viewModel.fwVersion.postValue(message.firmware)
         }
 
+        override fun handleBulkChangeMessage(message: BtBulkChangeMessage) {
+            message.changes.forEach {
+                viewModel.activePreset.value?.processChangeMessage(it)
+            }
+            //Call value change on observers
+            viewModel.activePreset.postValue(viewModel.activePreset.value)
+        }
     }
 
     private val deviceCallback = object : DeviceCallback {
@@ -114,10 +121,10 @@ class ControlActivity : FragmentActivity() {
             bluetoothService.setDeviceCallback(deviceCallback)
 
             timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
-                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_STATUS))
+                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
             }
-
             messageSender.sendMessage(BtRequestMessage(EMessageType.FIRMWARE_REQUEST))
+            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
         }
 
     }
@@ -135,7 +142,8 @@ class ControlActivity : FragmentActivity() {
             when (message.type) {
                 EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
                 EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
-                EMessageType.UART_STATUS -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
+                EMessageType.BULK_CHANGE -> messageHandler.handleBulkChangeMessage(message as BtBulkChangeMessage)
+                EMessageType.UART_RESPONSE -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
                 EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
                 EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
                 EMessageType.FIRMWARE_RESPONSE -> messageHandler.handleFwVersionMessage(message as BtFirmwareStatusMessage)

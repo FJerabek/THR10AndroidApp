@@ -15,39 +15,11 @@
         android:layout_height="match_parent"
         android:paddingTop="10dp">
 
-<!--        <cz.fjerabek.thr10controller.ui.Knob-->
-<!--            android:id="@+id/knob"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="200dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.025"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:maxValue="@{EMainPanel.MASTER.max}"-->
-<!--            app:minValue="@{EMainPanel.MASTER.min}"-->
-<!--            app:value="@{preset.mainPanel.master}"-->
-<!--            app:inner_relative_size="0.7"-->
-<!--            app:outer_relative_size="0.8"-->
-<!--            app:marker_relative_length="0.07"-->
-<!--            app:min_angle="20"-->
-<!--            app:max_angle="350"-->
-<!--            app:value_text_size="20sp"-->
-<!--            app:relative_move="true"-->
-<!--            app:continuous="true"-->
-<!--            app:name="Test"-->
-<!--            app:inner_color="@color/colorAccent"-->
-<!--            />-->
-
-
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/amp"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.AMP}"
-            app:min_value="0"
-            app:max_value="10"
             app:value_text_size="13sp"
             app:value="@{preset.mainPanel.amp.id}"
             app:name="Amp type"
@@ -56,7 +28,6 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/gain"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -68,7 +39,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/master"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -81,7 +51,6 @@
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/bass"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -95,7 +64,6 @@
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/middle"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -108,7 +76,6 @@
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/treble"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -121,7 +88,6 @@
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:paddingTop="6dp"
             android:id="@+id/cabinet"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
