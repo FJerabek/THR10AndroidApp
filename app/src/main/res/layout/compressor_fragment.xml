@@ -9,11 +9,12 @@
         <import type="cz.fjerabek.thr10controller.data.controls.compressor.Stomp"/>
         <import type="cz.fjerabek.thr10controller.data.enums.compressor.ERack"/>
         <import type="cz.fjerabek.thr10controller.data.enums.compressor.EStomp"/>
+        <import type="cz.fjerabek.thr10controller.data.enums.EStatus"/>
         <import type="android.view.View" />
 
         <variable
-            name="preset"
-            type="cz.fjerabek.thr10controller.data.Preset" />
+            name="compressor"
+            type="cz.fjerabek.thr10controller.data.controls.Compressor" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBaseline_toBaselineOf="@id/compressorTypeSelect"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:checked="@{compressor.status == EStatus.ON}"/>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
 
@@ -49,10 +51,10 @@
             android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/attack"
-            app:layout_constraintTop_toBottomOf="@id/compressorStatus"
-            app:value="@{(preset.compressor.specific.type == ECompressorType.RACK)? ((Rack)preset.compressor.specific).threshold : ((Stomp)preset.compressor.specific).output}"
-            app:property="@{(preset.compressor.specific.type == ECompressorType.RACK)? ERack.THRESHOLD : EStomp.OUTPUT}"
-            app:name="@{(preset.compressor.specific.type == ECompressorType.RACK)? `Threshold` : `Output`}" />
+            app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
+            app:value="@{(compressor.specific.type == ECompressorType.RACK)? ((Rack)compressor.specific).threshold : ((Stomp)compressor.specific).output}"
+            app:property="@{(compressor.specific.type == ECompressorType.RACK)? ERack.THRESHOLD : EStomp.OUTPUT}"
+            app:name="@{(compressor.specific.type == ECompressorType.RACK)? `Threshold` : `Output`}" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
@@ -63,9 +65,9 @@
             app:layout_constraintEnd_toStartOf="@+id/threshold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
-            app:value="@{(preset.compressor.specific.type == ECompressorType.RACK)? ((Rack)preset.compressor.specific).attack : ((Stomp)preset.compressor.specific).sustain}"
-            app:property="@{(preset.compressor.specific.type == ECompressorType.RACK)? ERack.ATTACK : EStomp.SUSTAIN}"
-            app:name="@{(preset.compressor.specific.type == ECompressorType.RACK)? `Attack` : `Sustain`}" />
+            app:value="@{(compressor.specific.type == ECompressorType.RACK)? ((Rack)compressor.specific).attack : ((Stomp)compressor.specific).sustain}"
+            app:property="@{(compressor.specific.type == ECompressorType.RACK)? ERack.ATTACK : EStomp.SUSTAIN}"
+            app:name="@{(compressor.specific.type == ECompressorType.RACK)? `Attack` : `Sustain`}" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
@@ -74,7 +76,7 @@
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{ERack.RELEASE}"
-            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"
+            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attack"
@@ -87,7 +89,7 @@
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{ERack.RATIO}"
-            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"
+            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/release"
             app:layout_constraintTop_toBottomOf="@+id/attack"
@@ -99,7 +101,7 @@
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
-            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"
+            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:property="@{ERack.KNEE}"
             app:layout_constraintEnd_toStartOf="@+id/ratio"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,8 +114,9 @@
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
-            android:visibility="@{(preset.compressor.specific.type == preset.compressor.specific.type.RACK)? View.GONE : View.VISIBLE}"
+            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:property="@{ERack.OUTPUT}"
+            app:value="@{compressor.specific.type == ECompressorType.RACK? ((Rack) compressor.specific).output : 0}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/knee"
             app:layout_constraintTop_toBottomOf="@+id/ratio"

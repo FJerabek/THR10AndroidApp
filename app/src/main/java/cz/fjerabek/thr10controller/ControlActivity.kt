@@ -32,7 +32,7 @@ import timber.log.Timber
 import kotlin.collections.ArrayList
 import kotlin.concurrent.timer
 
-private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Gate", "Reverb")
+private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Effect", "Reverb", "Gate")
 
 class ControlActivity : FragmentActivity() {
 

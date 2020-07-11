@@ -14,4 +14,5 @@
     <string name="preset_rearrange_description">Drag and drop rearrange presets</string>
     <string name="preset_remove_description">Preset remove button</string>
     <string name="no_preset">No preset</string>
+    <string name="type_state">State</string>
 </resources>

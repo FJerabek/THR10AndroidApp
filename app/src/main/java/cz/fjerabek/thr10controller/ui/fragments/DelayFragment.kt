@@ -9,7 +9,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import cz.fjerabek.thr10controller.R
+import cz.fjerabek.thr10controller.data.enums.EStatus
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.delay.EDelay
+import cz.fjerabek.thr10controller.data.enums.gate.EGate
 import cz.fjerabek.thr10controller.data.message.bluetooth.BtChangeMessage
 import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
 import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
@@ -55,11 +58,17 @@ class DelayFragment : Fragment() {
         binding.level.valueChangeListener = defaultListener
         binding.lowCut.valueChangeListener = defaultListener
         binding.time.valueChangeListener = defaultListener
+        binding.status.setOnCheckedChangeListener { _, checked ->
+            handleChange(
+                EDelay.STATUS,
+                if (checked) EStatus.ON.value.toInt() else EStatus.OFF.value.toInt()
+            )
+        }
 
         return binding.root
     }
 
-    fun handleChange(property: IControlProperty, value: Int) {
+    private fun handleChange(property: IControlProperty, value: Int) {
         val changeMessage = ChangeMessage(property.getPropertyId(), value)
         viewModel.sender?.sendMessage(
             BtChangeMessage(
