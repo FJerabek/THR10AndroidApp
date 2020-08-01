@@ -17,11 +17,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.data.Preset
+import cz.fjerabek.thr10controller.data.enums.IControlProperty
 import cz.fjerabek.thr10controller.data.enums.effect.EEffect
 import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageHandler
 import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageSender
 import cz.fjerabek.thr10controller.data.message.bluetooth.*
 import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageReceiver
+import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
 import cz.fjerabek.thr10controller.ui.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
@@ -228,6 +230,16 @@ class ControlActivity : FragmentActivity() {
         super.onDestroy()
         bluetoothService?.deviceDisconnect()
         unbindService(serviceConnection)
+    }
+
+    private fun handleChange(property: IControlProperty, value: Int) {
+        val changeMessage = ChangeMessage(property.getPropertyId(), value)
+        viewModel.sender?.sendMessage(
+            BtChangeMessage(
+                EMessageType.CHANGE,
+                changeMessage
+            )
+        )
     }
 
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :

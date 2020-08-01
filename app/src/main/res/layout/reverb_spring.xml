@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.reverb.ESpring" />
+        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EReverbType" />
+        <import type="cz.fjerabek.thr10controller.data.controls.reverb.Spring" />
+        <variable
+            name="specific"
+            type="cz.fjerabek.thr10controller.data.controls.reverb.ReverbSpecific" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp">
+
+
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/highRatio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ESpring.REVERB}"
+            app:value="@{(specific.type == EReverbType.SPRING)? Integer.valueOf(((Spring) specific).reverb) : ESpring.REVERB.min}"
+            app:name="Reverb"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/lowRatio"
+            app:layout_constraintTop_toTopOf="parent">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/lowRatio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ESpring.FILTER}"
+            app:value="@{(specific.type == EReverbType.SPRING)? Integer.valueOf(((Spring) specific).filter) : ESpring.FILTER.min}"
+            app:name="Filter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/highRatio"
+            app:layout_constraintTop_toTopOf="parent">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

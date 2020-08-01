@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="cz.fjerabek.thr10controller.data.enums.reverb.ERoom" />
+        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EReverbType" />
+        <import type="cz.fjerabek.thr10controller.data.controls.reverb.Room" />
+        <variable
+            name="specific"
+            type="cz.fjerabek.thr10controller.data.controls.reverb.ReverbSpecific" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp">
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/time"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.TIME}"
+            app:value="@{(specific.type == EReverbType.ROOM)? ((Room) specific).time : ERoom.TIME.min}"
+            app:name="Time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/preDelay"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/preDelay"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.PRE_DELAY}"
+            app:value="@{(specific.type == EReverbType.ROOM)? ((Room) specific).preDelay : ERoom.PRE_DELAY.min}"
+            app:name="Pre delay"
+            app:layout_constraintStart_toEndOf="@+id/time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/lowCut"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.LOW_CUT}"
+            app:value="@{(specific.type == EReverbType.ROOM)? ((Room) specific).lowCut : ERoom.LOW_CUT.min}"
+            app:name="Low cut"
+            app:layout_constraintEnd_toStartOf="@id/highCut"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/preDelay">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/highCut"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.HIGH_CUT}"
+            app:value="@{(specific.type == EReverbType.ROOM)? ((Room) specific).highCut : ERoom.HIGH_CUT.min}"
+            app:name="High cut"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/lowCut"
+            app:layout_constraintTop_toBottomOf="@+id/preDelay">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/highRatio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.HIGH_RATIO}"
+            app:value="@{(specific.type == EReverbType.ROOM)? Integer.valueOf(((Room) specific).highRatio) : ERoom.HIGH_RATIO.min}"
+            app:name="High ratio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/highCut"
+            app:layout_constraintTop_toBottomOf="@+id/highCut">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/lowRatio"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.LOW_RATIO}"
+            app:value="@{(specific.type == EReverbType.ROOM)? Integer.valueOf(((Room) specific).lowRatio) : ERoom.LOW_RATIO.min}"
+            app:name="Low ratio"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/highRatio"
+            app:layout_constraintTop_toBottomOf="@+id/highCut">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            android:id="@+id/level"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:property="@{ERoom.LEVEL}"
+            app:value="@{(specific.type == EReverbType.ROOM)? Integer.valueOf(((Room) specific).level) : ERoom.LEVEL.min}"
+            app:name="Level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lowRatio">
+        </cz.fjerabek.thr10controller.ui.CustomKnob>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

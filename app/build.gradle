@@ -56,6 +56,17 @@ dependencies {
     //Logger
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+
+    //Dependency injection
+    // Koin AndroidX Scope feature
+    implementation "org.koin:koin-androidx-scope:2.1.6"
+
+    // Koin AndroidX ViewModel feature
+    implementation "org.koin:koin-androidx-viewmodel:2.1.6"
+
+    // Koin AndroidX Fragment Factory (unstable version)
+    implementation "org.koin:koin-androidx-fragment:2.1.6"
+
     //Debug tools
     debugImplementation 'com.willowtreeapps.hyperion:hyperion-core:0.9.27'
     debugImplementation 'com.willowtreeapps.hyperion:hyperion-attr:0.9.27'

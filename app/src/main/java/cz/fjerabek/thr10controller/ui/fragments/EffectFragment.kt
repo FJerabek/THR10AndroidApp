@@ -13,7 +13,10 @@ import androidx.lifecycle.observe
 import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.data.controls.IDCompressor
 import cz.fjerabek.thr10controller.data.controls.IDEffect
+import cz.fjerabek.thr10controller.data.enums.EStatus
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
+import cz.fjerabek.thr10controller.data.enums.compressor.ECompressor
+import cz.fjerabek.thr10controller.data.enums.effect.EEffect
 import cz.fjerabek.thr10controller.data.enums.effect.EEffectType
 import cz.fjerabek.thr10controller.data.message.bluetooth.BtChangeMessage
 import cz.fjerabek.thr10controller.data.message.bluetooth.EMessageType
@@ -66,6 +69,15 @@ class EffectFragment : Fragment() {
                 viewModel.sender?.sendMessage(BtChangeMessage(EMessageType.CHANGE, changeMessage))
             }
 
+        }
+
+
+        binding.effectStatus.setOnCheckedChangeListener { _, checked ->
+            handleChange(
+                EEffect.STATUS,
+                if (checked) EStatus.ON.value.toInt() else EStatus.OFF.value.toInt()
+            )
+            viewModel.activePreset.value?.effect?.status = if (checked) EStatus.ON else EStatus.OFF
         }
 
 
