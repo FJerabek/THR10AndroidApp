@@ -16,14 +16,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
-import cz.fjerabek.thr10controller.data.Preset
 import cz.fjerabek.thr10controller.data.enums.IControlProperty
-import cz.fjerabek.thr10controller.data.enums.effect.EEffect
-import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageHandler
-import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageSender
-import cz.fjerabek.thr10controller.data.message.bluetooth.*
-import cz.fjerabek.thr10controller.data.message.bluetooth.IBtMessageReceiver
-import cz.fjerabek.thr10controller.data.message.midi.ChangeMessage
+import cz.fjerabek.thr10controller.data.midi.messages.ChangeMessage
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
 import cz.fjerabek.thr10controller.ui.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
@@ -32,8 +26,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import me.aflak.bluetooth.interfaces.DeviceCallback
 import timber.log.Timber
-import kotlin.collections.ArrayList
-import kotlin.concurrent.timer
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
 
@@ -45,46 +37,46 @@ class ControlActivity : FragmentActivity() {
 
     private val viewModel: PresetViewModel by viewModels()
     private val json = Json(JsonConfiguration.Stable)
-    private val messageHandler = object :
-        IBtMessageHandler {
-        override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
-            viewModel.presets.postValue(message.presets as ArrayList<Preset>)
-
-        }
-
-        override fun handleChangeMessage(message: BtChangeMessage) {
-            viewModel.activePreset.value!!.processChangeMessage(message.change)
-            //Call value change on observers
-            viewModel.activePreset.postValue(viewModel.activePreset.value)
-        }
-
-        override fun handleUartStatusMessage(message: BtUartStatusMessage) {
-            viewModel.uartStatus.postValue(message.status)
-        }
-
-        override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
-            Timber.tag("Bluetooth").d("Preset change received: ${message}")
-        }
-
-        override fun handleDumpMessage(message: BtPresetMessage) {
-            viewModel.activePreset.postValue(message.preset)
-        }
-
-        override fun handleFwVersionMessage(message: BtFirmwareStatusMessage) {
-            viewModel.fwVersion.postValue(message.firmware)
-        }
-
-        override fun handleBulkChangeMessage(message: BtBulkChangeMessage) {
-            message.changes.forEach {
-                viewModel.activePreset.value?.processChangeMessage(it)
-                if(it.property == EEffect.STATUS.id) {
-                    Timber.d("Effect status changed ${it.value} : ${viewModel.activePreset.value?.effect?.status}")
-                }
-            }
-            //Call value change on observers
-            viewModel.activePreset.postValue(viewModel.activePreset.value)
-        }
-    }
+//    private val messageHandler = object :
+//        IBtMessageHandler {
+//        override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
+//            viewModel.presets.postValue(message.presets as ArrayList<Preset>)
+//
+//        }
+//
+//        override fun handleChangeMessage(message: BtChangeMessage) {
+//            viewModel.activePreset.value!!.processChangeMessage(message.change)
+//            //Call value change on observers
+//            viewModel.activePreset.postValue(viewModel.activePreset.value)
+//        }
+//
+//        override fun handleUartStatusMessage(message: BtUartStatusMessage) {
+//            viewModel.uartStatus.postValue(message.status)
+//        }
+//
+//        override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
+//            Timber.tag("Bluetooth").d("Preset change received: ${message}")
+//        }
+//
+//        override fun handleDumpMessage(message: BtPresetMessage) {
+//            viewModel.activePreset.postValue(message.preset)
+//        }
+//
+//        override fun handleFwVersionMessage(message: BtFirmwareStatusMessage) {
+//            viewModel.fwVersion.postValue(message.firmware)
+//        }
+//
+//        override fun handleBulkChangeMessage(message: BtBulkChangeMessage) {
+//            message.changes.forEach {
+//                viewModel.activePreset.value?.processChangeMessage(it)
+//                if(it.property == EEffect.STATUS.id) {
+//                    Timber.d("Effect status changed ${it.value} : ${viewModel.activePreset.value?.effect?.status}")
+//                }
+//            }
+//            //Call value change on observers
+//            viewModel.activePreset.postValue(viewModel.activePreset.value)
+//        }
+//    }
 
     private val deviceCallback = object : DeviceCallback {
         override fun onDeviceDisconnected(device: BluetoothDevice?, message: String?) {
@@ -100,7 +92,7 @@ class ControlActivity : FragmentActivity() {
 
         override fun onMessage(message: ByteArray?) {
             message?.let {
-                messageReceiver.receiveMessage(json.parse(BtMessageSerializer, String(it)))
+//                messageReceiver.receiveMessage(json.parse(BtMessageSerializer, String(it)))
             }
         }
 
@@ -118,49 +110,49 @@ class ControlActivity : FragmentActivity() {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
 
-            bluetoothService!!.send(
-                json.stringify(
-                    BtMessageSerializer,
-                    BtRequestMessage(EMessageType.GET_PRESETS)
-                ).plus("\n")
-            )
+//            bluetoothService!!.send(
+//                json.stringify(
+//                    BtMessageSerializer,
+//                    BtRequestMessage(EMessageType.GET_PRESETS)
+//                ).plus("\n")
+//            )
             bluetoothService!!.setDeviceCallback(deviceCallback)
 
-            timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
-                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
-            }
-            messageSender.sendMessage(BtRequestMessage(EMessageType.FIRMWARE_REQUEST))
-            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
+//            timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
+//                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
+//            }
+//            messageSender.sendMessage(BtRequestMessage(EMessageType.FIRMWARE_REQUEST))
+//            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
         }
 
     }
 
-    private val messageSender : IBtMessageSender = object :
-        IBtMessageSender {
-        override fun sendMessage(message: BtMessage) {
-            bluetoothService?.send(json.stringify(BtMessageSerializer, message).plus("\n"))
-            if(bluetoothService == null) {
-                Timber.e("Trying to send messagen when bluetooth service is null")
-            }
-        }
-    }
+//    private val messageSender : IBtMessageSender = object :
+//        IBtMessageSender {
+//        override fun sendMessage(message: BtMessage) {
+//            bluetoothService?.send(json.stringify(BtMessageSerializer, message).plus("\n"))
+//            if(bluetoothService == null) {
+//                Timber.e("Trying to send messagen when bluetooth service is null")
+//            }
+//        }
+//    }
 
-    private val messageReceiver : IBtMessageReceiver = object :
-        IBtMessageReceiver {
-        override fun receiveMessage(message: BtMessage) {
-            when (message.type) {
-                EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
-                EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
-                EMessageType.BULK_CHANGE -> messageHandler.handleBulkChangeMessage(message as BtBulkChangeMessage)
-                EMessageType.UART_RESPONSE -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
-                EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
-                EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
-                EMessageType.FIRMWARE_RESPONSE -> messageHandler.handleFwVersionMessage(message as BtFirmwareStatusMessage)
-                else -> Timber.e("Unsupported message received ${message.type}")
-            }
-        }
-
-    }
+//    private val messageReceiver : IBtMessageReceiver = object :
+//        IBtMessageReceiver {
+//        override fun receiveMessage(message: BtMessage) {
+//            when (message.type) {
+//                EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
+//                EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
+//                EMessageType.BULK_CHANGE -> messageHandler.handleBulkChangeMessage(message as BtBulkChangeMessage)
+//                EMessageType.UART_RESPONSE -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
+//                EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
+//                EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
+//                EMessageType.FIRMWARE_RESPONSE -> messageHandler.handleFwVersionMessage(message as BtFirmwareStatusMessage)
+//                else -> Timber.e("Unsupported message received ${message.type}")
+//            }
+//        }
+//
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,7 +181,7 @@ class ControlActivity : FragmentActivity() {
             false //prevents the bottom sheet from completely hiding off the screen
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-        viewModel.sender = messageSender
+//        viewModel.sender = messageSender
 
         binding.presetList.setOnItemClickListener { _, _, index, _ ->
             run {
@@ -197,9 +189,9 @@ class ControlActivity : FragmentActivity() {
             }
         }
 
-        binding.noPresetSelector.setOnClickListener {
-            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
-        }
+//        binding.noPresetSelector.setOnClickListener {
+//            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
+//        }
 
         setViewModelObservers()
     }
@@ -234,12 +226,12 @@ class ControlActivity : FragmentActivity() {
 
     private fun handleChange(property: IControlProperty, value: Int) {
         val changeMessage = ChangeMessage(property.getPropertyId(), value)
-        viewModel.sender?.sendMessage(
-            BtChangeMessage(
-                EMessageType.CHANGE,
-                changeMessage
-            )
-        )
+//        viewModel.sender?.sendMessage(
+//            BtChangeMessage(
+//                EMessageType.CHANGE,
+//                changeMessage
+//            )
+//        )
     }
 
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :

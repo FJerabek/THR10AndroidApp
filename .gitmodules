@@ -1,0 +1,3 @@
+[submodule "app/src/main/java/cz/fjerabek/thr/data"]
+	path = app/src/main/java/cz/fjerabek/thr/data
+	url = git@github.com:FJerabek/THR-common.git
