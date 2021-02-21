@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
-            name="btnCallbacks"
-            type="cz.fjerabek.thr10controller.MainActivity.ButtonCallbacks" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.MainActivityViewModel" />
     </data>
 
  <RelativeLayout
@@ -26,16 +27,8 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:layout_alignParentTop="true"
-         android:layout_above="@id/bluetoothScanButton" />
-
-     <Button
-         android:layout_alignParentBottom="true"
-         android:layout_margin="10dp"
-         android:id="@+id/bluetoothScanButton"
-         android:layout_height="wrap_content"
-         android:layout_width="match_parent"
-         android:text="@string/bluetooth_scan_button"
-         android:onClick="@{()-> btnCallbacks.bluetoothScan()}"/>
+         app:data="@{viewModel.devices}"
+         />
 
  </RelativeLayout>
 </layout>

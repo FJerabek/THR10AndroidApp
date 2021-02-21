@@ -2,13 +2,13 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.effect.EFlanger" />
-        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType" />
-        <import type="cz.fjerabek.thr10controller.data.controls.effect.Flanger" />
+        <import type="cz.fjerabek.thr.data.enums.effect.EFlanger" />
+        <import type="cz.fjerabek.thr.data.enums.effect.EEffectType" />
+        <import type="cz.fjerabek.thr.data.controls.effect.Flanger" />
 
         <variable
             name="effect"
-            type="cz.fjerabek.thr10controller.data.controls.effect.EffectSpecific" />
+            type="cz.fjerabek.thr.data.controls.effect.Effect" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +24,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="parent"
-            app:value="@{effect.type == EEffectType.FLANGER? ((Flanger) effect).speed : EFlanger.SPEED.min}"
             app:property="@{EFlanger.SPEED}"
             app:name="Speed" />
 
@@ -37,7 +36,6 @@
             app:layout_constraintEnd_toStartOf="@+id/speed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:value="@{effect.type == EEffectType.FLANGER? ((Flanger) effect).manual : EFlanger.MANUAL.min}"
             app:property="@{EFlanger.DEPTH}"
             app:name="Manual" />
 
@@ -51,7 +49,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="@id/feedback"
-            app:value="@{effect.type == EEffectType.FLANGER? ((Flanger) effect).depth : EFlanger.DEPTH.min}"
             app:property="@{EFlanger.DEPTH}"
             app:name="Depth" />
 
@@ -64,7 +61,6 @@
             app:layout_constraintEnd_toStartOf="@+id/speed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/speed"
-            app:value="@{effect.type == EEffectType.FLANGER? ((Flanger) effect).feedback : EFlanger.FEEDBACK.min}"
             app:property="@{EFlanger.FEEDBACK}"
             app:name="Feedback" />
 
@@ -75,7 +71,6 @@
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{EFlanger.SPREAD}"
-            app:value="@{effect.type == EEffectType.FLANGER? ((Flanger) effect).spread : EFlanger.SPREAD.min}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/feedback"

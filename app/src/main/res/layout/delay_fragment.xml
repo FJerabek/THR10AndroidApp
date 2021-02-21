@@ -6,11 +6,11 @@
 
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.delay.EDelay" />
-        <import type="cz.fjerabek.thr10controller.data.enums.EStatus" />
+        <import type="cz.fjerabek.thr.data.enums.delay.EDelay" />
+        <import type="cz.fjerabek.thr.data.enums.EStatus" />
         <variable
             name="preset"
-            type="cz.fjerabek.thr10controller.data.Preset" />
+            type="cz.fjerabek.thr.data.midi.PresetMessage" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

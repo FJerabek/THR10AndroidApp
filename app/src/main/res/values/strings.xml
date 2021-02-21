@@ -15,4 +15,5 @@
     <string name="preset_remove_description">Preset remove button</string>
     <string name="no_preset">No preset</string>
     <string name="type_state">State</string>
+    <string name="connection_error">Error connecting to device</string>
 </resources>

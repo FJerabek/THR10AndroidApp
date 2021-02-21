@@ -4,10 +4,10 @@
 
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.mainpanel.EMainPanel" />
+        <import type="cz.fjerabek.thr.data.enums.mainpanel.EMainPanel" />
         <variable
             name="preset"
-            type="cz.fjerabek.thr10controller.data.Preset" />
+            type="cz.fjerabek.thr.data.midi.PresetMessage" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

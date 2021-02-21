@@ -2,13 +2,13 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.effect.EPhaser" />
-        <import type="cz.fjerabek.thr10controller.data.enums.effect.EEffectType" />
-        <import type="cz.fjerabek.thr10controller.data.controls.effect.Phaser" />
+        <import type="cz.fjerabek.thr.data.enums.effect.EPhaser" />
+        <import type="cz.fjerabek.thr.data.enums.effect.EEffectType" />
+        <import type="cz.fjerabek.thr.data.controls.effect.Phaser" />
 
         <variable
             name="effect"
-            type="cz.fjerabek.thr10controller.data.controls.effect.EffectSpecific" />
+            type="cz.fjerabek.thr.data.controls.effect.Effect" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +24,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="parent"
-            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).speed : EPhaser.SPEED.min}"
             app:property="@{EPhaser.SPEED}"
             app:name="Speed" />
 
@@ -37,7 +36,6 @@
             app:layout_constraintEnd_toStartOf="@+id/speed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).manual : EPhaser.MANUAL.min}"
             app:property="@{EPhaser.DEPTH}"
             app:name="Manual" />
 
@@ -51,7 +49,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="@id/feedback"
-            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).depth : EPhaser.DEPTH.min}"
             app:property="@{EPhaser.DEPTH}"
             app:name="Depth" />
 
@@ -64,7 +61,6 @@
             app:layout_constraintEnd_toStartOf="@+id/speed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/speed"
-            app:value="@{effect.type == EEffectType.PHASER? ((Phaser) effect).feedback : EPhaser.FEEDBACK.min}"
             app:property="@{EPhaser.FEEDBACK}"
             app:name="Feedback" />
 

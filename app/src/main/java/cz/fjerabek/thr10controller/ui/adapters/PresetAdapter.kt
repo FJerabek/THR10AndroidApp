@@ -1,4 +1,4 @@
-package cz.fjerabek.thr10controller.ui
+package cz.fjerabek.thr10controller.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,19 +7,19 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.databinding.DataBindingUtil
 import cz.fjerabek.thr10controller.R
-import cz.fjerabek.thr10controller.data.Preset
+import cz.fjerabek.thr.data.midi.PresetMessage
 import cz.fjerabek.thr10controller.databinding.PresetListRowLayoutBinding
 
 class PresetAdapter(
     context: Context,
-    var presets : List<Preset>
+    var presets : List<PresetMessage>
 ) : BaseAdapter() {
     private val inflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int = presets.size
 
-    override fun getItem(pos: Int): Preset? = presets[pos]
+    override fun getItem(pos: Int): PresetMessage? = presets[pos]
 
     override fun getItemId(p0: Int): Long {
         return p0.toLong()

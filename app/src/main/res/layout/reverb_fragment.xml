@@ -5,13 +5,13 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EReverbType"/>
-        <import type="cz.fjerabek.thr10controller.data.enums.EStatus"/>
+        <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType"/>
+        <import type="cz.fjerabek.thr.data.enums.EStatus"/>
         <import type="android.view.View" />
 
         <variable
             name="reverb"
-            type="cz.fjerabek.thr10controller.data.controls.Reverb" />
+            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
     </data>
 
     <LinearLayout
@@ -50,25 +50,21 @@
         <include
             android:id="@+id/hall"
             layout="@layout/reverb_hall"
-            bind:specific = "@{reverb.specific}"
-            android:visibility="@{(reverb.specific.type == EReverbType.HALL)? View.VISIBLE : View.GONE}"/>
+            bind:specific = "@{reverb}"/>
 
         <include
             android:id="@+id/plate"
             layout="@layout/reverb_plate"
-            bind:specific = "@{reverb.specific}"
-            android:visibility="@{(reverb.specific.type == EReverbType.PLATE)? View.VISIBLE : View.GONE}"/>
+            bind:specific = "@{reverb}"/>
 
         <include
             android:id="@+id/room"
             layout="@layout/reverb_room"
-            bind:specific = "@{reverb.specific}"
-            android:visibility="@{(reverb.specific.type == EReverbType.ROOM)? View.VISIBLE : View.GONE}"/>
+            bind:specific = "@{reverb}"/>
 
         <include
             android:id="@+id/spring"
             layout="@layout/reverb_spring"
-            bind:specific = "@{reverb.specific}"
-            android:visibility="@{(reverb.specific.type == EReverbType.SPRING)? View.VISIBLE : View.GONE}"/>
+            bind:specific = "@{reverb}"/>
     </LinearLayout>
 </layout>

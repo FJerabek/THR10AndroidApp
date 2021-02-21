@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="cz.fjerabek.thr10controller.data.enums.compressor.ECompressorType"/>
-        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Rack"/>
-        <import type="cz.fjerabek.thr10controller.data.controls.compressor.Stomp"/>
-        <import type="cz.fjerabek.thr10controller.data.enums.compressor.ERack"/>
-        <import type="cz.fjerabek.thr10controller.data.enums.compressor.EStomp"/>
-        <import type="cz.fjerabek.thr10controller.data.enums.EStatus"/>
+        <import type="cz.fjerabek.thr.data.enums.compressor.ECompressorType"/>
+        <import type="cz.fjerabek.thr.data.controls.compressor.Rack"/>
+        <import type="cz.fjerabek.thr.data.controls.compressor.Stomp"/>
+        <import type="cz.fjerabek.thr.data.enums.compressor.ERack"/>
+        <import type="cz.fjerabek.thr.data.enums.compressor.EStomp"/>
+        <import type="cz.fjerabek.thr.data.enums.EStatus"/>
         <import type="android.view.View" />
 
         <variable
             name="compressor"
-            type="cz.fjerabek.thr10controller.data.controls.Compressor" />
+            type="cz.fjerabek.thr.data.controls.compressor.Compressor" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,9 +52,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/attack"
             app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
-            app:value="@{(compressor.specific.type == ECompressorType.RACK)? ((Rack)compressor.specific).threshold : ((Stomp)compressor.specific).output}"
-            app:property="@{(compressor.specific.type == ECompressorType.RACK)? ERack.THRESHOLD : EStomp.OUTPUT}"
-            app:name="@{(compressor.specific.type == ECompressorType.RACK)? `Threshold` : `Output`}" />
+            />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
@@ -65,9 +63,7 @@
             app:layout_constraintEnd_toStartOf="@+id/threshold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
-            app:value="@{(compressor.specific.type == ECompressorType.RACK)? ((Rack)compressor.specific).attack : ((Stomp)compressor.specific).sustain}"
-            app:property="@{(compressor.specific.type == ECompressorType.RACK)? ERack.ATTACK : EStomp.SUSTAIN}"
-            app:name="@{(compressor.specific.type == ECompressorType.RACK)? `Attack` : `Sustain`}" />
+            />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
@@ -76,7 +72,6 @@
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{ERack.RELEASE}"
-            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toStartOf="@id/ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/attack"
@@ -89,7 +84,6 @@
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{ERack.RATIO}"
-            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/release"
             app:layout_constraintTop_toBottomOf="@+id/attack"
@@ -101,7 +95,6 @@
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
-            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:property="@{ERack.KNEE}"
             app:layout_constraintEnd_toStartOf="@+id/ratio"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,9 +107,7 @@
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
-            android:visibility="@{(compressor.specific.type != ECompressorType.RACK)? View.GONE : View.VISIBLE}"
             app:property="@{ERack.OUTPUT}"
-            app:value="@{compressor.specific.type == ECompressorType.RACK? ((Rack) compressor.specific).output : 0}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/knee"
             app:layout_constraintTop_toBottomOf="@+id/ratio"

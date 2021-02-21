@@ -2,7 +2,7 @@ package cz.fjerabek.thr10controller.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import cz.fjerabek.thr10controller.data.enums.IControlProperty
+import cz.fjerabek.thr.data.enums.IControlProperty
 
 
 class CustomKnob(context: Context, attributeSet: AttributeSet) :

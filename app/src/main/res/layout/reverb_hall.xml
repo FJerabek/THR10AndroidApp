@@ -4,12 +4,12 @@
 
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EHall" />
-        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EReverbType" />
-        <import type="cz.fjerabek.thr10controller.data.controls.reverb.Hall" />
+        <import type="cz.fjerabek.thr.data.enums.reverb.EHall" />
+        <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType" />
+        <import type="cz.fjerabek.thr.data.controls.reverb.Hall" />
         <variable
             name="specific"
-            type="cz.fjerabek.thr10controller.data.controls.reverb.ReverbSpecific" />
+            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,7 +23,6 @@
             android:layout_height="100dp"
             app:property="@{EHall.TIME}"
             app:value_text_size="13sp"
-            app:value="@{(specific.type == EReverbType.HALL)? ((Hall) specific).time : EHall.TIME.min}"
             app:name="Time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/preDelay"
@@ -34,7 +33,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.PRE_DELAY}"
-            app:value="@{(specific.type == EReverbType.HALL)? ((Hall) specific).preDelay : EHall.PRE_DELAY.min}"
             app:name="Pre delay"
             app:layout_constraintStart_toEndOf="@+id/time"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +43,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.LOW_CUT}"
-            app:value="@{(specific.type == EReverbType.HALL)? ((Hall) specific).lowCut : EHall.LOW_CUT.min}"
             app:name="Low cut"
             app:layout_constraintEnd_toStartOf="@id/highCut"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +54,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.HIGH_CUT}"
-            app:value="@{(specific.type == EReverbType.HALL)? ((Hall) specific).highCut : EHall.HIGH_CUT.min}"
             app:name="High cut"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/lowCut"
@@ -70,7 +66,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.HIGH_RATIO}"
-            app:value="@{(specific.type == EReverbType.HALL)? Integer.valueOf(((Hall) specific).highRatio) : EHall.HIGH_RATIO.min}"
             app:name="High ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/highCut"
@@ -82,7 +77,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.LOW_RATIO}"
-            app:value="@{(specific.type == EReverbType.HALL)? Integer.valueOf(((Hall) specific).lowRatio) : EHall.LOW_RATIO.min}"
             app:name="Low ratio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/highRatio"
@@ -94,7 +88,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{EHall.LEVEL}"
-            app:value="@{(specific.type == EReverbType.HALL)? Integer.valueOf(((Hall) specific).level) : EHall.LEVEL.min}"
             app:name="Level"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

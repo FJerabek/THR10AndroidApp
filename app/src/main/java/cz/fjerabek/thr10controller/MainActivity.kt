@@ -6,17 +6,24 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.media.MediaRouter2
 import android.os.Bundle
 import android.os.IBinder
-import android.view.View
-import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import cz.fjerabek.thr10controller.bluetooth.BluetoothDeviceAdapter
+import com.google.android.material.snackbar.Snackbar
+import cz.fjerabek.thr.data.bluetooth.IBluetoothMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityMainBinding
-import me.aflak.bluetooth.interfaces.DeviceCallback
-import me.aflak.bluetooth.interfaces.DiscoveryCallback
+import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
+import cz.fjerabek.thr10controller.ui.adapters.BluetoothDeviceAdapter
+import cz.fjerabek.thr10controller.ui.adapters.BluetoothDeviceWrapper
+import cz.fjerabek.thr10controller.viewmodels.MainActivityViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
@@ -25,88 +32,28 @@ import timber.log.Timber
  */
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var btListAdapter: BluetoothDeviceAdapter
-
-    private lateinit var bluetoothService: BluetoothService
-
-    private var btDevices = ArrayList<BluetoothDevice>()
+    private var bluetoothService: BluetoothService? = null
+    private val viewModel: MainActivityViewModel by viewModels()
+    private var connectingDeviceBinding: BluetoothListRowLayoutBinding? = null
 
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
+            Timber.d("Bluetooth service disconnected")
 
         }
 
         override fun onServiceConnected(p0: ComponentName?, binder: IBinder?) {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
-            btDevices.addAll(bluetoothService.pairedDevices)
+
+            viewModel.devices.value = bluetoothService!!.pairedDevices.map { BluetoothDeviceWrapper(it, true) }
+
             btListAdapter.notifyDataSetChanged()
 
-            /* Set bluetooth service */
-            bluetoothService.setDeviceCallback(object : DeviceCallback {
-                override fun onDeviceDisconnected(device: BluetoothDevice?, message: String?) {
-                    Timber.d("Device disconnected  $message")
-                }
+            bluetoothService!!.onDeviceConnected = ::deviceConnected
+            bluetoothService!!.onDeviceDisconnected = ::deviceDisconnect
 
-                override fun onDeviceConnected(device: BluetoothDevice?) {
-                    /*
-                    Switch to control activity
-                     */
-                    val intent = Intent(this@MainActivity, ControlActivity::class.java)
-                    startActivity(intent)
-                }
-
-                override fun onConnectError(device: BluetoothDevice?, message: String?) {
-                    Toast.makeText(this@MainActivity, "Error connecting to device", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onMessage(message: ByteArray?) {
-                    Timber.e("Bluetooth message  $message")
-                }
-
-                override fun onError(errorCode: Int) {
-                    Timber.e("Device error. Error code: $errorCode")
-                }
-            })
-
-            bluetoothService.setDiscoveryCallback(object : DiscoveryCallback {
-                override fun onDevicePaired(device: BluetoothDevice?) {}
-                override fun onDeviceUnpaired(device: BluetoothDevice?) {}
-
-                override fun onDiscoveryStarted() {
-                    Timber.d("Scan started")
-                    binding.bluetoothProgressBar.isIndeterminate = true
-                    binding.bluetoothProgressBar.visibility = View.VISIBLE
-                    btDevices.clear()
-                    btDevices.addAll(bluetoothService.pairedDevices)
-                    btListAdapter.notifyDataSetChanged()
-                }
-
-                override fun onError(errorCode: Int) {
-                    Timber.e("Bluetooth discovery error error code: $errorCode")
-                }
-
-                override fun onDiscoveryFinished() {
-                    binding.bluetoothScanButton.isEnabled = true
-                    binding.bluetoothProgressBar.isIndeterminate = false
-                    binding.bluetoothProgressBar.visibility = View.GONE
-                }
-
-                override fun onDeviceFound(device: BluetoothDevice?) {
-                    device?.let {
-                        btDevices.forEach { paired ->
-                            if(it.address == paired.address) {
-                                Timber.d("Device: ${it.name} is already in paired devices")
-                                return
-                            }
-                        }
-                        btDevices.add(it)
-                    }
-                    btListAdapter.notifyDataSetChanged()
-                }
-
-            })
         }
 
     }
@@ -133,38 +80,54 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Timber.plant(Timber.DebugTree())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.lifecycleOwner = this
 
+        viewModel.devices.observe(this) {
+            btListAdapter.devices = it
+            btListAdapter.notifyDataSetChanged()
+        }
 
-        btListAdapter = BluetoothDeviceAdapter(this, btDevices)
+        btListAdapter = BluetoothDeviceAdapter(this)
+        binding.bluetoothDeviceList.setOnItemClickListener { _, view, position, _ ->
+            connectingDeviceBinding = DataBindingUtil.bind(view)
+
+            setAllDevicesEnabled(false)
+            connectingDeviceBinding?.loading = true
+            GlobalScope.launch {
+                bluetoothService?.deviceConnect(btListAdapter.devices[position].device)
+            }
+        }
 
         binding.bluetoothDeviceList.adapter = btListAdapter
-        binding.bluetoothDeviceList.setOnItemClickListener { adapterView, _, i, _ ->
-            /* Called bluetooth device is selected */
-            val adapter = adapterView.adapter as BluetoothDeviceAdapter
-            bluetoothService.deviceConnect(adapter.devices[i])
-
-        }
-
-        binding.btnCallbacks = object : ButtonCallbacks {
-            override fun bluetoothScan() {
-                bluetoothService.startScan()
-                binding.bluetoothScanButton.isEnabled = false
-
-            }
-
-        }
     }
 
-    /**
-     * Ui button callbacks
-     */
-    interface ButtonCallbacks {
-        /**
-         * Gets called when "bluetooth scan devices" button is pressed
-         */
-        fun bluetoothScan()
+    private suspend fun deviceConnected(connectedDevice: BluetoothDevice) {
+        Timber.d("Device connected")
+        withContext(Dispatchers.Main) {
+            connectingDeviceBinding?.loading = false
+        }
+        setAllDevicesEnabled(true)
+
+        val intent = Intent(this, ControlActivity::class.java)
+        startActivity(intent)
+        finishAffinity()
     }
+
+    private suspend fun deviceDisconnect(e: Exception, connectedDevice: BluetoothDevice) {
+        Timber.d(e)
+        Snackbar.make(binding.root, R.string.connection_error, Snackbar.LENGTH_LONG).show()
+        withContext(Dispatchers.Main) {
+            connectingDeviceBinding?.loading = false
+        }
+        setAllDevicesEnabled(true)
+    }
+     private fun setAllDevicesEnabled(enabled: Boolean) {
+         viewModel.devices.value?.forEach {
+             it.enabled = enabled
+         }
+     }
 }

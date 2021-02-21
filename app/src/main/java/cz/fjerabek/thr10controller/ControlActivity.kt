@@ -1,6 +1,5 @@
 package cz.fjerabek.thr10controller
 
-import android.bluetooth.BluetoothDevice
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,20 +10,16 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.observe
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
+import cz.fjerabek.thr.data.enums.IControlProperty
+import cz.fjerabek.thr.data.midi.ChangeMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
-import cz.fjerabek.thr10controller.data.enums.IControlProperty
-import cz.fjerabek.thr10controller.data.midi.messages.ChangeMessage
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
-import cz.fjerabek.thr10controller.ui.PresetAdapter
+import cz.fjerabek.thr10controller.ui.adapters.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
-import kotlinx.android.synthetic.main.activity_control.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import me.aflak.bluetooth.interfaces.DeviceCallback
+import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
 import timber.log.Timber
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
@@ -36,7 +31,6 @@ class ControlActivity : FragmentActivity() {
     private lateinit var presetAdapter: PresetAdapter
 
     private val viewModel: PresetViewModel by viewModels()
-    private val json = Json(JsonConfiguration.Stable)
 //    private val messageHandler = object :
 //        IBtMessageHandler {
 //        override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
@@ -78,28 +72,6 @@ class ControlActivity : FragmentActivity() {
 //        }
 //    }
 
-    private val deviceCallback = object : DeviceCallback {
-        override fun onDeviceDisconnected(device: BluetoothDevice?, message: String?) {
-            finishActivity(0)
-        }
-
-        override fun onDeviceConnected(device: BluetoothDevice?) {
-        }
-
-        override fun onConnectError(device: BluetoothDevice?, message: String?) {
-            Timber.tag("Bluetooth").e("Bluetooth connection error")
-        }
-
-        override fun onMessage(message: ByteArray?) {
-            message?.let {
-//                messageReceiver.receiveMessage(json.parse(BtMessageSerializer, String(it)))
-            }
-        }
-
-        override fun onError(errorCode: Int) {
-            Timber.tag("Bluetooth").e("Device error. Error code: $errorCode")
-        }
-    }
 
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -116,7 +88,6 @@ class ControlActivity : FragmentActivity() {
 //                    BtRequestMessage(EMessageType.GET_PRESETS)
 //                ).plus("\n")
 //            )
-            bluetoothService!!.setDeviceCallback(deviceCallback)
 
 //            timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
 //                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
@@ -168,13 +139,12 @@ class ControlActivity : FragmentActivity() {
 
         bindBluetoothService()
 
-        topAppBar.outlineProvider = null
-        appBarLayout.outlineProvider = null
+//        topAppBar.outlineProvider = null
+//        appBarLayout.outlineProvider = null
 
         presetAdapter = PresetAdapter(this, ArrayList())
-
         binding.presetList.adapter = presetAdapter
-
+//
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable =
@@ -182,35 +152,35 @@ class ControlActivity : FragmentActivity() {
         sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
 
 //        viewModel.sender = messageSender
-
-        binding.presetList.setOnItemClickListener { _, _, index, _ ->
-            run {
-                viewModel.activePreset.value = viewModel.presets.value!![index]
-            }
-        }
+//
+//        binding.presetList.setOnItemClickListener { _, _, index, _ ->
+//            run {
+//                viewModel.activePreset.value = viewModel.presets.value!![index]
+//            }
+//        }
 
 //        binding.noPresetSelector.setOnClickListener {
 //            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
 //        }
 
-        setViewModelObservers()
+//        setViewModelObservers()
     }
 
 
-    private fun setViewModelObservers() {
-        viewModel.presets.observe(this) {
-            presetAdapter.presets = it
-            presetAdapter.notifyDataSetChanged()
-        }
-
-        viewModel.uartStatus.observe(this) {
-            binding.uartStatus = it
-        }
-
-        viewModel.fwVersion.observe(this) {
-            binding.firmwareVersion = it
-        }
-    }
+//    private fun setViewModelObservers() {
+//        viewModel.presets.observe(this) {
+//            presetAdapter.presets = it
+//            presetAdapter.notifyDataSetChanged()
+//        }
+//
+//        viewModel.uartStatus.observe(this) {
+//            binding.uartStatus = it
+//        }
+//
+//        viewModel.fwVersion.observe(this) {
+//            binding.firmwareVersion = it
+//        }
+//    }
 
     private fun bindBluetoothService() {
         Intent(this, BluetoothService::class.java).also { intent ->
@@ -220,7 +190,6 @@ class ControlActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothService?.deviceDisconnect()
         unbindService(serviceConnection)
     }
 

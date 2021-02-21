@@ -4,12 +4,12 @@
 
     <data>
 
-        <import type="cz.fjerabek.thr10controller.data.enums.reverb.ESpring" />
-        <import type="cz.fjerabek.thr10controller.data.enums.reverb.EReverbType" />
-        <import type="cz.fjerabek.thr10controller.data.controls.reverb.Spring" />
+        <import type="cz.fjerabek.thr.data.enums.reverb.ESpring" />
+        <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType" />
+        <import type="cz.fjerabek.thr.data.controls.reverb.Spring" />
         <variable
             name="specific"
-            type="cz.fjerabek.thr10controller.data.controls.reverb.ReverbSpecific" />
+            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ESpring.REVERB}"
-            app:value="@{(specific.type == EReverbType.SPRING)? Integer.valueOf(((Spring) specific).reverb) : ESpring.REVERB.min}"
             app:name="Reverb"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/lowRatio"
@@ -37,7 +36,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ESpring.FILTER}"
-            app:value="@{(specific.type == EReverbType.SPRING)? Integer.valueOf(((Spring) specific).filter) : ESpring.FILTER.min}"
             app:name="Filter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/highRatio"
