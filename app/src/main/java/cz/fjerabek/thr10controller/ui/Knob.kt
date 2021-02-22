@@ -1,5 +1,6 @@
 package cz.fjerabek.thr10controller.ui
 
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -10,6 +11,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.animation.doOnEnd
 import androidx.core.content.res.use
 import cz.fjerabek.thr10controller.R
 import timber.log.Timber
@@ -31,13 +33,19 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
     var pointerWidth = 5f
     var nameTextSize = 48f
     var valueTextSize = 48f
-
     var maxAngle = Math.toRadians(25.0)
     var minAngle = Math.toRadians(335.0)
     var name = ""
     var markerRelativePadding = 0.1f
     var markerRelativeLength = 0.12f
     var markerWidth = 2f
+    var relativeMove = true
+    var continuous = false
+    var namePadding = 25f
+    var selectedColor = Color.parseColor("#fbc02d")
+    var valueStringConverter: ((value: Int) -> String) = { it -> it.toString() }
+    var onValueChangeListener: ((value: Int) -> Unit) = {}
+    var markerColor = Color.DKGRAY
 
     private var _value = 0
     var value: Int
@@ -62,16 +70,6 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
             anglePerMarker = (minAngle - maxAngle) / (maxValue - minValue)
         }
 
-    var relativeMove = true
-    var continuous = false
-    var namePadding = 25f
-
-    var selectedColor = Color.parseColor("#fbc02d")
-    var valueStringConverter: ((value: Int) -> String) = { it -> it.toString() }
-
-    var onValueChangeListener: ((value: Int) -> Unit) = {}
-
-    var markerColor = Color.DKGRAY
     private var angle = (6 / 4) * Math.PI
     private var centerX = 0f
     private var centerY = 0f
@@ -325,7 +323,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
                         ) + (Math.PI / 2)
                     }
                     swipe = true
-                    angleToValue()
+                    angleToValue(true)
                     postInvalidate()
                     return@setOnTouchListener true
                 }
@@ -334,13 +332,13 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
                     if (!swipe) {
                         this.performClick()
                         _value++
-                        Timber.d("Value: $value Max: $maxValue Min: $minValue")
                         if (value > maxValue)
                             _value = maxValue
 
                         if (value < minValue)
                             _value = minValue
 
+                        onValueChangeListener(_value)
                         animateValue(_value)
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -371,7 +369,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         return normalized
     }
 
-    private fun angleToValue() {
+    private fun angleToValue(callback: Boolean) {
         angle = normalizeAngle(angle)
 
         val min = normalizeAngle(maxAngle)
@@ -388,9 +386,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         val newValue =
             (minValue + (((angle - maxAngle) + (anglePerMarker / 2)) / anglePerMarker)).toInt()
 
-        if (value != newValue) {
+        if (_value != newValue) {
             _value = newValue
-            onValueChangeListener(value)
+            if(callback)
+                onValueChangeListener(_value)
         }
 
     }
@@ -400,7 +399,7 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         animator = ValueAnimator.ofFloat(angle.toFloat(), valueToAngle(value).toFloat())
         animator?.addUpdateListener {
             angle = (it.animatedValue as Float).toDouble()
-            angleToValue()
+            angleToValue(false)
             invalidate()
         }
         animator?.duration = 100
