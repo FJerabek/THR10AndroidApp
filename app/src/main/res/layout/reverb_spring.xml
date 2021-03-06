@@ -8,35 +8,39 @@
         <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType" />
         <import type="cz.fjerabek.thr.data.controls.reverb.Spring" />
         <variable
-            name="specific"
-            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="@{viewModel.activePreset.reverb instanceof Spring}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="5dp">
 
-
-
-
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/highRatio"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ESpring.REVERB}"
-            app:name="Reverb"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/reverb"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/lowRatio"
             app:layout_constraintTop_toTopOf="parent">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/lowRatio"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ESpring.FILTER}"
-            app:name="Filter"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/filter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/highRatio"
             app:layout_constraintTop_toTopOf="parent">

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="cz.fjerabek.thr.data.enums.delay.EDelay" />
+
         <import type="cz.fjerabek.thr.data.enums.EStatus" />
+
         <variable
-            name="preset"
-            type="cz.fjerabek.thr.data.midi.PresetMessage" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,77 +23,88 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:checked="@{viewModel.activePreset.delay.status == EStatus.ON}"
+            android:onCheckedChanged="@{(switch, checked) -> viewModel.changeMessageCallback.invoke(EDelay.STATUS.propertyId, Integer.valueOf(checked? EStatus.ON.value : EStatus.OFF.value))}"
+            app:name="@string/state"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="State "
-            android:checked="@{preset.delay.status == EStatus.ON}"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/time"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toStartOf="@id/feedback"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:name="Time"
-            app:continuous = "true"
-            app:property="@{EDelay.TIME}"
-            app:value="@{preset.delay.time}" />
+            app:name="@string/time"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EDelay.TIME}" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/feedback"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/time"
             app:layout_constraintTop_toTopOf="@id/time"
-            app:name="Feedback"
-            app:continuous = "true"
-            app:property="@{EDelay.FEEDBACK}"
-            app:value="@{preset.delay.feedback}" />
+            app:name="@string/feedback"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EDelay.FEEDBACK}" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/high_cut"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toStartOf="@+id/feedback"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/feedback"
-            app:name="High cut"
-            app:continuous = "true"
-            app:property="@{EDelay.HIGH_CUT}"
-            app:value="@{preset.delay.highCut}" />
+            app:name="@string/high_cut"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EDelay.HIGH_CUT}" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/low_cut"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/high_cut"
             app:layout_constraintTop_toBottomOf="@+id/feedback"
-            app:name="Low cut"
-            app:continuous = "true"
-            app:property="@{EDelay.LOW_CUT}"
-            app:value="@{preset.delay.lowCut}" />
+            app:name="@string/low_cut"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EDelay.LOW_CUT}" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/level"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/low_cut"
-            app:name="Level"
-            app:continuous = "true"
-            app:property="@{EDelay.LEVEL}"
-            app:value="@{preset.delay.level}" />
+            app:name="@string/level"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EDelay.LEVEL}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

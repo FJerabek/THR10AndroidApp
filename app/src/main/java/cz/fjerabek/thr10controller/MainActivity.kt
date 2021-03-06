@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
+import cz.fjerabek.thr.data.bluetooth.FwVersionRq
 import cz.fjerabek.thr.data.bluetooth.IBluetoothMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityMainBinding
@@ -20,11 +21,9 @@ import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
 import cz.fjerabek.thr10controller.ui.adapters.BluetoothDeviceAdapter
 import cz.fjerabek.thr10controller.ui.adapters.BluetoothDeviceWrapper
 import cz.fjerabek.thr10controller.viewmodels.MainActivityViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import timber.log.Timber
+import kotlin.concurrent.timer
 
 
 /**
@@ -47,7 +46,13 @@ class MainActivity : AppCompatActivity() {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
 
-            viewModel.devices.value = bluetoothService!!.pairedDevices.map { BluetoothDeviceWrapper(it, true) }
+            if (bluetoothService?.connected == true) {
+                startControlActivity()
+            }
+
+
+            viewModel.devices.value =
+                bluetoothService!!.pairedDevices.map { BluetoothDeviceWrapper(it, true) }
 
             btListAdapter.notifyDataSetChanged()
 
@@ -56,6 +61,12 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun startControlActivity() {
+        val intent = Intent(this, ControlActivity::class.java)
+        startActivity(intent)
+        finishAffinity()
     }
 
     override fun onDestroy() {
@@ -81,15 +92,15 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Timber.plant(Timber.DebugTree())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
-        viewModel.devices.observe(this) {
+        viewModel.devices.observe(this) { //Todo: Live data should not need to be observed if databinding is used
             btListAdapter.devices = it
             btListAdapter.notifyDataSetChanged()
         }
+
 
         btListAdapter = BluetoothDeviceAdapter(this)
         binding.bluetoothDeviceList.setOnItemClickListener { _, view, position, _ ->
@@ -105,29 +116,30 @@ class MainActivity : AppCompatActivity() {
         binding.bluetoothDeviceList.adapter = btListAdapter
     }
 
-    private suspend fun deviceConnected(connectedDevice: BluetoothDevice) {
+    private fun deviceConnected(connectedDevice: BluetoothDevice) {
         Timber.d("Device connected")
-        withContext(Dispatchers.Main) {
-            connectingDeviceBinding?.loading = false
+        runBlocking {
+            withContext(Dispatchers.Main) {
+                connectingDeviceBinding?.loading = false
+            }
         }
         setAllDevicesEnabled(true)
-
-        val intent = Intent(this, ControlActivity::class.java)
-        startActivity(intent)
-        finishAffinity()
+        startControlActivity()
     }
 
-    private suspend fun deviceDisconnect(e: Exception, connectedDevice: BluetoothDevice) {
+    private fun deviceDisconnect(e: Exception, connectedDevice: BluetoothDevice) {
         Timber.d(e)
         Snackbar.make(binding.root, R.string.connection_error, Snackbar.LENGTH_LONG).show()
-        withContext(Dispatchers.Main) {
+        runOnUiThread {
             connectingDeviceBinding?.loading = false
         }
         setAllDevicesEnabled(true)
     }
-     private fun setAllDevicesEnabled(enabled: Boolean) {
-         viewModel.devices.value?.forEach {
-             it.enabled = enabled
-         }
-     }
+
+    private fun setAllDevicesEnabled(enabled: Boolean) {
+        viewModel.devices.value?.forEach {
+            it.enabled = enabled
+        }
+    }
+
 }

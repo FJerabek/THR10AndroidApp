@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.databinding.GateFragmentBinding
-import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
+import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
+import timber.log.Timber
 
 class GateFragment : Fragment() {
-    private lateinit var viewModel: PresetViewModel
+    private lateinit var viewModel: ControlActivityViewModel
     private lateinit var binding: GateFragmentBinding
 
     companion object {
@@ -24,9 +25,10 @@ class GateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ControlActivityViewModel::class.java)
         binding = GateFragmentBinding.inflate(inflater, container, false)
-
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
 //        viewModel.activePreset.observe(viewLifecycleOwner) {
 //            binding.preset = it

@@ -29,10 +29,12 @@ class BluetoothService : Service() {
     private var socket: BluetoothSocket? = null
 
 
-    var onDeviceConnected: (suspend (device: BluetoothDevice) -> Unit)? = null
-    var onMessageReceived: (suspend (IBluetoothMessage) -> Unit)? = null
-    var onDeviceDisconnected: (suspend (e: Exception, device: BluetoothDevice) -> Unit)? = null
+    var onDeviceConnected: ((device: BluetoothDevice) -> Unit)? = null
+    var onMessageReceived: ((IBluetoothMessage) -> Unit)? = null
+    var onDeviceDisconnected: ((e: Exception, device: BluetoothDevice) -> Unit)? = null
     val pairedDevices: Set<BluetoothDevice> get() = bluetoothAdapter.bondedDevices
+    val connected: Boolean
+        get() = (socket?.isConnected ?: false)
 
     /**
      * Connects to device
@@ -59,25 +61,44 @@ class BluetoothService : Service() {
      * Sends string message to connected device
      * @param message string message to send
      */
-    suspend fun send(message: String) {
+    private suspend fun send(message: String) {
         withContext(Dispatchers.IO) {
             socket?.outputStream?.write(message.encodeToByteArray())
         }
     }
 
+    suspend fun send(message: IBluetoothMessage) {
+        try {
+            send(parser.serialize(message) + "\n")
+        } catch (e: IOException) {
+            onDeviceDisconnected?.invoke(e, connectedDevice!!)
+        }
+    }
+
     private suspend fun startReader(stream: InputStream) {
         withContext(Dispatchers.IO) {
+            val builder = StringBuilder()
             while (true) {
                 try {
                     val available = stream.available()
+                    if(available == 0) continue
                     val read = ByteArray(available)
                     stream.read(read, 0, available)
-                    val receivedString = read.decodeToString()
+                    builder.append(read.decodeToString())
+                    val lastMessageDelimiter = builder.lastIndexOf('\n')
+                    if(lastMessageDelimiter == -1) continue
+                    val messages = builder.substring(0..lastMessageDelimiter)
+                    builder.deleteRange(0, lastMessageDelimiter + 1)
+                    val split = messages.split('\n').filterNot { it.trim().isEmpty() }
 
-                    parseMessage(receivedString)
+                    split.forEach {
+                        parseMessage(it)
+                    }
+
                 } catch (e: Exception) {
                     Timber.e(e)
                     onDeviceDisconnected?.invoke(e, connectedDevice!!)
+                    return@withContext
                 }
             }
         }
@@ -85,7 +106,7 @@ class BluetoothService : Service() {
     }
 
     private suspend fun parseMessage(receivedString: String) {
-        receivedString.split('\n').forEach messageLoop@{
+        receivedString.split('\n').forEach messageLoop@{ //Todo: Some better message splitting mechanism
             if (it.trim().isEmpty()) return@messageLoop
             val message = parser.deserialize(it)
             onMessageReceived?.invoke(message)

@@ -7,15 +7,18 @@
         <import type="cz.fjerabek.thr.data.controls.effect.Flanger" />
 
         <variable
-            name="effect"
-            type="cz.fjerabek.thr.data.controls.effect.Effect" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:visibility="@{viewModel.activePreset.effect instanceof Flanger}"
         android:layout_height="wrap_content">
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
 
             android:id="@+id/speed"
             android:layout_width="@dimen/knob_size"
@@ -25,10 +28,13 @@
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="parent"
             app:property="@{EFlanger.SPEED}"
-            app:name="Speed" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/speed" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/manual"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -37,10 +43,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:property="@{EFlanger.DEPTH}"
-            app:name="Manual" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/manual" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
 
             android:id="@+id/depth"
             android:layout_width="@dimen/knob_size"
@@ -50,10 +59,13 @@
             app:layout_constraintStart_toEndOf="@+id/manual"
             app:layout_constraintTop_toTopOf="@id/feedback"
             app:property="@{EFlanger.DEPTH}"
-            app:name="Depth" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/depth" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/feedback"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -62,19 +74,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/speed"
             app:property="@{EFlanger.FEEDBACK}"
-            app:name="Feedback" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/feedback" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/spread"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{EFlanger.SPREAD}"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/feedback"
-            app:name="Spread"/>
+            app:name="@string/spread"/>
 
 
 

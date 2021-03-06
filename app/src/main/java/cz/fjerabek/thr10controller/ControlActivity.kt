@@ -1,26 +1,43 @@
 package cz.fjerabek.thr10controller
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.bluetooth.BluetoothDevice
+import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import cz.fjerabek.thr.data.enums.IControlProperty
+import cz.fjerabek.thr.data.bluetooth.*
+import cz.fjerabek.thr.data.enums.effect.EEffect
 import cz.fjerabek.thr.data.midi.ChangeMessage
+import cz.fjerabek.thr.data.midi.PresetMessage
+import cz.fjerabek.thr.data.uart.FWVersionMessage
+import cz.fjerabek.thr.data.uart.StatusMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
+import cz.fjerabek.thr10controller.databinding.AlertEditDialogBinding
+import cz.fjerabek.thr10controller.parser.IMessageParser
+import cz.fjerabek.thr10controller.ui.adapters.ItemMoveCallback
 import cz.fjerabek.thr10controller.ui.adapters.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
-import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
+import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
 import timber.log.Timber
+import java.util.*
+import kotlin.concurrent.timer
 
 private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
 
@@ -29,49 +46,10 @@ class ControlActivity : FragmentActivity() {
     private var bluetoothService: BluetoothService? = null
     private lateinit var binding: ActivityControlBinding
     private lateinit var presetAdapter: PresetAdapter
+    private var infoTimer: Timer? = null
+    private val parser: IMessageParser by inject()
 
-    private val viewModel: PresetViewModel by viewModels()
-//    private val messageHandler = object :
-//        IBtMessageHandler {
-//        override fun handlePresetsStatusMessage(message: BtPresetsMessage) {
-//            viewModel.presets.postValue(message.presets as ArrayList<Preset>)
-//
-//        }
-//
-//        override fun handleChangeMessage(message: BtChangeMessage) {
-//            viewModel.activePreset.value!!.processChangeMessage(message.change)
-//            //Call value change on observers
-//            viewModel.activePreset.postValue(viewModel.activePreset.value)
-//        }
-//
-//        override fun handleUartStatusMessage(message: BtUartStatusMessage) {
-//            viewModel.uartStatus.postValue(message.status)
-//        }
-//
-//        override fun handlePresetChangeMessage(message: BtPresetChangeMessage) {
-//            Timber.tag("Bluetooth").d("Preset change received: ${message}")
-//        }
-//
-//        override fun handleDumpMessage(message: BtPresetMessage) {
-//            viewModel.activePreset.postValue(message.preset)
-//        }
-//
-//        override fun handleFwVersionMessage(message: BtFirmwareStatusMessage) {
-//            viewModel.fwVersion.postValue(message.firmware)
-//        }
-//
-//        override fun handleBulkChangeMessage(message: BtBulkChangeMessage) {
-//            message.changes.forEach {
-//                viewModel.activePreset.value?.processChangeMessage(it)
-//                if(it.property == EEffect.STATUS.id) {
-//                    Timber.d("Effect status changed ${it.value} : ${viewModel.activePreset.value?.effect?.status}")
-//                }
-//            }
-//            //Call value change on observers
-//            viewModel.activePreset.postValue(viewModel.activePreset.value)
-//        }
-//    }
-
+    private val viewModel: ControlActivityViewModel by viewModels()
 
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -81,106 +59,133 @@ class ControlActivity : FragmentActivity() {
         override fun onServiceConnected(p0: ComponentName?, binder: IBinder?) {
             binder as BluetoothService.Binder
             bluetoothService = binder.getService()
+            bluetoothService?.onDeviceDisconnected = ::deviceDisconnected
+            bluetoothService?.onMessageReceived = ::messageReceived
 
-//            bluetoothService!!.send(
-//                json.stringify(
-//                    BtMessageSerializer,
-//                    BtRequestMessage(EMessageType.GET_PRESETS)
-//                ).plus("\n")
-//            )
+            runBlocking(Dispatchers.IO) {
+                bluetoothService?.send(FwVersionRq())
+                bluetoothService?.send(PresetsRq())
+                bluetoothService?.send(CurrentPresetRq())
+                bluetoothService?.send(CurrentPresetIndexRq())
+            }
 
-//            timer("Bluetooth_uart_status_request_timer", false, 0, 2000) {
-//                messageSender.sendMessage(BtRequestMessage(EMessageType.UART_REQUEST))
-//            }
-//            messageSender.sendMessage(BtRequestMessage(EMessageType.FIRMWARE_REQUEST))
-//            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
+            infoTimer = timer("Test message timer", false, period = 5000) {
+                runBlocking(Dispatchers.IO) {
+                    bluetoothService?.send(HwStatusRq())
+                }
+            }
         }
-
     }
 
-//    private val messageSender : IBtMessageSender = object :
-//        IBtMessageSender {
-//        override fun sendMessage(message: BtMessage) {
-//            bluetoothService?.send(json.stringify(BtMessageSerializer, message).plus("\n"))
-//            if(bluetoothService == null) {
-//                Timber.e("Trying to send messagen when bluetooth service is null")
-//            }
-//        }
-//    }
-
-//    private val messageReceiver : IBtMessageReceiver = object :
-//        IBtMessageReceiver {
-//        override fun receiveMessage(message: BtMessage) {
-//            when (message.type) {
-//                EMessageType.PRESETS_STATUS -> messageHandler.handlePresetsStatusMessage(message as BtPresetsMessage)
-//                EMessageType.CHANGE -> messageHandler.handleChangeMessage(message as BtChangeMessage)
-//                EMessageType.BULK_CHANGE -> messageHandler.handleBulkChangeMessage(message as BtBulkChangeMessage)
-//                EMessageType.UART_RESPONSE -> messageHandler.handleUartStatusMessage(message as BtUartStatusMessage)
-//                EMessageType.PRESET_CHANGE -> messageHandler.handlePresetChangeMessage(message as BtPresetChangeMessage)
-//                EMessageType.DUMP_RESPONSE -> messageHandler.handleDumpMessage(message as BtPresetMessage)
-//                EMessageType.FIRMWARE_RESPONSE -> messageHandler.handleFwVersionMessage(message as BtFirmwareStatusMessage)
-//                else -> Timber.e("Unsupported message received ${message.type}")
-//            }
-//        }
-//
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.plant(Timber.DebugTree())
 
-        // Remove appbar shadow
         binding = DataBindingUtil.setContentView(this, R.layout.activity_control)
         binding.viewPager.adapter = ViewPagerAdapter(this)
-        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-            tab.text = pageTitles[position]
-        }.attach()
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         bindBluetoothService()
 
-//        topAppBar.outlineProvider = null
-//        appBarLayout.outlineProvider = null
+//         Add tabs to control panel
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.text = pageTitles[position]
+        }.attach()
 
-        presetAdapter = PresetAdapter(this, ArrayList())
+        viewModel.changeMessageCallback.value = ::sendChangeMessage
+        viewModel.presets.observe(this, ::onPresetsModified)
+        viewModel.presetChanged.observe(this, ::onPresetModifiedChange)
+
+        val layoutManager = LinearLayoutManager(this)
+        binding.presetList.layoutManager = layoutManager
+        binding.presetList.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                layoutManager.orientation
+            )
+        )
+
+        presetAdapter = PresetAdapter(this, viewModel.presets, binding.root)
+        presetAdapter.onItemSelectedListener = ::onPresetSelected
+        presetAdapter.onItemLongClick = ::onPresetLongClick
+
+        val touchHelper = ItemTouchHelper(ItemMoveCallback(presetAdapter))
+        touchHelper.attachToRecyclerView(binding.presetList)
+        presetAdapter.onDragRequest = {
+            touchHelper.startDrag(it)
+        }
+
         binding.presetList.adapter = presetAdapter
 //
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable =
             false //prevents the bottom sheet from completely hiding off the screen
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-
-//        viewModel.sender = messageSender
-//
-//        binding.presetList.setOnItemClickListener { _, _, index, _ ->
-//            run {
-//                viewModel.activePreset.value = viewModel.presets.value!![index]
-//            }
-//        }
-
-//        binding.noPresetSelector.setOnClickListener {
-//            messageSender.sendMessage(BtRequestMessage(EMessageType.DUMP_REQUEST))
-//        }
-
-//        setViewModelObservers()
+        sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
+    private fun onPresetLongClick(preset: PresetMessage, position: Int) {
+        val binding = AlertEditDialogBinding.inflate(layoutInflater)
+        MaterialAlertDialogBuilder(this)
+            .setView(binding.root)
+            .setTitle(R.string.new_preset_name)
+            .setCancelable(true)
+            .setPositiveButton(R.string.positive_button) { _: DialogInterface, _: Int ->
+                preset.name = binding.presetName.text.toString()
+                viewModel.presets.value = viewModel.presets.value
+            }
+            .show()
+    }
 
-//    private fun setViewModelObservers() {
-//        viewModel.presets.observe(this) {
-//            presetAdapter.presets = it
-//            presetAdapter.notifyDataSetChanged()
-//        }
-//
-//        viewModel.uartStatus.observe(this) {
-//            binding.uartStatus = it
-//        }
-//
-//        viewModel.fwVersion.observe(this) {
-//            binding.firmwareVersion = it
-//        }
-//    }
+    private fun onPresetSelected(
+        presetMessage: PresetMessage,
+        i: Int
+    ) {
+        viewModel.activePresetIndex.value = i
+        viewModel.activePreset.value = presetMessage.duplicate()
+        sendPresetChangeMessage(presetMessage, i)
+    }
+
+    private fun onPresetsModified(it: MutableList<PresetMessage>) {
+        runBlocking(Dispatchers.IO) {
+            bluetoothService?.send(PresetSelect(-1))
+            bluetoothService?.send(SetPresetsRq(it))
+        }
+    }
+
+    private fun onPresetModifiedChange(it: Boolean) {
+        if (it) {
+            binding.topAppBar.menu.add("Revert")
+                .setIcon(R.drawable.ic_baseline_undo_24)
+                .setOnMenuItemClickListener {
+                    revertPreset()
+                    true
+                }.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+
+            binding.topAppBar.menu.add("Save").setIcon(R.drawable.ic_baseline_save_24)
+                .setOnMenuItemClickListener {
+                    savePreset()
+                    true
+                }.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        }
+    }
+
+    private fun savePreset() {
+        viewModel.presetChanged.value = false
+        viewModel.presets.value?.set(
+            viewModel.activePresetIndex.value!!, viewModel.activePreset.value!!.duplicate()
+        )
+        binding.topAppBar.menu.clear()
+        sendSetPresetsMessage(viewModel.presets.value!!)
+    }
+
+    private fun revertPreset() {
+        viewModel.presetChanged.value = false
+        viewModel.activePreset.value =
+            viewModel.presets.value?.get(viewModel.activePresetIndex.value!!)!!.duplicate()
+        binding.topAppBar.menu.clear()
+    }
 
     private fun bindBluetoothService() {
         Intent(this, BluetoothService::class.java).also { intent ->
@@ -190,17 +195,104 @@ class ControlActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        infoTimer?.cancel()
         unbindService(serviceConnection)
     }
 
-    private fun handleChange(property: IControlProperty, value: Int) {
-        val changeMessage = ChangeMessage(property.getPropertyId(), value)
-//        viewModel.sender?.sendMessage(
-//            BtChangeMessage(
-//                EMessageType.CHANGE,
-//                changeMessage
-//            )
-//        )
+    private fun deviceDisconnected(e: Exception, connectedDevice: BluetoothDevice) {
+        Timber.e(e)
+        Snackbar.make(binding.root, getString(R.string.device_disconnected),Snackbar.LENGTH_LONG).show()
+        infoTimer?.cancel()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finishAffinity()
+    }
+
+    private fun messageReceived(message: IBluetoothMessage) {
+        when (message) {
+            is FWVersionMessage -> {
+                runOnUiThread {
+                    viewModel.fwVersion.value = message
+                }
+            }
+
+            is StatusMessage -> {
+                runOnUiThread {
+                    viewModel.hwStatus.value = message
+                }
+            }
+
+            is PresetsResponse -> {
+                runOnUiThread {
+                    viewModel.presets.value = message.presets.toMutableList()
+                }
+            }
+
+            is PresetMessage -> {
+                runOnUiThread {
+                    viewModel.activePreset.value = message
+                }
+            }
+
+            is ChangeMessage -> {
+                if (message.property == EEffect.TYPE.propertyId) {
+                    Timber.d("Effect change: ${message.value}")
+                }
+                runOnUiThread {
+                    viewModel.activePreset.value?.setByControlPropertyId(
+                        message.property,
+                        message.value
+                    )
+                    viewModel.activePreset.value =
+                        viewModel.activePreset.value //Call live data observers
+                }
+            }
+
+            is PresetSelect -> {
+                runOnUiThread {
+                    if (message.index != -1) {
+                        viewModel.activePresetIndex.value = message.index
+                        viewModel.activePreset.value =
+                            viewModel.presets.value?.get(message.index)
+                        Toast.makeText(
+                            this,
+                            resources.getString(
+                                R.string.preset_change_message,
+                                viewModel.activePreset.value?.name
+                            ),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+
+            else -> Timber.d(parser.serialize(message))
+
+        }
+    }
+
+    private fun sendChangeMessage(property: Byte, value: Int) {
+        val message = ChangeMessage(property, value)
+        if (!viewModel.presetChanged.value!! && viewModel.activePresetIndex.value != -1) {
+            viewModel.presetChanged.value = true
+        }
+        viewModel.activePreset.value?.setByControlPropertyId(property, value)
+        runBlocking(Dispatchers.IO) {
+            bluetoothService?.send(message)
+        }
+    }
+
+    private fun sendPresetChangeMessage(preset: PresetMessage, index: Int) {
+        val message = PresetSelect(index)
+        runBlocking(Dispatchers.IO) {
+            bluetoothService?.send(message)
+        }
+    }
+
+    private fun sendSetPresetsMessage(presets: List<PresetMessage>) {
+        runBlocking(Dispatchers.IO) {
+            bluetoothService?.send(SetPresetsRq(presets))
+        }
     }
 
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :

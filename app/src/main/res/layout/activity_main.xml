@@ -19,8 +19,7 @@
          android:layout_height="wrap_content"
          android:indeterminate="false"
          android:visibility="gone"
-         android:indeterminateTint="@color/colorPrimary"
-         style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+         style="@style/ProgressBar"/>
 
      <ListView
          android:id="@+id/bluetoothDeviceList"

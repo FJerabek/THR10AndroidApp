@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.databinding.DelayFragmentBinding
-import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
+import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
 
 class DelayFragment : Fragment() {
-    private lateinit var viewModel: PresetViewModel
+    private lateinit var viewModel: ControlActivityViewModel
     private lateinit var binding: DelayFragmentBinding
 
     companion object {
@@ -25,8 +25,10 @@ class DelayFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ControlActivityViewModel::class.java)
         binding = DelayFragmentBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
 
 //        viewModel.activePreset.observe(viewLifecycleOwner) {

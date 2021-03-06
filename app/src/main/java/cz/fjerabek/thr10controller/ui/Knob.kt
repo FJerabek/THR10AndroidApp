@@ -24,11 +24,13 @@ import kotlin.math.sin
 open class Knob(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
     var outerColor = Color.parseColor("#1b1b1b")
     var innerColor = Color.parseColor("#fbc02d")
-    var outerRelativeSize = 0.8f
-    var innerRelativeSize = 0.8f
     var pointerColor = Color.WHITE
     var valueTextColor = Color.BLACK
     var nameTextColor = Color.BLACK
+    var selectedColor = Color.parseColor("#fbc02d")
+    var markerColor = Color.DKGRAY
+    var outerRelativeSize = 0.8f
+    var innerRelativeSize = 0.8f
     var pointerRelativeLength = 0.25f
     var pointerWidth = 5f
     var nameTextSize = 48f
@@ -42,12 +44,11 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
     var relativeMove = true
     var continuous = false
     var namePadding = 25f
-    var selectedColor = Color.parseColor("#fbc02d")
     var valueStringConverter: ((value: Int) -> String) = { it -> it.toString() }
     var onValueChangeListener: ((value: Int) -> Unit) = {}
-    var markerColor = Color.DKGRAY
+    var swipe = false
+        private set
 
-    private var _value = 0
     var value: Int
         set(value) {
             if(!swipe) {
@@ -70,10 +71,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
             anglePerMarker = (minAngle - maxAngle) / (maxValue - minValue)
         }
 
+    private var _value = 0
     private var angle = (6 / 4) * Math.PI
     private var centerX = 0f
     private var centerY = 0f
-    private var swipe = false
     private var anglePerMarker = 0.0
     private var startAngle = 0.0
     private var animator: ValueAnimator? = null

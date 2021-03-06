@@ -7,15 +7,17 @@
         <import type="cz.fjerabek.thr.data.controls.effect.Chorus" />
 
         <variable
-            name="effect"
-            type="cz.fjerabek.thr.data.controls.effect.Effect" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:visibility="@{viewModel.activePreset.effect instanceof Chorus}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
 
             android:id="@+id/speed"
             android:layout_width="@dimen/knob_size"
@@ -25,10 +27,13 @@
             app:layout_constraintStart_toEndOf="@+id/depth"
             app:layout_constraintTop_toTopOf="parent"
             app:property="@{EChorus.SPEED}"
-            app:name="Speed" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/speed" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/depth"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
@@ -37,19 +42,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:property="@{EChorus.DEPTH}"
-            app:name="Depth" />
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/depth" />
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/mix"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
             app:property="@{EChorus.MIX}"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/depth"
-            app:name="Mix" />
+            app:name="@string/mix" />
 
 
 

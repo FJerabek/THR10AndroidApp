@@ -13,12 +13,6 @@ import androidx.lifecycle.LifecycleOwner
 import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
 
-@BindingAdapter("app:data")
-fun setData(listView: ListView?, items: List<BluetoothDeviceWrapper>?) {
-    items?.let {
-        (listView?.adapter as BluetoothDeviceAdapter).devices = it
-    }
-}
 
 data class BluetoothDeviceWrapper(val device: BluetoothDevice, var enabled: Boolean)
 

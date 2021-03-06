@@ -1,56 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout>
+
     <data>
 
-        <import type="cz.fjerabek.thr.data.enums.effect.ETremolo" />
-        <import type="cz.fjerabek.thr.data.enums.effect.EEffectType" />
-        <import type="cz.fjerabek.thr.data.controls.effect.Tremolo" />
+        <import type="cz.fjerabek.thr.data.enums.compressor.EStomp" />
+        <import type="cz.fjerabek.thr.data.controls.compressor.Stomp" />
 
         <variable
             name="viewModel"
             type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
-
-
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:visibility="@{viewModel.activePreset.effect instanceof Tremolo}"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:visibility="@{viewModel.activePreset.compressor instanceof Stomp}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
             style="@style/ControlKnob"
+            android:id="@+id/sustain"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@id/output"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EStomp.SUSTAIN}"
+            />
 
-            android:id="@+id/freq"
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/output"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/depth"
+            app:layout_constraintStart_toEndOf="@id/sustain"
             app:layout_constraintTop_toTopOf="parent"
-            app:property="@{ETremolo.FREQ}"
-            app:preset="@{viewModel.activePreset}"
             app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
-            app:name="@string/freq" />
-
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            style="@style/ControlKnob"
-            android:id="@+id/depth"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/freq"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:property="@{ETremolo.DEPTH}"
             app:preset="@{viewModel.activePreset}"
-            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
-            app:name="@string/depth" />
-
-
-
+            app:property="@{EStomp.OUTPUT}"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr10controller.databinding.EffectFragmentBinding
-import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
+import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
+import timber.log.Timber
 
 class EffectFragment : Fragment() {
-    private lateinit var viewModel: PresetViewModel
+    private lateinit var viewModel: ControlActivityViewModel
     private lateinit var binding : EffectFragmentBinding
 
     companion object {
@@ -22,10 +23,11 @@ class EffectFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
-
+    ): View {
+        viewModel = ViewModelProvider(requireActivity()).get(ControlActivityViewModel::class.java)
         binding = EffectFragmentBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
 //        val items = listOf(EEffectType.CHORUS, EEffectType.FLANGER, EEffectType.PHASER, EEffectType.TREMOLO)
 //

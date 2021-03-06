@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType"/>
-        <import type="cz.fjerabek.thr.data.enums.EStatus"/>
+
+        <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType" />
+
+        <import type="cz.fjerabek.thr.data.enums.reverb.EReverb" />
+
+        <import type="cz.fjerabek.thr.data.enums.EStatus" />
+
+        <import type="cz.fjerabek.thr.data.controls.TypeConverter" />
+
         <import type="android.view.View" />
 
         <variable
-            name="reverb"
-            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,46 +32,49 @@
             tools:context=".ui.fragments.CompressorFragment">
 
 
-            <Spinner
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/reverbSelect"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:id="@+id/reverbSelect"
+                android:layout_marginHorizontal="10dp"
+                app:entries="@{viewModel.reverbTypes}"
+                android:theme="@style/SpinnerTheme"
                 app:layout_constraintEnd_toStartOf="@id/reverbStatus"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginHorizontal="10dp"
-                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:newValue="@{viewModel.activePreset.reverb.reverbType}"
+                app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(EReverb.TYPE.propertyId, TypeConverter.convert(property))}" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/reverbStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="@{viewModel.activePreset.reverb.status == EStatus.ON}"
+                android:onCheckedChanged="@{(switch, checked) -> viewModel.changeMessageCallback.invoke(EReverb.STATUS.propertyId, Integer.valueOf(checked? EStatus.ON.value : EStatus.OFF.value))}"
                 app:layout_constraintBottom_toBottomOf="@+id/reverbSelect"
-                app:layout_constraintTop_toTopOf="@+id/reverbSelect"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:checked="@{reverb.status == EStatus.ON}"/>
+                app:layout_constraintTop_toTopOf="@+id/reverbSelect" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/hall"
             layout="@layout/reverb_hall"
-            bind:specific = "@{reverb}"/>
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/plate"
             layout="@layout/reverb_plate"
-            bind:specific = "@{reverb}"/>
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/room"
             layout="@layout/reverb_room"
-            bind:specific = "@{reverb}"/>
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/spring"
             layout="@layout/reverb_spring"
-            bind:specific = "@{reverb}"/>
+            app:viewModel="@{viewModel}" />
     </LinearLayout>
 </layout>

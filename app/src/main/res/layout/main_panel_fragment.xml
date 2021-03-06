@@ -8,6 +8,9 @@
         <variable
             name="preset"
             type="cz.fjerabek.thr.data.midi.PresetMessage" />
+        <variable
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,89 +19,108 @@
         android:paddingTop="10dp">
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/amp"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.AMP}"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
             app:value_text_size="13sp"
-            app:value="@{preset.mainPanel.amp.id}"
-            app:name="Amp type"
+            app:name="@string/amp_type"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/gain"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/master"/>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/gain"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.GAIN}"
-            app:value="@{preset.mainPanel.gain}"
-            app:name="Gain"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/gain"
             app:layout_constraintStart_toEndOf="@+id/amp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bass"/>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/master"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.MASTER}"
-            app:value="@{preset.mainPanel.master}"
-            app:name="Master"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/master"
             app:layout_constraintEnd_toStartOf="@id/bass"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gain">
+            app:layout_constraintTop_toBottomOf="@+id/amp"
+            app:layout_constraintBottom_toTopOf="@id/middle">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/bass"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.BASS}"
-            app:value="@{preset.mainPanel.bass}"
-            app:name="Bass"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/bass"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/master"
-            app:layout_constraintTop_toBottomOf="@+id/gain">
+            app:layout_constraintTop_toBottomOf="@+id/gain"
+            app:layout_constraintBottom_toTopOf="@id/treble">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/middle"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
-            app:property="@{EMainPanel.MIDDLE}"
-            app:value="@{preset.mainPanel.middle}"
-            app:name="Middle"
+            app:layout_constraintBottom_toTopOf="@+id/cabinet"
+            app:layout_constraintEnd_toStartOf="@+id/treble"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/bass"
-            app:layout_constraintTop_toBottomOf="@+id/bass">
-        </cz.fjerabek.thr10controller.ui.CustomKnob>
+            app:layout_constraintTop_toBottomOf="@+id/master"
+            app:name="@string/middle"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EMainPanel.MIDDLE}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/treble"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             app:property="@{EMainPanel.TREBLE}"
-            app:value="@{preset.mainPanel.treble}"
-            app:name="Treble"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/treble"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/middle"
-            app:layout_constraintTop_toBottomOf="@+id/bass">
+            app:layout_constraintTop_toBottomOf="@+id/bass"
+            app:layout_constraintBottom_toTopOf="@id/cabinet">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/cabinet"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
-            app:property="@{EMainPanel.CABINET}"
-            app:value_text_size="10sp"
-            app:value="@{preset.mainPanel.cabinet.id}"
-            app:name="Cabinet"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/treble">
-        </cz.fjerabek.thr10controller.ui.CustomKnob>
+            app:layout_constraintTop_toBottomOf="@+id/treble"
+            app:name="@string/cabinet"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EMainPanel.CABINET}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:value_text_size="10sp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

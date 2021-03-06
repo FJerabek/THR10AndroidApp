@@ -1,16 +1,20 @@
 package cz.fjerabek.thr10controller.ui.fragments
 
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cz.fjerabek.thr.data.enums.reverb.EReverbType
 import cz.fjerabek.thr10controller.databinding.ReverbFragmentBinding
-import cz.fjerabek.thr10controller.viewmodels.PresetViewModel
+import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
+import timber.log.Timber
 
 class ReverbFragment : Fragment() {
-    private lateinit var viewModel: PresetViewModel
+    private lateinit var viewModel: ControlActivityViewModel
     private lateinit var binding: ReverbFragmentBinding
 
     private var changeListen = true;
@@ -25,14 +29,16 @@ class ReverbFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = ViewModelProvider(requireActivity()).get(PresetViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ControlActivityViewModel::class.java)
         binding = ReverbFragmentBinding.inflate(inflater)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
 
 //        val items = listOf(EReverbType.HALL, EReverbType.PLATE, EReverbType.ROOM, EReverbType.SPRING)
 //
 //        val dataAdapter =
-//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-//
+//            ArrayAdapter(requireContext(), R.layout.simple_spinner_dropdown_item, items)
+
 //        viewModel.activePreset.observe(viewLifecycleOwner) {
 //            changeListen = false
 //            binding.reverb = it.reverb

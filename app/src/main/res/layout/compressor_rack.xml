@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="cz.fjerabek.thr.data.enums.compressor.ERack" />
+        <import type="cz.fjerabek.thr.data.controls.compressor.Rack" />
+
+        <variable
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="@{viewModel.activePreset.compressor instanceof Rack}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/threshold"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:continuous="true"
+            app:layout_constraintEnd_toStartOf="@id/attack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:name="@string/threshold"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.THRESHOLD}"
+            />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/attack"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintStart_toEndOf="@id/threshold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:name="@string/attack"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.ATTACK}"
+            />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/release"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@id/ratio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/threshold"
+            app:name="@string/release"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.RELEASE}"
+            />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/ratio"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/release"
+            app:layout_constraintTop_toBottomOf="@id/attack"
+            app:name="@string/ratio"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.RATIO}" />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/knee"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toStartOf="@id/output"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/release"
+            app:name="@string/knee"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.KNEE}"
+            />
+
+        <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
+            android:id="@+id/output"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
+            android:paddingTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/knee"
+            app:layout_constraintTop_toBottomOf="@id/ratio"
+            app:continuous="true"
+            app:name="@string/output"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{ERack.OUTPUT}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

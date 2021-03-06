@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="cz.fjerabek.thr.data.enums.gate.EGate" />
+
         <import type="cz.fjerabek.thr.data.enums.EStatus" />
+
         <variable
-            name="preset"
-            type="cz.fjerabek.thr.data.midi.PresetMessage" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,37 +23,42 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            android:checked="@{viewModel.activePreset.gate.status == EStatus.ON}"
+            android:onCheckedChanged="@{(switch, checked) -> viewModel.changeMessageCallback.invoke(EGate.STATUS.propertyId, Integer.valueOf(checked? EStatus.ON.value : EStatus.OFF.value))}"
+            app:name="@string/type_state"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="@string/type_state"
-            android:checked="@{preset.gate.status == EStatus.ON}"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/threshold"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toStartOf="@id/release"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/status"
-            app:name="Threshold"
-            app:continuous = "true"
-            app:property="@{EGate.THRESHOLD}"
-            app:value="@{preset.gate.threshold}" />
+            app:name="@string/threshold"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EGate.THRESHOLD}" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/release"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
             android:paddingTop="6dp"
+            app:continuous="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/threshold"
             app:layout_constraintTop_toTopOf="@id/threshold"
-            app:name="Release"
-            app:continuous = "true"
-            app:property="@{EGate.RELEASE}"
-            app:value="@{preset.gate.release}" />
+            app:name="@string/release"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:preset="@{viewModel.activePreset}"
+            app:property="@{EGate.RELEASE}" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

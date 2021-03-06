@@ -22,6 +22,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
+import timber.log.Timber
 
 class Application : Application() {
 
@@ -79,13 +80,15 @@ class Application : Application() {
             subclass(WideStereo::class)
             subclass(ConnectedRq::class)
             subclass(Connected::class)
+            subclass(SetPresetsRq::class)
+            subclass(CurrentPresetIndexRq::class)
         }
     }
 
     private val serializerModule = module {
         single {
             Json {
-                prettyPrint = true
+                prettyPrint = false
                 serializersModule = jsonSerializerModule
             }
         }
@@ -104,5 +107,6 @@ class Application : Application() {
                 serializerModule
             )
         }
+        Timber.plant(Timber.DebugTree())
     }
 }

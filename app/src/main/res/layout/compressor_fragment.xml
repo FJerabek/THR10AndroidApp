@@ -4,17 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="cz.fjerabek.thr.data.enums.compressor.ECompressorType"/>
-        <import type="cz.fjerabek.thr.data.controls.compressor.Rack"/>
-        <import type="cz.fjerabek.thr.data.controls.compressor.Stomp"/>
-        <import type="cz.fjerabek.thr.data.enums.compressor.ERack"/>
-        <import type="cz.fjerabek.thr.data.enums.compressor.EStomp"/>
-        <import type="cz.fjerabek.thr.data.enums.EStatus"/>
+
+        <import type="cz.fjerabek.thr.data.enums.compressor.ECompressorType" />
+
+        <import type="cz.fjerabek.thr.data.enums.compressor.ECompressor" />
+
+        <import type="cz.fjerabek.thr.data.controls.compressor.Rack" />
+
+        <import type="cz.fjerabek.thr.data.controls.compressor.Stomp" />
+
+        <import type="cz.fjerabek.thr.data.enums.compressor.ERack" />
+
+        <import type="cz.fjerabek.thr.data.enums.compressor.EStomp" />
+
+        <import type="cz.fjerabek.thr.data.enums.EStatus" />
+
+        <import type="cz.fjerabek.thr.data.controls.TypeConverter" />
+
         <import type="android.view.View" />
 
         <variable
-            name="compressor"
-            type="cz.fjerabek.thr.data.controls.compressor.Compressor" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,95 +35,48 @@
         tools:context=".ui.fragments.CompressorFragment">
 
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/compressorTypeSelect"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:id="@+id/compressorTypeSelect"
+            android:layout_marginHorizontal="10dp"
+            android:theme="@style/SpinnerTheme"
+            app:entries="@{viewModel.compressorTypes}"
             app:layout_constraintEnd_toStartOf="@id/compressorStatus"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="10dp"
-            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:newValue="@{viewModel.activePreset.compressor.compressorType}"
+            app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(ECompressor.TYPE.propertyId, TypeConverter.convert(property))}" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/compressorStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@id/compressorTypeSelect"
+            android:checked="@{viewModel.activePreset.compressor.status == EStatus.ON}"
+            android:onCheckedChanged="@{(switch, checked) -> viewModel.changeMessageCallback.invoke(ECompressor.STATUS.propertyId, Integer.valueOf(checked? EStatus.ON.value : EStatus.OFF.value))}"
+            app:layout_constraintBottom_toBottomOf="@id/compressorTypeSelect"
             app:layout_constraintEnd_toEndOf="parent"
-            android:checked="@{compressor.status == EStatus.ON}"/>
+            app:layout_constraintTop_toTopOf="@id/compressorTypeSelect" />
 
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-
-            android:id="@+id/threshold"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="10dp"
+        <include
+            layout="@layout/compressor_rack"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/attack"
-            app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
-            />
-
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:id="@+id/attack"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/threshold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
-            />
+            app:viewModel="@{viewModel}" />
 
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:id="@+id/release"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="6dp"
-            app:property="@{ERack.RELEASE}"
-            app:layout_constraintEnd_toStartOf="@id/ratio"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attack"
-            app:name="Release" />
-
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:id="@+id/ratio"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="6dp"
-            app:property="@{ERack.RATIO}"
+        <include
+            layout="@layout/compressor_stomp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/release"
-            app:layout_constraintTop_toBottomOf="@+id/attack"
-            app:name="Ratio" />
-
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:id="@+id/knee"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="6dp"
-            app:property="@{ERack.KNEE}"
-            app:layout_constraintEnd_toStartOf="@+id/ratio"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratio"
-            app:name="Knee" />
-
-
-        <cz.fjerabek.thr10controller.ui.CustomKnob
-            android:id="@+id/output"
-            android:layout_width="@dimen/knob_size"
-            android:layout_height="@dimen/knob_size"
-            android:paddingTop="6dp"
-            app:property="@{ERack.OUTPUT}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/knee"
-            app:layout_constraintTop_toBottomOf="@+id/ratio"
-            app:continuous = "true"
-            app:name="Output" />
+            app:layout_constraintTop_toBottomOf="@id/compressorTypeSelect"
+            app:viewModel="@{viewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

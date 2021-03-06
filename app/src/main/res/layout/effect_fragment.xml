@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="cz.fjerabek.thr.data.enums.effect.EEffectType" />
 
+        <import type="cz.fjerabek.thr.data.enums.effect.EEffect" />
+
         <import type="cz.fjerabek.thr.data.controls.compressor.Rack" />
+
+        <import type="cz.fjerabek.thr.data.controls.TypeConverter" />
 
         <import type="cz.fjerabek.thr.data.controls.compressor.Stomp" />
 
@@ -21,8 +24,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="effect"
-            type="cz.fjerabek.thr.data.controls.effect.Effect" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <LinearLayout
@@ -37,43 +40,50 @@
             tools:context=".ui.fragments.CompressorFragment">
 
 
-            <Spinner
-                android:id="@+id/effectSelect"
-                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/effectTypeSelect"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
                 android:layout_marginHorizontal="10dp"
+                android:theme="@style/SpinnerTheme"
+                app:entries="@{viewModel.effectTypes}"
                 app:layout_constraintEnd_toStartOf="@id/effectStatus"
                 app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:newValue="@{viewModel.activePreset.effect.effectType}"
+                app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(EEffect.TYPE.propertyId, TypeConverter.convert(property))}" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/effectStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="@{effect.status == EStatus.ON}"
-                app:layout_constraintBottom_toBottomOf="@+id/effectSelect"
+                android:checked="@{viewModel.activePreset.effect.status == EStatus.ON}"
+                android:onCheckedChanged="@{(switch, checked) -> viewModel.changeMessageCallback.invoke(EEffect.STATUS.propertyId, Integer.valueOf(checked? EStatus.ON.value : EStatus.OFF.value))}"
+                app:layout_constraintBottom_toBottomOf="@+id/effectTypeSelect"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/effectSelect" />
+                app:layout_constraintTop_toTopOf="@+id/effectTypeSelect" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <include
             android:id="@+id/chorus"
-            layout="@layout/effect_chorus" />
+            layout="@layout/effect_chorus"
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/flanger"
-            layout="@layout/effect_flanger" />
+            layout="@layout/effect_flanger"
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/phaser"
-            layout="@layout/effect_phaser" />
+            layout="@layout/effect_phaser"
+            app:viewModel="@{viewModel}" />
 
         <include
             android:id="@+id/tremolo"
-            layout="@layout/effect_tremolo" />
+            layout="@layout/effect_tremolo"
+            app:viewModel="@{viewModel}" />
 
     </LinearLayout>
 </layout>

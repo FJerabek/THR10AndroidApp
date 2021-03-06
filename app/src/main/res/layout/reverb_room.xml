@@ -8,52 +8,69 @@
         <import type="cz.fjerabek.thr.data.enums.reverb.EReverbType" />
         <import type="cz.fjerabek.thr.data.controls.reverb.Room" />
         <variable
-            name="specific"
-            type="cz.fjerabek.thr.data.controls.reverb.Reverb" />
+            name="viewModel"
+            type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="@{viewModel.activePreset.reverb instanceof Room}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="5dp">
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/time"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.TIME}"
-            app:name="Time"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/time"
+            app:continuous="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/preDelay"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/preDelay"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.PRE_DELAY}"
-            app:name="Pre delay"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/pre_delay"
+            app:continuous="true"
             app:layout_constraintStart_toEndOf="@+id/time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/lowCut"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.LOW_CUT}"
-            app:name="Low cut"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/low_cut"
+            app:continuous="true"
             app:layout_constraintEnd_toStartOf="@id/highCut"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/preDelay">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/highCut"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.HIGH_CUT}"
-            app:name="High cut"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/high_cut"
+            app:continuous="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/lowCut"
             app:layout_constraintTop_toBottomOf="@+id/preDelay">
@@ -61,33 +78,42 @@
 
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/highRatio"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.HIGH_RATIO}"
-            app:name="High ratio"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/high_ratio"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/highCut"
             app:layout_constraintTop_toBottomOf="@+id/highCut">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/lowRatio"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.LOW_RATIO}"
-            app:name="Low ratio"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/low_ratio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/highRatio"
             app:layout_constraintTop_toBottomOf="@+id/highCut">
         </cz.fjerabek.thr10controller.ui.CustomKnob>
 
         <cz.fjerabek.thr10controller.ui.CustomKnob
+            style="@style/ControlKnob"
             android:id="@+id/level"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:property="@{ERoom.LEVEL}"
-            app:name="Level"
+            app:preset="@{viewModel.activePreset}"
+            app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
+            app:name="@string/level"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lowRatio">
