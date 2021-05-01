@@ -67,6 +67,7 @@ class ControlActivity : FragmentActivity() {
                 bluetoothService?.send(PresetsRq())
                 bluetoothService?.send(CurrentPresetRq())
                 bluetoothService?.send(CurrentPresetIndexRq())
+                bluetoothService?.send(ConnectedRq())
             }
 
             infoTimer = timer("Test message timer", false, period = 5000) {
@@ -149,8 +150,17 @@ class ControlActivity : FragmentActivity() {
 
     private fun onPresetsModified(it: MutableList<PresetMessage>) {
         runBlocking(Dispatchers.IO) {
-            bluetoothService?.send(PresetSelect(-1))
+
             bluetoothService?.send(SetPresetsRq(it))
+            val index = it.indexOf(viewModel.activePreset.value)
+            runOnUiThread {
+                viewModel.activePresetIndex.value = index
+            }
+            bluetoothService?.send(
+                PresetSelect(
+                    index
+                )
+            )
         }
     }
 
@@ -201,7 +211,8 @@ class ControlActivity : FragmentActivity() {
 
     private fun deviceDisconnected(e: Exception, connectedDevice: BluetoothDevice) {
         Timber.e(e)
-        Snackbar.make(binding.root, getString(R.string.device_disconnected),Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.root, getString(R.string.device_disconnected), Snackbar.LENGTH_LONG)
+            .show()
         infoTimer?.cancel()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -245,6 +256,12 @@ class ControlActivity : FragmentActivity() {
                     )
                     viewModel.activePreset.value =
                         viewModel.activePreset.value //Call live data observers
+                }
+            }
+
+            is Connected -> {
+                runOnUiThread {
+                    viewModel.connected.value = message.connected
                 }
             }
 

@@ -95,11 +95,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
-
-        viewModel.devices.observe(this) { //Todo: Live data should not need to be observed if databinding is used
-            btListAdapter.devices = it
-            btListAdapter.notifyDataSetChanged()
-        }
+        binding.viewModel = viewModel
 
 
         btListAdapter = BluetoothDeviceAdapter(this)

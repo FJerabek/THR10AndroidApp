@@ -19,6 +19,7 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
     val changeMessageCallback: MutableLiveData<((Byte, Int) -> Unit)?> = MutableLiveData()
     val activePresetIndex: MutableLiveData<Int> = MutableLiveData(-1)
     val presetChanged: MutableLiveData<Boolean> = MutableLiveData(false)
+    val connected: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val compressorTypes
         get() = ECompressorType.values().toList()
@@ -31,7 +32,13 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
 
     fun addPreset() {
         val newPresets = presets.value?.toMutableList();
-        val preset = activePreset.value!!
+
+        val preset: PresetMessage = if(activePreset.value != null) {
+            activePreset.value!!
+        } else if(presets.value != null && presets.value!!.size > 0) {
+            presets.value!!.first()
+        } else return
+
         newPresets?.add(preset)
         presets.value = newPresets
     }

@@ -22,28 +22,38 @@ import kotlin.math.sin
 
 
 open class Knob(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
+
     var outerColor = Color.parseColor("#1b1b1b")
-    var innerColor = Color.parseColor("#fbc02d")
-    var pointerColor = Color.WHITE
-    var valueTextColor = Color.BLACK
-    var nameTextColor = Color.BLACK
-    var selectedColor = Color.parseColor("#fbc02d")
-    var markerColor = Color.DKGRAY
     var outerRelativeSize = 0.8f
+
+    var innerColor = Color.parseColor("#fbc02d")
     var innerRelativeSize = 0.8f
+
+    var pointerColor = Color.WHITE
     var pointerRelativeLength = 0.25f
     var pointerWidth = 5f
+
+    var namePadding = 25f
+    var nameTextColor = Color.BLACK
+
+    var markerColor = Color.DKGRAY
+
     var nameTextSize = 48f
-    var valueTextSize = 48f
-    var maxAngle = Math.toRadians(25.0)
-    var minAngle = Math.toRadians(335.0)
     var name = ""
+
+    var continuous = false
     var markerRelativePadding = 0.1f
     var markerRelativeLength = 0.12f
     var markerWidth = 2f
+    var selectedColor = Color.parseColor("#fbc02d")
+
+    var maxAngle = Math.toRadians(25.0)
+    var minAngle = Math.toRadians(335.0)
+
     var relativeMove = true
-    var continuous = false
-    var namePadding = 25f
+
+    var valueTextSize = 48f
+    var valueTextColor = Color.BLACK
     var valueStringConverter: ((value: Int) -> String) = { it -> it.toString() }
     var onValueChangeListener: ((value: Int) -> Unit) = {}
     var swipe = false

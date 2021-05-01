@@ -16,7 +16,7 @@ import cz.fjerabek.thr10controller.R
 
 @BindingAdapter("android:text")
 fun MaterialTextView.setText(message: MutableLiveData<FWVersionMessage>?) {
-    text = "${message?.value?.major}.${message?.value?.minor}.${message?.value?.patch}"
+    text = "ver. ${message?.value?.major}.${message?.value?.minor}.${message?.value?.patch}"
 }
 
 @BindingConversion

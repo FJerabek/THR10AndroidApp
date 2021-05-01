@@ -47,11 +47,12 @@ class BluetoothService : Service() {
             socket?.let {
                 try {
                     it.connect()
+                    onDeviceConnected?.invoke(connectedDevice!!)
                 } catch (e: IOException) {
                     Timber.e(e)
                     onDeviceDisconnected?.invoke(e, connectedDevice!!)
+                    socket = null
                 }
-                onDeviceConnected?.invoke(connectedDevice!!)
                 startReader(it.inputStream)
             }
         }
@@ -72,6 +73,7 @@ class BluetoothService : Service() {
             send(parser.serialize(message) + "\n")
         } catch (e: IOException) {
             onDeviceDisconnected?.invoke(e, connectedDevice!!)
+            socket = null
         }
     }
 
@@ -95,9 +97,10 @@ class BluetoothService : Service() {
                         parseMessage(it)
                     }
 
-                } catch (e: Exception) {
+                } catch (e: IOException) {
                     Timber.e(e)
                     onDeviceDisconnected?.invoke(e, connectedDevice!!)
+                    socket = null
                     return@withContext
                 }
             }

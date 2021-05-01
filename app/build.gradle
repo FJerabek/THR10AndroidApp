@@ -58,7 +58,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 
     //Dependency injection
-    implementation "org.koin:koin-android:2.2.2"
     // Koin AndroidX Scope feature
     implementation "org.koin:koin-androidx-scope:2.2.2"
     // Koin AndroidX ViewModel feature

@@ -45,6 +45,7 @@
                 <View style="@style/Divider" />
 
                 <com.google.android.material.button.MaterialButton
+                    style="@style/ButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_preset"

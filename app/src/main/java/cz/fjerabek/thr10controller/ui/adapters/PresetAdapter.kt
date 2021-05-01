@@ -54,7 +54,6 @@ class PresetAdapter(
         holder.itemBinding.dragHandle.setOnTouchListener { _, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Timber.d("Touch down")
                     onDragRequest?.invoke(holder)
                 }
             }
