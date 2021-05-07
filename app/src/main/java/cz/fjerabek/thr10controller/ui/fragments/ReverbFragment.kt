@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cz.fjerabek.thr.data.controls.TypeConverter
 import cz.fjerabek.thr.data.enums.reverb.EReverbType
 import cz.fjerabek.thr10controller.databinding.ReverbFragmentBinding
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
@@ -33,6 +34,7 @@ class ReverbFragment : Fragment() {
         binding = ReverbFragmentBinding.inflate(inflater)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.converter = TypeConverter
 
 //        val items = listOf(EReverbType.HALL, EReverbType.PLATE, EReverbType.ROOM, EReverbType.SPRING)
 //

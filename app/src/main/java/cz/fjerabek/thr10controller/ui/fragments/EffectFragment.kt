@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cz.fjerabek.thr.data.controls.TypeConverter
 import cz.fjerabek.thr10controller.databinding.EffectFragmentBinding
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
 import timber.log.Timber
@@ -28,6 +29,7 @@ class EffectFragment : Fragment() {
         binding = EffectFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.converter = TypeConverter
 
 //        val items = listOf(EEffectType.CHORUS, EEffectType.FLANGER, EEffectType.PHASER, EEffectType.TREMOLO)
 //

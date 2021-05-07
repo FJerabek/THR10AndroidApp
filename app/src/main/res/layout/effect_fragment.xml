@@ -26,6 +26,10 @@
         <variable
             name="viewModel"
             type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
+
+        <variable
+            name="converter"
+            type="TypeConverter" />
     </data>
 
     <LinearLayout
@@ -51,7 +55,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:newValue="@{viewModel.activePreset.effect.effectType}"
-                app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(EEffect.TYPE.propertyId, TypeConverter.convert(property))}" />
+                app:onItemSelected="@{(property) -> viewModel.changeTypeCallback(EEffect.TYPE.propertyId, converter.convert(property))}" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/effectStatus"

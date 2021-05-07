@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import cz.fjerabek.thr.data.controls.TypeConverter
 import cz.fjerabek.thr.data.controls.compressor.Rack
 import cz.fjerabek.thr.data.controls.compressor.Stomp
 import cz.fjerabek.thr.data.enums.compressor.ECompressorType
@@ -36,6 +37,7 @@ class CompressorFragment : Fragment() {
         binding = CompressorFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.converter = TypeConverter
 
         return binding.root
     }

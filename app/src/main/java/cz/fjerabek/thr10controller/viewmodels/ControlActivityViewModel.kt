@@ -83,7 +83,7 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
     fun changeTypeCallback(id: Byte, value: Int) {
         when (id) {
             EEffect.TYPE.propertyId -> {
-                if (activePreset.value?.effect?.effectType?.id?.toInt() == value) {
+                if (activePreset.value?.effect?.effectType?.id?.toInt() != value) {
                     changeMessageCallback.value?.invoke(id, value)
                     changeMessageCallback.value?.invoke(
                         EEffect.STATUS.propertyId,
@@ -93,7 +93,7 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
                 }
             }
             EReverb.TYPE.propertyId -> {
-                if (activePreset.value?.reverb?.reverbType?.id?.toInt() == value) {
+                if (activePreset.value?.reverb?.reverbType?.id?.toInt() != value) {
                     changeMessageCallback.value?.invoke(id, value)
                     changeMessageCallback.value?.invoke(
                         EReverb.STATUS.propertyId,
@@ -103,7 +103,7 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
                 }
             }
             ECompressor.TYPE.propertyId -> {
-                if (activePreset.value?.compressor?.compressorType?.id?.toInt() == value) {
+                if (activePreset.value?.compressor?.compressorType?.id?.toInt() != value) {
                     changeMessageCallback.value?.invoke(id, value)
                     changeMessageCallback.value?.invoke(
                         ECompressor.STATUS.propertyId,
