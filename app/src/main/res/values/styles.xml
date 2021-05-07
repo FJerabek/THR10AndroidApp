@@ -46,7 +46,8 @@
         <item name="android:backgroundTint">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="SpinnerTheme" parent="@style/Theme.MaterialComponents.Light">
+    <style name="SpinnerTheme" parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="strokeColor">#9e9e9e</item>
     </style>
 
     <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">

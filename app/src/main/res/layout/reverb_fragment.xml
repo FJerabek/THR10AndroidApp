@@ -43,7 +43,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:newValue="@{viewModel.activePreset.reverb.reverbType}"
-                app:onItemSelected="@{(property) -> viewModel.changeTypeCallback(EReverb.TYPE.propertyId, TypeConverter.convert(property))}" />
+                app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(EReverb.TYPE.propertyId, TypeConverter.convert(property))}" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/reverbStatus"

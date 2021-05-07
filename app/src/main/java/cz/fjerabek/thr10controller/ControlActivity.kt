@@ -254,6 +254,7 @@ class ControlActivity : FragmentActivity() {
                     Timber.d("Effect change: ${message.value}")
                 }
                 runOnUiThread {
+                    viewModel.activePresetIndex.value = -1
                     viewModel.activePreset.value?.setByControlPropertyId(
                         message.property,
                         message.value

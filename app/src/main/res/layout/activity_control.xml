@@ -6,6 +6,7 @@
     <data>
 
         <import type="cz.fjerabek.thr.data.uart.ECharging" />
+
         <variable
             name="viewModel"
             type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
@@ -28,31 +29,47 @@
                 android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
-                <com.google.android.material.appbar.AppBarLayout
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/appBarLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.appbar.MaterialToolbar
-                        android:id="@+id/topAppBar"
-                        style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        app:title="@string/app_name">
-                    </com.google.android.material.appbar.MaterialToolbar>
+                        android:layout_height="wrap_content">
 
-                </com.google.android.material.appbar.AppBarLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton"
+                            style="@style/ButtonStyle"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginEnd="50dp"
+                            android:layout_height="wrap_content"
+                            android:onClick="@{()-> viewModel.addPreset()}"
+                            android:text="@string/add_preset"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:cornerRadius="20dp" />
+
+                        <com.google.android.material.appbar.MaterialToolbar
+                            android:id="@+id/topAppBar"
+                            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                            android:layout_width="0dp"
+                            android:layout_height="?attr/actionBarSize"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/materialButton"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
 
                 <View style="@style/Divider" />
-
-                <com.google.android.material.button.MaterialButton
-                    style="@style/ButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="@{()-> viewModel.addPreset()}"
-                    android:text="@string/add_preset" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/presetList"
@@ -96,9 +113,9 @@
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/current"
+                        drawable="@{viewModel.hwStatus.charging}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        drawable="@{viewModel.hwStatus.charging}"
                         android:drawablePadding="2dp"
                         android:drawableTint="@color/colorAccent"
                         android:text="@{String.valueOf(viewModel.hwStatus.battery) + '%'}"

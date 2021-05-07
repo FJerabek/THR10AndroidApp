@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:newValue="@{viewModel.activePreset.compressor.compressorType}"
-            app:onItemSelected="@{(property) -> viewModel.changeTypeCallback(ECompressor.TYPE.propertyId, TypeConverter.convert(property))}" />
+            app:onItemSelected="@{(property) -> viewModel.changeMessageCallback.invoke(ECompressor.TYPE.propertyId, TypeConverter.convert(property))}" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/compressorStatus"
