@@ -112,7 +112,6 @@
             android:id="@+id/cabinet"
             android:layout_width="@dimen/knob_size"
             android:layout_height="@dimen/knob_size"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/treble"

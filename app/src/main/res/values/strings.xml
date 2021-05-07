@@ -51,5 +51,6 @@
     <string name="low_ratio">Low ratio</string>
     <string name="filter">Filter</string>
     <string name="device_disconnected">Device disconnected</string>
+    <string name="select_device">Select device</string>
 
 </resources>

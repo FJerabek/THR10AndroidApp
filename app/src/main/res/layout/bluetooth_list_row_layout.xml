@@ -30,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="17sp"
-            android:textColor="@color/colorAccent"
             android:text="@{name}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,12 +42,10 @@
             android:layout_below="@id/btName"
             android:textAllCaps="true"
             android:textSize="12sp"
-            android:textColor="@color/colorAccent"
             app:layout_constraintTop_toBottomOf="@id/btName"
             app:layout_constraintStart_toStartOf="@id/btName"
             android:text="@{address}"
             />
-
 
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -57,11 +54,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:indeterminate="true"
-            app:indicatorColor="@color/colorAccent"
             android:visibility="@{loading? View.VISIBLE: View.INVISIBLE}"
             android:layout_height="match_parent"
             android:layout_width="0dp" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

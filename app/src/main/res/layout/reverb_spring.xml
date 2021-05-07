@@ -21,8 +21,8 @@
         <cz.fjerabek.thr10controller.ui.CustomKnob
             style="@style/ControlKnob"
             android:id="@+id/highRatio"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
             app:property="@{ESpring.REVERB}"
             app:preset="@{viewModel.activePreset}"
             app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"
@@ -35,8 +35,8 @@
         <cz.fjerabek.thr10controller.ui.CustomKnob
             style="@style/ControlKnob"
             android:id="@+id/lowRatio"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/knob_size"
+            android:layout_height="@dimen/knob_size"
             app:property="@{ESpring.FILTER}"
             app:preset="@{viewModel.activePreset}"
             app:propertyValueChangeListener="@{viewModel.changeMessageCallback}"

@@ -6,23 +6,19 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Intent
 import android.os.IBinder
-import android.view.View
 import cz.fjerabek.thr.data.bluetooth.IBluetoothMessage
-import cz.fjerabek.thr10controller.parser.IMessageParser
+import cz.fjerabek.thr10controller.parser.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStream
-import java.lang.Exception
 import java.util.*
 
 /**
  * Android service managing bluetooth and its connections
  */
 class BluetoothService : Service() {
-    private val parser: IMessageParser by inject()
     private val serviceUuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
     private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private var connectedDevice: BluetoothDevice? = null
@@ -70,7 +66,7 @@ class BluetoothService : Service() {
 
     suspend fun send(message: IBluetoothMessage) {
         try {
-            send(parser.serialize(message) + "\n")
+            send(JsonParser.serialize(message) + "\n")
         } catch (e: IOException) {
             onDeviceDisconnected?.invoke(e, connectedDevice!!)
             socket = null
@@ -111,7 +107,7 @@ class BluetoothService : Service() {
     private suspend fun parseMessage(receivedString: String) {
         receivedString.split('\n').forEach messageLoop@{ //Todo: Some better message splitting mechanism
             if (it.trim().isEmpty()) return@messageLoop
-            val message = parser.deserialize(it)
+            val message = JsonParser.deserialize(it)
             onMessageReceived?.invoke(message)
         }
     }

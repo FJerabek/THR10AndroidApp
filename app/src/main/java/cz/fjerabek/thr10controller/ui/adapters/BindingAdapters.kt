@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import cz.fjerabek.thr.data.midi.PresetMessage
+import cz.fjerabek.thr.data.uart.ECharging
 import cz.fjerabek.thr.data.uart.FWVersionMessage
 import cz.fjerabek.thr10controller.R
 
@@ -22,6 +23,18 @@ fun MaterialTextView.setText(message: MutableLiveData<FWVersionMessage>?) {
 @BindingConversion
 fun booleanToVisibility(visible: Boolean) =
     if (visible) View.VISIBLE else View.GONE
+
+
+@BindingAdapter("drawable")
+fun MaterialTextView.chargingStateToDrawable(charging: ECharging?) {
+    var drawable = when(charging) {
+        ECharging.DISCHARGING -> R.drawable.ic_battery_24
+        ECharging.CHARGING -> R.drawable.ic_battery_charging_24
+        ECharging.FULL -> R.drawable.ic_battery_24
+        null -> R.drawable.ic_battery_24
+    }
+    setCompoundDrawablesWithIntrinsicBounds(drawable,0,0,0)
+}
 
 @Suppress("UNCHECKED_CAST") // No way to check types inside List<Any> at runtime
 @BindingAdapter("data")

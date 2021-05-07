@@ -99,34 +99,37 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
             0,
             0
         ).use {
-            outerColor = it.getColor(R.styleable.Knob_outer_color, outerColor)
-            innerColor = it.getColor(R.styleable.Knob_inner_color, innerColor)
             outerRelativeSize = it.getFloat(R.styleable.Knob_outer_relative_size, outerRelativeSize)
             innerRelativeSize = it.getFloat(R.styleable.Knob_inner_relative_size, innerRelativeSize)
-            pointerColor = it.getColor(R.styleable.Knob_pointer_color, pointerColor)
             pointerRelativeLength =
                 it.getFloat(R.styleable.Knob_pointer_relative_length, pointerRelativeLength)
             pointerWidth = it.getFloat(R.styleable.Knob_pointer_width, pointerWidth)
-            nameTextSize = it.getDimension(R.styleable.Knob_name_text_size, nameTextSize)
-            valueTextSize = it.getDimension(R.styleable.Knob_value_text_size, valueTextSize)
-            name = it.getString(R.styleable.Knob_name) ?: name
-            valueTextColor = it.getColor(R.styleable.Knob_value_text_color, valueTextColor)
-            nameTextColor = it.getColor(R.styleable.Knob_name_text_color, nameTextColor)
-            maxValue = it.getInt(R.styleable.Knob_max_value, maxValue)
-            minValue = it.getInt(R.styleable.Knob_min_value, minValue)
             markerRelativeLength =
                 it.getFloat(R.styleable.Knob_marker_relative_length, markerRelativeLength)
             markerRelativePadding =
                 it.getFloat(R.styleable.Knob_marker_relative_padding, markerRelativePadding)
-            markerColor = it.getColor(R.styleable.Knob_marker_color, markerColor)
-            markerWidth = it.getDimension(R.styleable.Knob_marker_width, markerWidth)
             minAngle = Math.toRadians(it.getFloat(R.styleable.Knob_min_angle, 25f).toDouble())
             maxAngle = Math.toRadians(it.getFloat(R.styleable.Knob_max_angle, 335f).toDouble())
-            _value = it.getInt(R.styleable.Knob_value, 0)
-            continuous = it.getBoolean(R.styleable.Knob_continuous, false)
-            selectedColor = it.getColor(R.styleable.Knob_selected_color, selectedColor)
-            namePadding = it.getDimension(R.styleable.Knob_name_padding, namePadding)
 
+            continuous = it.getBoolean(R.styleable.Knob_continuous, false)
+            markerWidth = it.getDimension(R.styleable.Knob_marker_width, markerWidth)
+            namePadding = it.getDimension(R.styleable.Knob_name_padding, namePadding)
+            nameTextSize = it.getDimension(R.styleable.Knob_name_text_size, nameTextSize)
+            valueTextSize = it.getDimension(R.styleable.Knob_value_text_size, valueTextSize)
+
+            name = it.getString(R.styleable.Knob_name) ?: name
+
+            maxValue = it.getInt(R.styleable.Knob_max_value, maxValue)
+            minValue = it.getInt(R.styleable.Knob_min_value, minValue)
+            _value = it.getInt(R.styleable.Knob_value, 0)
+
+            valueTextColor = it.getColor(R.styleable.Knob_value_text_color, valueTextColor)
+            nameTextColor = it.getColor(R.styleable.Knob_name_text_color, nameTextColor)
+            outerColor = it.getColor(R.styleable.Knob_outer_color, outerColor)
+            innerColor = it.getColor(R.styleable.Knob_inner_color, innerColor)
+            markerColor = it.getColor(R.styleable.Knob_marker_color, markerColor)
+            selectedColor = it.getColor(R.styleable.Knob_selected_color, selectedColor)
+            pointerColor = it.getColor(R.styleable.Knob_pointer_color, pointerColor)
 
             if (value > maxValue || value < minValue) error("Value must be between minValue and maxValue")
             if (minValue > maxValue) error("Min value must be less than max value")

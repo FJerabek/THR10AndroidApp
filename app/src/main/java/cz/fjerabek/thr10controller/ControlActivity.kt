@@ -28,13 +28,14 @@ import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
 import cz.fjerabek.thr10controller.databinding.AlertEditDialogBinding
 import cz.fjerabek.thr10controller.parser.IMessageParser
+import cz.fjerabek.thr10controller.parser.JsonParser
 import cz.fjerabek.thr10controller.ui.adapters.ItemMoveCallback
 import cz.fjerabek.thr10controller.ui.adapters.PresetAdapter
 import cz.fjerabek.thr10controller.ui.fragments.*
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.koin.android.ext.android.inject
+import kotlinx.serialization.builtins.LongAsStringSerializer.serialize
 import timber.log.Timber
 import java.util.*
 import kotlin.concurrent.timer
@@ -47,7 +48,6 @@ class ControlActivity : FragmentActivity() {
     private lateinit var binding: ActivityControlBinding
     private lateinit var presetAdapter: PresetAdapter
     private var infoTimer: Timer? = null
-    private val parser: IMessageParser by inject()
 
     private val viewModel: ControlActivityViewModel by viewModels()
 
@@ -143,6 +143,7 @@ class ControlActivity : FragmentActivity() {
         presetMessage: PresetMessage,
         i: Int
     ) {
+        viewModel.presetChanged.value = false
         viewModel.activePresetIndex.value = i
         viewModel.activePreset.value = presetMessage.duplicate()
         sendPresetChangeMessage(presetMessage, i)
@@ -154,6 +155,9 @@ class ControlActivity : FragmentActivity() {
             bluetoothService?.send(SetPresetsRq(it))
             val index = it.indexOf(viewModel.activePreset.value)
             runOnUiThread {
+                if(index == -1) {
+                    viewModel.presetChanged.value = false
+                }
                 viewModel.activePresetIndex.value = index
             }
             bluetoothService?.send(
@@ -178,6 +182,8 @@ class ControlActivity : FragmentActivity() {
                     savePreset()
                     true
                 }.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+        } else {
+            binding.topAppBar.menu.clear()
         }
     }
 
@@ -186,7 +192,6 @@ class ControlActivity : FragmentActivity() {
         viewModel.presets.value?.set(
             viewModel.activePresetIndex.value!!, viewModel.activePreset.value!!.duplicate()
         )
-        binding.topAppBar.menu.clear()
         sendSetPresetsMessage(viewModel.presets.value!!)
     }
 
@@ -194,7 +199,6 @@ class ControlActivity : FragmentActivity() {
         viewModel.presetChanged.value = false
         viewModel.activePreset.value =
             viewModel.presets.value?.get(viewModel.activePresetIndex.value!!)!!.duplicate()
-        binding.topAppBar.menu.clear()
     }
 
     private fun bindBluetoothService() {
@@ -268,22 +272,23 @@ class ControlActivity : FragmentActivity() {
             is PresetSelect -> {
                 runOnUiThread {
                     if (message.index != -1) {
+                        viewModel.presetChanged.value = false
                         viewModel.activePresetIndex.value = message.index
                         viewModel.activePreset.value =
                             viewModel.presets.value?.get(message.index)
-                        Toast.makeText(
-                            this,
+                        Snackbar.make(
+                            binding.viewPager,
                             resources.getString(
                                 R.string.preset_change_message,
                                 viewModel.activePreset.value?.name
                             ),
-                            Toast.LENGTH_SHORT
+                            Snackbar.LENGTH_SHORT
                         ).show()
                     }
                 }
             }
 
-            else -> Timber.d(parser.serialize(message))
+            else -> Timber.d(JsonParser.serialize(message))
 
         }
     }
@@ -294,6 +299,7 @@ class ControlActivity : FragmentActivity() {
             viewModel.presetChanged.value = true
         }
         viewModel.activePreset.value?.setByControlPropertyId(property, value)
+        viewModel.activePreset.value = viewModel.activePreset.value
         runBlocking(Dispatchers.IO) {
             bluetoothService?.send(message)
         }

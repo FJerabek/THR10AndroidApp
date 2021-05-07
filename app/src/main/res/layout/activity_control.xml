@@ -5,6 +5,7 @@
 
     <data>
 
+        <import type="cz.fjerabek.thr.data.uart.ECharging" />
         <variable
             name="viewModel"
             type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
@@ -15,21 +16,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
-                style="@style/Widget.MaterialComponents.Toolbar.Primary"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:title="@string/app_name">
-            </com.google.android.material.appbar.MaterialToolbar>
-
-        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -42,22 +28,39 @@
                 android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
+                <com.google.android.material.appbar.AppBarLayout
+                    android:id="@+id/appBarLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/topAppBar"
+                        style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:title="@string/app_name">
+                    </com.google.android.material.appbar.MaterialToolbar>
+
+                </com.google.android.material.appbar.AppBarLayout>
+
+
                 <View style="@style/Divider" />
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/ButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/add_preset"
-                    android:onClick="@{()-> viewModel.addPreset()}"/>
+                    android:onClick="@{()-> viewModel.addPreset()}"
+                    android:text="@string/add_preset" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/presetList"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    app:selectedItem="@{viewModel.activePresetIndex}"
-                    app:data="@{viewModel.presets}" />
+                    app:data="@{viewModel.presets}"
+                    app:selectedItem="@{viewModel.activePresetIndex}" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,7 +98,7 @@
                         android:id="@+id/current"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_flash_on_24"
+                        drawable="@{viewModel.hwStatus.charging}"
                         android:drawablePadding="2dp"
                         android:drawableTint="@color/colorAccent"
                         android:text="@{String.valueOf(viewModel.hwStatus.battery) + '%'}"
@@ -125,33 +128,33 @@
                 app:behavior_peekHeight="@dimen/sheet_peek_distance"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:background="@color/colorPrimary"-->
-<!--                    android:elevation="4dp">-->
+                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:background="@color/colorPrimary"-->
+                <!--                    android:elevation="4dp">-->
 
-                    <com.google.android.material.tabs.TabLayout
-                        android:elevation="4dp"
-                        android:id="@+id/tabs"
-                        style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/round_corners"
-                        android:backgroundTint="@color/colorPrimaryDark"
-                        android:paddingHorizontal="10dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tabMode="scrollable"
-                        app:tabSelectedTextColor="@color/colorAccent"
-                        app:tabTextColor="@color/textColorOnDark" />
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_corners"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:elevation="4dp"
+                    android:paddingHorizontal="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="@color/colorAccent"
+                    app:tabTextColor="@color/textColorOnDark" />
 
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/design_default_color_background"
+                    android:background="?android:attr/colorBackground"
                     android:orientation="horizontal" />
             </LinearLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
