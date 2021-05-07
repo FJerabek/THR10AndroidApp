@@ -5,7 +5,10 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.MenuItem
-import android.widget.Toast
+import android.view.View
+import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -27,7 +30,6 @@ import cz.fjerabek.thr.data.uart.StatusMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityControlBinding
 import cz.fjerabek.thr10controller.databinding.AlertEditDialogBinding
-import cz.fjerabek.thr10controller.parser.IMessageParser
 import cz.fjerabek.thr10controller.parser.JsonParser
 import cz.fjerabek.thr10controller.ui.adapters.ItemMoveCallback
 import cz.fjerabek.thr10controller.ui.adapters.PresetAdapter
@@ -35,12 +37,9 @@ import cz.fjerabek.thr10controller.ui.fragments.*
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.builtins.LongAsStringSerializer.serialize
 import timber.log.Timber
 import java.util.*
 import kotlin.concurrent.timer
-
-private val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
 
 class ControlActivity : FragmentActivity() {
 
@@ -120,6 +119,7 @@ class ControlActivity : FragmentActivity() {
         binding.presetList.adapter = presetAdapter
 //
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
+        sheetBehavior
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable =
             false //prevents the bottom sheet from completely hiding off the screen
@@ -155,7 +155,7 @@ class ControlActivity : FragmentActivity() {
             bluetoothService?.send(SetPresetsRq(it))
             val index = it.indexOf(viewModel.activePreset.value)
             runOnUiThread {
-                if(index == -1) {
+                if (index == -1) {
                     viewModel.presetChanged.value = false
                 }
                 viewModel.activePresetIndex.value = index
@@ -166,6 +166,20 @@ class ControlActivity : FragmentActivity() {
                 )
             )
         }
+    }
+
+    private fun animateMarginEnd(view: View, value: Int) {
+        val params = view.layoutParams as ViewGroup.MarginLayoutParams
+        val start = params.marginEnd
+        val a = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                val params = view.layoutParams as ViewGroup.MarginLayoutParams
+                params.marginEnd = start + ((value - start) * interpolatedTime).toInt()
+                view.layoutParams = params
+            }
+        }
+        a.duration = 500
+        view.startAnimation(a)
     }
 
     private fun onPresetModifiedChange(it: Boolean) {
@@ -337,5 +351,9 @@ class ControlActivity : FragmentActivity() {
             else -> error("Invalid fragment position")
         }
 
+    }
+
+    companion object {
+        val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
     }
 }

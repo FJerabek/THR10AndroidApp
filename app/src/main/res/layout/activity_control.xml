@@ -12,28 +12,31 @@
             type="cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        tools:context=".ControlActivity">
 
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ControlActivity">
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/appBarLayout"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar"
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,139 +44,123 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/materialButton"
+                            android:id="@+id/addPresetButton"
                             style="@style/ButtonStyle"
                             android:layout_width="0dp"
-                            android:layout_marginStart="50dp"
-                            android:layout_marginEnd="50dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="25dp"
+                            android:layout_marginEnd="25dp"
                             android:onClick="@{()-> viewModel.addPreset()}"
                             android:text="@string/add_preset"
-                            app:layout_constraintTop_toTopOf="parent"
+                            app:cornerRadius="20dp"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:cornerRadius="20dp" />
-
-                        <com.google.android.material.appbar.MaterialToolbar
-                            android:id="@+id/topAppBar"
-                            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-                            android:layout_width="0dp"
-                            android:layout_height="?attr/actionBarSize"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/materialButton"
                             app:layout_constraintTop_toTopOf="parent" />
+
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.appbar.MaterialToolbar>
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-                <View style="@style/Divider" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/presetList"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:data="@{viewModel.presets}"
-                    app:selectedItem="@{viewModel.activePresetIndex}" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginBottom="@dimen/sheet_peek_distance">
+            <View style="@style/Divider" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/battery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="2dp"
-                        android:drawableTint="@color/colorAccent"
-                        android:text="@{viewModel.fwVersion}"
-                        android:textColor="@color/textColorOnDark"
-                        app:layout_constraintEnd_toStartOf="@+id/uptime"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/uptime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/ic_timer_24"
-                        android:drawablePadding="2dp"
-                        android:drawableTint="@color/colorAccent"
-                        android:text="@{String.valueOf(viewModel.hwStatus.uptime) + 's'}"
-                        android:textColor="@color/textColorOnDark"
-                        app:layout_constraintEnd_toStartOf="@id/current"
-                        app:layout_constraintStart_toEndOf="@+id/battery"
-                        app:layout_constraintTop_toTopOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/presetList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:data="@{viewModel.presets}"
+                app:selectedItem="@{viewModel.activePresetIndex}" />
 
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/current"
-                        drawable="@{viewModel.hwStatus.charging}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="2dp"
-                        android:drawableTint="@color/colorAccent"
-                        android:text="@{String.valueOf(viewModel.hwStatus.battery) + '%'}"
-                        android:textColor="@color/textColorOnDark"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/uptime"
-                        app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginBottom="@dimen/sheet_peek_distance">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/current"
-                        tools:ignore="SmallSp" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="2dp"
+                    android:drawableTint="@color/colorAccent"
+                    android:text="@{viewModel.fwVersion}"
+                    android:textColor="@color/textColorOnDark"
+                    app:layout_constraintEnd_toStartOf="@+id/uptime"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/uptime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_timer_24"
+                    android:drawablePadding="2dp"
+                    android:drawableTint="@color/colorAccent"
+                    android:text="@{String.valueOf(viewModel.hwStatus.uptime) + 's'}"
+                    android:textColor="@color/textColorOnDark"
+                    app:layout_constraintEnd_toStartOf="@id/current"
+                    app:layout_constraintStart_toEndOf="@+id/battery"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <LinearLayout
-                android:id="@+id/contentLayout"
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/current"
+                    drawable="@{viewModel.hwStatus.charging}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="2dp"
+                    android:drawableTint="@color/colorAccent"
+                    android:text="@{String.valueOf(viewModel.hwStatus.battery) + '%'}"
+                    android:textColor="@color/textColorOnDark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/uptime"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/current"
+                    tools:ignore="SmallSp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:behavior_peekHeight="@dimen/sheet_peek_distance"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_corners"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:elevation="4dp"
+                android:paddingHorizontal="10dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabTextColor="@color/textColorOnDark" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                app:behavior_peekHeight="@dimen/sheet_peek_distance"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:background="@color/colorPrimary"-->
-                <!--                    android:elevation="4dp">-->
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_corners"
-                    android:backgroundTint="@color/colorPrimaryDark"
-                    android:elevation="4dp"
-                    android:paddingHorizontal="10dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:tabMode="scrollable"
-                    app:tabSelectedTextColor="@color/colorAccent"
-                    app:tabTextColor="@color/textColorOnDark" />
-
-                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?android:attr/colorBackground"
-                    android:orientation="horizontal" />
-            </LinearLayout>
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </LinearLayout>
+                android:background="?android:attr/colorBackground"
+                android:orientation="horizontal" />
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
