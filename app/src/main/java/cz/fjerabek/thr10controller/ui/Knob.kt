@@ -1,6 +1,5 @@
 package cz.fjerabek.thr10controller.ui
 
-import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -11,54 +10,150 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.animation.doOnEnd
 import androidx.core.content.res.use
 import cz.fjerabek.thr10controller.R
-import timber.log.Timber
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 
 
+/**
+ * UI Knob component
+ * @param context application context
+ * @param attributeSet view attribute set
+ */
 open class Knob(context: Context, attributeSet: AttributeSet) : View(context, attributeSet) {
 
+    /**
+     * Outer circle color
+     */
     var outerColor = Color.parseColor("#1b1b1b")
+
+    /**
+     * Outer circle relative size
+     */
     var outerRelativeSize = 0.8f
 
+    /**
+     * Inner circle color
+     */
     var innerColor = Color.parseColor("#fbc02d")
+
+    /**
+     * Inner circle relative size
+     */
     var innerRelativeSize = 0.8f
 
+    /**
+     * Pointer color
+     */
     var pointerColor = Color.WHITE
+
+    /**
+     * Pointer relative length
+     */
     var pointerRelativeLength = 0.25f
+
+    /**
+     * Pointre width
+     */
     var pointerWidth = 5f
 
+    /**
+     * Name padding from knob
+     */
     var namePadding = 25f
+
+    /**
+     * Name text color
+     */
     var nameTextColor = Color.BLACK
 
+    /**
+     * Scale marker color
+     */
     var markerColor = Color.DKGRAY
 
+    /**
+     * Name text size
+     */
     var nameTextSize = 48f
+
+    /**
+     * Knob name
+     */
     var name = ""
 
+    /**
+     * Scale type. Continuous is solid line. Non continuous shows scale with short lines
+     */
     var continuous = false
+
+    /**
+     * Scale markings distance from knob
+     */
     var markerRelativePadding = 0.1f
+
+    /**
+     * Scale markers relative length
+     */
     var markerRelativeLength = 0.12f
+
+    /**
+     * Scale markers width
+     */
     var markerWidth = 2f
+
+    /**
+     * Continuous scale. Color of selected portion
+     */
     var selectedColor = Color.parseColor("#fbc02d")
 
+    /**
+     * Scale max angle
+     */
     var maxAngle = Math.toRadians(25.0)
+
+    /**
+     * Scale min angle
+     */
     var minAngle = Math.toRadians(335.0)
 
+    /**
+     * Move type. Relative moves relative to touch. Absolute points to touch position
+     */
     var relativeMove = true
 
+    /**
+     * Size of value text inside knob
+     */
     var valueTextSize = 48f
+
+    /**
+     * Value text color
+     */
     var valueTextColor = Color.BLACK
+
+    /**
+     * Value to string converter. Allows showing other than integer values in value text
+     */
     var valueStringConverter: ((value: Int) -> String) = { it -> it.toString() }
+
+    /**
+     * Value change callback
+     */
     var onValueChangeListener: ((value: Int) -> Unit) = {}
+
+    /**
+     * Is knob being changed by swiping
+     */
     var swipe = false
         private set
 
+    /**
+     * Knob value
+     */
     var value: Int
         set(value) {
             if(!swipe) {
@@ -69,27 +164,72 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         }
         get() = _value
 
+    /**
+     * Minimal value
+     */
     var minValue = 0
         set(value) {
             field = value
             anglePerMarker = (minAngle - maxAngle) / (maxValue - minValue)
         }
 
+    /**
+     * Maximum value
+     */
     var maxValue = 100
         set(value) {
             field = value
             anglePerMarker = (minAngle - maxAngle) / (maxValue - minValue)
         }
 
+    /**
+     * Private non animated value.
+     */
     private var _value = 0
+
+    /**
+     * Angle of knob
+     */
     private var angle = (6 / 4) * Math.PI
+
+    /**
+     * Center position x value
+     */
     private var centerX = 0f
+
+    /**
+     * Center position y value
+     */
     private var centerY = 0f
+
+    /**
+     * Angle per scale marker
+     */
     private var anglePerMarker = 0.0
+
+    /**
+     * Scale start angle
+     */
     private var startAngle = 0.0
+
+    /**
+     * Value animator
+     */
     private var animator: ValueAnimator? = null
+
+    /**
+     * Knob max radius
+     */
     private var radius = 0f
+
+    /**
+     *  Value text line padding
+     */
     private val linePadding: Int = 10
+
+    /**
+     * Drawing paint
+     */
     private var paint = Paint()
 
     init {
@@ -165,6 +305,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         }
     }
 
+    /**
+     * Draws knob name
+     * @param canvas canvas to draw to
+     */
     private fun paintName(canvas: Canvas) {
         paint.isAntiAlias = true
         paint.color = nameTextColor
@@ -176,6 +320,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         canvas.drawText(name, centerX, centerY + radius + namePadding, paint)
     }
 
+    /**
+     * Paints arc scale
+     * @param canvas canvas to draw arc scale to
+     */
     private fun paintArc(canvas: Canvas) {
         val rectangle = RectF(
             centerX - (outerRelativeSize * radius) - (markerRelativePadding * radius),
@@ -210,6 +358,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         )
     }
 
+    /**
+     * Paints center piece of knob (two circles)
+     * @param canvas canvas to draw to
+     */
     private fun paintCenter(canvas: Canvas) {
         val outerRadius = outerRelativeSize * radius
         val innerRadius = innerRelativeSize * outerRadius
@@ -244,6 +396,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         }
     }
 
+    /**
+     * Paints knob pointer
+     * @param canvas canvas to draw to
+     */
     private fun paintPointer(canvas: Canvas) {
         val outerRadius = outerRelativeSize * radius
         val startX = centerX + (outerRadius * (1 - pointerRelativeLength) * sin(angle))
@@ -256,6 +412,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         canvas.drawLine(startX.toFloat(), startY.toFloat(), endX.toFloat(), endY.toFloat(), paint)
     }
 
+    /**
+     * Paints marker scale
+     * @param canvas canvas to draw to
+     */
     private fun paintMarkers(canvas: Canvas) {
         paint.strokeWidth = markerWidth
         paint.color = markerColor
@@ -290,6 +450,9 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         }
     }
 
+    /**
+     * Sets up motion event listener
+     */
     private fun setupListener() {
         setOnTouchListener { view, motionEvent ->
             val distanceX = motionEvent.x - centerX
@@ -371,11 +534,21 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         }
     }
 
+    /**
+     * Converts knob value to angle
+     * @param value knob value
+     * @return knob angle
+     */
     private fun valueToAngle(value: Int): Double {
         return (value - minValue) * anglePerMarker + maxAngle
     }
 
 
+    /**
+     * Normalizes angle to max 2*pi value
+     * @param angle value
+     * @return normalized value
+     */
     private fun normalizeAngle(angle: Double): Double {
         var normalized = angle
         while (normalized < 0) normalized += Math.PI * 2
@@ -383,6 +556,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
         return normalized
     }
 
+    /**
+     * Converts knob angle to value and calls callback if value has changed
+     * @param callback value changed callback
+     */
     private fun angleToValue(callback: Boolean) {
         angle = normalizeAngle(angle)
 
@@ -408,6 +585,10 @@ open class Knob(context: Context, attributeSet: AttributeSet) : View(context, at
 
     }
 
+    /**
+     * Animates knob to new value
+     * @param value value to animate knob to
+     */
     fun animateValue(value: Int) {
         animator?.cancel()
         animator = ValueAnimator.ofFloat(angle.toFloat(), valueToAngle(value).toFloat())

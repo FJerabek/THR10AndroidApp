@@ -6,15 +6,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.MediaRouter2
 import android.os.Bundle
 import android.os.IBinder
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.snackbar.Snackbar
-import cz.fjerabek.thr.data.bluetooth.FwVersionRq
-import cz.fjerabek.thr.data.bluetooth.IBluetoothMessage
 import cz.fjerabek.thr10controller.bluetooth.BluetoothService
 import cz.fjerabek.thr10controller.databinding.ActivityMainBinding
 import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
@@ -23,19 +20,40 @@ import cz.fjerabek.thr10controller.ui.adapters.BluetoothDeviceWrapper
 import cz.fjerabek.thr10controller.viewmodels.MainActivityViewModel
 import kotlinx.coroutines.*
 import timber.log.Timber
-import kotlin.concurrent.timer
 
 
 /**
  * Bluetooth connection selection chooser
  */
-class MainActivity : AppCompatActivity() {
+class DeviceSelectActivity : AppCompatActivity() {
+    /**
+     * UI data binding
+     */
     private lateinit var binding: ActivityMainBinding
+
+    /**
+     * Bluetooth device adapter
+     */
     private lateinit var btListAdapter: BluetoothDeviceAdapter
+
+    /**
+     * Bluetooth communication service
+     */
     private var bluetoothService: BluetoothService? = null
+
+    /**
+     * View model
+     */
     private val viewModel: MainActivityViewModel by viewModels()
+
+    /**
+     * UI binding of connecting device
+     */
     private var connectingDeviceBinding: BluetoothListRowLayoutBinding? = null
 
+    /**
+     * Service connection to bluetooth communication service
+     */
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
             Timber.d("Bluetooth service disconnected")
@@ -63,6 +81,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Starts control activity
+     */
     private fun startControlActivity() {
         val intent = Intent(this, ControlActivity::class.java)
         startActivity(intent)
@@ -112,6 +133,10 @@ class MainActivity : AppCompatActivity() {
         binding.bluetoothDeviceList.adapter = btListAdapter
     }
 
+    /**
+     * Device connected callback
+     * @param connectedDevice connected device
+     */
     private fun deviceConnected(connectedDevice: BluetoothDevice) {
         Timber.d("Device connected")
         runBlocking {
@@ -123,7 +148,12 @@ class MainActivity : AppCompatActivity() {
         startControlActivity()
     }
 
-    private fun deviceDisconnect(e: Exception, connectedDevice: BluetoothDevice) {
+    /**
+     * Device disconnected callback
+     * @param e disconnected exception
+     * @param disconnectedDevice device that was disconnected
+     */
+    private fun deviceDisconnect(e: Exception, disconnectedDevice: BluetoothDevice) {
         Timber.d(e)
         Snackbar.make(binding.root, R.string.connection_error, Snackbar.LENGTH_LONG).show()
         runOnUiThread {
@@ -132,6 +162,10 @@ class MainActivity : AppCompatActivity() {
         setAllDevicesEnabled(true)
     }
 
+    /**
+     * Sets all devices enabled value to provided state
+     * @param enabled enabled state for all devices
+     */
     private fun setAllDevicesEnabled(enabled: Boolean) {
         viewModel.devices.value?.forEach {
             it.enabled = enabled

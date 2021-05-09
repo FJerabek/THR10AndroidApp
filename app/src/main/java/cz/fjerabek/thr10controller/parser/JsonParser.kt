@@ -18,8 +18,14 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
+/**
+ * Json message parser object
+ */
 object JsonParser : IMessageParser {
 
+    /**
+     * Serializer module containing all abstract and its concrete definitions
+     */
     private val jsonSerializerModule = SerializersModule {
         polymorphic(Effect::class) {
             subclass(Chorus::class)
@@ -79,12 +85,14 @@ object JsonParser : IMessageParser {
         }
     }
 
-    val serializer =
+    /**
+     * Json serializer instance
+     */
+    private val serializer =
         Json {
             prettyPrint = false
             serializersModule = jsonSerializerModule
         }
-
 
     override fun deserialize(string: String): IBluetoothMessage =
         serializer.decodeFromString(string)

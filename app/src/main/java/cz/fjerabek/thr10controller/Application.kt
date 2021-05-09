@@ -19,6 +19,9 @@ import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import timber.log.Timber
 
+/**
+ * Application entry class
+ */
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()

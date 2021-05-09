@@ -15,19 +15,32 @@ import cz.fjerabek.thr.data.uart.ECharging
 import cz.fjerabek.thr.data.uart.FWVersionMessage
 import cz.fjerabek.thr10controller.R
 
+/**
+ * Custom text binding adapter formatting FW version message to string
+ * @param message FWVersionMessage with version information
+ */
 @BindingAdapter("android:text")
 fun MaterialTextView.setText(message: MutableLiveData<FWVersionMessage>?) {
     text = "ver. ${message?.value?.major}.${message?.value?.minor}.${message?.value?.patch}"
 }
 
+/**
+ * Boolean to visibility converter
+ * @param visible if view should be visible
+ * @return View.VISIBLE or Vew.GONE
+ */
 @BindingConversion
 fun booleanToVisibility(visible: Boolean) =
     if (visible) View.VISIBLE else View.GONE
 
 
+/**
+ * Drawable binding for ECharging type setting battery drawable according to charge state
+ * @param charging charging state
+ */
 @BindingAdapter("drawable")
 fun MaterialTextView.chargingStateToDrawable(charging: ECharging?) {
-    var drawable = when(charging) {
+    val drawable = when(charging) {
         ECharging.DISCHARGING -> R.drawable.ic_battery_24
         ECharging.CHARGING -> R.drawable.ic_battery_charging_24
         ECharging.FULL -> R.drawable.ic_battery_24
@@ -36,6 +49,10 @@ fun MaterialTextView.chargingStateToDrawable(charging: ECharging?) {
     setCompoundDrawablesWithIntrinsicBounds(drawable,0,0,0)
 }
 
+/**
+ * Sets items to adapter of listView
+ * @param items items to set
+ */
 @Suppress("UNCHECKED_CAST") // No way to check types inside List<Any> at runtime
 @BindingAdapter("data")
 fun ListView.setPresetData(items: List<Any>?) {
@@ -50,6 +67,10 @@ fun ListView.setPresetData(items: List<Any>?) {
 }
 
 
+/**
+ * Adapter for setting presets on to adapter on recyclerView
+ * @param items new presets
+ */
 @BindingAdapter("data")
 fun RecyclerView.setPresetData(items: MutableLiveData<MutableList<PresetMessage>>) {
     val adapter = adapter
@@ -60,6 +81,10 @@ fun RecyclerView.setPresetData(items: MutableLiveData<MutableList<PresetMessage>
     }
 }
 
+/**
+ * Binding for selecting item in recyclerView
+ * @param index index of selected item
+ */
 @BindingAdapter("selectedItem")
 fun RecyclerView.selectedItem(index: Int) {
     val adapter = adapter
@@ -68,6 +93,10 @@ fun RecyclerView.selectedItem(index: Int) {
     }
 }
 
+/**
+ * Binding for setting callback on preset change
+ * @param callback on preset change callback
+ */
 @BindingAdapter("presetChangeCallback")
 fun RecyclerView.setPresetChangeCallback(callback : ((PresetMessage, Int)->Unit)?) {
     val adapter = adapter
@@ -76,6 +105,10 @@ fun RecyclerView.setPresetChangeCallback(callback : ((PresetMessage, Int)->Unit)
     }
 }
 
+/**
+ * Binding for setting callback on item selected
+ * @param callback on item selected callback
+ */
 @BindingAdapter("onItemSelected")
 fun AppCompatSpinner.setOnItemSelectedCallback(callback: ((Any) -> Unit)?) {
     callback?.let {
@@ -96,6 +129,10 @@ fun AppCompatSpinner.setOnItemSelectedCallback(callback: ((Any) -> Unit)?) {
     }
 }
 
+/**
+ * Binding for selecting new value in AppCompatSpinner
+ * @param value selected item
+ */
 @Suppress("UNCHECKED_CAST") // No way to check types inside List<Any> at runtime
 @BindingAdapter("newValue")
 fun AppCompatSpinner.setNewValue(value: Any?) {
@@ -107,6 +144,12 @@ fun AppCompatSpinner.setNewValue(value: Any?) {
     }
 }
 
+
+/**
+ * Binding for setting selection entries in appCompatSpinner
+ * @param value new selection entries
+ *
+ */
 @BindingAdapter("entries")
 fun AppCompatSpinner.entities(value: List<Any>?) {
     value?.let {

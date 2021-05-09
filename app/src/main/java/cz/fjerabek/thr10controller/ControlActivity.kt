@@ -41,15 +41,51 @@ import timber.log.Timber
 import java.util.*
 import kotlin.concurrent.timer
 
+/**
+ * Activity providing GUI with combo controls
+ */
 class ControlActivity : FragmentActivity() {
 
+    /**
+     * Configuration titles
+     */
+    val pageTitles = listOf(
+        applicationContext.getString(R.string.main_panel),
+        applicationContext.getString(R.string.compressor),
+        applicationContext.getString(R.string.delay),
+        applicationContext.getString(R.string.reverb),
+        applicationContext.getString(R.string.effect),
+        applicationContext.getString(R.string.gate)
+    )
+
+    /**
+     * Bluetooth communication service
+     */
     private var bluetoothService: BluetoothService? = null
+
+    /**
+     * UI bindings
+     */
     private lateinit var binding: ActivityControlBinding
+
+    /**
+     * User presets adapter
+     */
     private lateinit var presetAdapter: PresetAdapter
+
+    /**
+     * Timer for requesting device info
+     */
     private var infoTimer: Timer? = null
 
+    /**
+     * Control view model
+     */
     private val viewModel: ControlActivityViewModel by viewModels()
 
+    /**
+     * Connection to bluetooth service
+     */
     private var serviceConnection = object : ServiceConnection {
         override fun onServiceDisconnected(p0: ComponentName?) {
             finishActivity(0)
@@ -119,13 +155,17 @@ class ControlActivity : FragmentActivity() {
         binding.presetList.adapter = presetAdapter
 //
         val sheetBehavior = BottomSheetBehavior.from(binding.contentLayout)
-        sheetBehavior
         sheetBehavior.isFitToContents = false
         sheetBehavior.isHideable =
             false //prevents the bottom sheet from completely hiding off the screen
         sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
+    /**
+     * Preset long click callback
+     * @param preset preset that was clickced
+     * @param position preset position
+     */
     private fun onPresetLongClick(preset: PresetMessage, position: Int) {
         val binding = AlertEditDialogBinding.inflate(layoutInflater)
         MaterialAlertDialogBuilder(this)
@@ -139,6 +179,11 @@ class ControlActivity : FragmentActivity() {
             .show()
     }
 
+    /**
+     * Preset selected callback
+     * @param presetMessage selected preset
+     * @param i preset index
+     */
     private fun onPresetSelected(
         presetMessage: PresetMessage,
         i: Int
@@ -146,9 +191,13 @@ class ControlActivity : FragmentActivity() {
         viewModel.presetChanged.value = false
         viewModel.activePresetIndex.value = i
         viewModel.activePreset.value = presetMessage.duplicate()
-        sendPresetChangeMessage(presetMessage, i)
+        sendPresetChangeMessage(i)
     }
 
+    /**
+     * Preset list modified callback
+     * @param it modified preset list
+     */
     private fun onPresetsModified(it: MutableList<PresetMessage>) {
         runBlocking(Dispatchers.IO) {
 
@@ -168,6 +217,11 @@ class ControlActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Animates margin end value
+     * @param view view to animate
+     * @param value new value
+     */
     private fun animateMarginEnd(view: View, value: Int) {
         val params = view.layoutParams as ViewGroup.MarginLayoutParams
         val start = params.marginEnd
@@ -182,6 +236,10 @@ class ControlActivity : FragmentActivity() {
         view.startAnimation(a)
     }
 
+    /**
+     * Preset modified value changed callback
+     * @param it new preset modified value
+     */
     private fun onPresetModifiedChange(it: Boolean) {
         if (it) {
             binding.topAppBar.menu.add("Revert")
@@ -201,6 +259,9 @@ class ControlActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Preset save click callback
+     */
     private fun savePreset() {
         viewModel.presetChanged.value = false
         viewModel.presets.value?.set(
@@ -209,12 +270,18 @@ class ControlActivity : FragmentActivity() {
         sendSetPresetsMessage(viewModel.presets.value!!)
     }
 
+    /**
+     * Preset revert click callback
+     */
     private fun revertPreset() {
         viewModel.presetChanged.value = false
         viewModel.activePreset.value =
             viewModel.presets.value?.get(viewModel.activePresetIndex.value!!)!!.duplicate()
     }
 
+    /**
+     * Binds bluetooth service
+     */
     private fun bindBluetoothService() {
         Intent(this, BluetoothService::class.java).also { intent ->
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
@@ -227,16 +294,24 @@ class ControlActivity : FragmentActivity() {
         unbindService(serviceConnection)
     }
 
+    /**
+     * On bluetooth device disconnected callback
+     */
     private fun deviceDisconnected(e: Exception, connectedDevice: BluetoothDevice) {
         Timber.e(e)
         Snackbar.make(binding.root, getString(R.string.device_disconnected), Snackbar.LENGTH_LONG)
             .show()
         infoTimer?.cancel()
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, DeviceSelectActivity::class.java)
         startActivity(intent)
         finishAffinity()
     }
 
+
+    /**
+     * On Bluetooth message callback
+     * @param message received bluetooth message
+     */
     private fun messageReceived(message: IBluetoothMessage) {
         when (message) {
             is FWVersionMessage -> {
@@ -308,6 +383,11 @@ class ControlActivity : FragmentActivity() {
         }
     }
 
+    /**
+     * Sends change message
+     * @param property ID of property that was changed
+     * @param value new value
+     */
     private fun sendChangeMessage(property: Byte, value: Int) {
         val message = ChangeMessage(property, value)
         if (!viewModel.presetChanged.value!! && viewModel.activePresetIndex.value != -1) {
@@ -320,19 +400,31 @@ class ControlActivity : FragmentActivity() {
         }
     }
 
-    private fun sendPresetChangeMessage(preset: PresetMessage, index: Int) {
+    /**
+     * Sends preset change message
+     * @param index index of selected preset
+     */
+    private fun sendPresetChangeMessage(index: Int) {
         val message = PresetSelect(index)
         runBlocking(Dispatchers.IO) {
             bluetoothService?.send(message)
         }
     }
 
+    /**
+     * Sends preset list message
+     * @param presets preset to send
+     */
     private fun sendSetPresetsMessage(presets: List<PresetMessage>) {
         runBlocking(Dispatchers.IO) {
             bluetoothService?.send(SetPresetsRq(presets))
         }
     }
 
+    /**
+     * View pager adapter for config categories
+     * @param fragmentActivity activity
+     */
     inner class ViewPagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
 
@@ -351,9 +443,5 @@ class ControlActivity : FragmentActivity() {
             else -> error("Invalid fragment position")
         }
 
-    }
-
-    companion object {
-        val pageTitles = listOf("Main panel", "Compressor", "Delay", "Reverb", "Effect", "Gate")
     }
 }

@@ -15,6 +15,15 @@ import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.databinding.PresetListRowLayoutBinding
 import timber.log.Timber
 
+/**
+ * Adapter of [PresetMessage] for [RecyclerView]
+ * @property context application context
+ * @property data entities
+ * @property snackbarViewAnchor anchor view for snackbar
+ * @property onDragRequest drag request callback
+ * @property onItemLongClick item long click callback
+ * @property onItemSelectedListener item selected callback
+ */
 class PresetAdapter(
     private val context: Context,
     var data: MutableLiveData<MutableList<PresetMessage>>,
@@ -23,10 +32,35 @@ class PresetAdapter(
     var onItemSelectedListener: ((PresetMessage, Int) -> Unit)? = null,
     var onItemLongClick: ((PresetMessage, Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PresetAdapter.ViewHolder>(), ItemMoveCallback.ItemTouchEventsCallback {
+    /**
+     * Data class representing removed item and its index
+     * @property index index of removed item
+     * @property preset removed preset
+     */
     private data class RemovedItem(val index: Int, val preset: PresetMessage)
 
+
+    /**
+     * View holder class
+     * @param itemView view of item
+     * @param itemBinding data binding definitions of item
+     */
+    data class ViewHolder(val itemView: View, val itemBinding: PresetListRowLayoutBinding) :
+        RecyclerView.ViewHolder(itemView)
+
+    /**
+     * is preset order changed
+     */
     private var orderChanged = false
+
+    /**
+     * Removed item
+     */
     private var removedItem: RemovedItem? = null
+
+    /**
+     * Selected item index -1 means nothing is selected
+     */
     var selectedItem: Int = -1
         set(value) {
             val oldItem = field
@@ -37,6 +71,9 @@ class PresetAdapter(
                 notifyItemChanged(field)
         }
 
+    /**
+     * Layout inflater
+     */
     private val inflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -102,9 +139,6 @@ class PresetAdapter(
 
     override fun getItemCount(): Int = data.value?.size ?: 0
 
-    data class ViewHolder(val itemView: View, val itemBinding: PresetListRowLayoutBinding) :
-        RecyclerView.ViewHolder(itemView)
-
     override fun onRowMoved(oldPos: Int, newPos: Int): Boolean {
         data.value?.let {
             it.add(newPos, it.removeAt(oldPos))
@@ -127,6 +161,10 @@ class PresetAdapter(
 }
 
 
+/**
+ * Item moved callback class
+ * @property callbackReceiver callback when item is moved
+ */
 class ItemMoveCallback(private val callbackReceiver: ItemTouchEventsCallback) :
     ItemTouchHelper.Callback() {
     override fun isLongPressDragEnabled() = false
@@ -162,6 +200,9 @@ class ItemMoveCallback(private val callbackReceiver: ItemTouchEventsCallback) :
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
     }
 
+    /**
+     * Interface defining callbacks for preset order modifications
+     */
     interface ItemTouchEventsCallback {
         fun onRowMoved(oldPos: Int, newPos: Int): Boolean
         fun onRowSelected(viewHolder: PresetAdapter.ViewHolder)

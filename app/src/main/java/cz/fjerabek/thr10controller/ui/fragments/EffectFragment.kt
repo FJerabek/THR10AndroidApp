@@ -9,13 +9,26 @@ import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr.data.controls.TypeConverter
 import cz.fjerabek.thr10controller.databinding.EffectFragmentBinding
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
-import timber.log.Timber
 
+/**
+ * Fragment providing UI for effect configuration
+ */
 class EffectFragment : Fragment() {
+    /**
+     * Control view model
+     */
     private lateinit var viewModel: ControlActivityViewModel
+
+    /**
+     * Data binding
+     */
     private lateinit var binding : EffectFragmentBinding
 
     companion object {
+        /**
+         * Gets instance of [EffectFragment]
+         * @return instance of [EffectFragment]
+         */
         fun getInstance(): EffectFragment {
             return EffectFragment()
         }

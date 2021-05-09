@@ -15,11 +15,25 @@ import cz.fjerabek.thr10controller.databinding.MainPanelFragmentBinding
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
 import timber.log.Timber
 
+/**
+ * Fragment providing UI for main panel configuration
+ */
 class MainPanelFragment : Fragment() {
+    /**
+     * Control view model
+     */
     private lateinit var viewModel: ControlActivityViewModel
+
+    /**
+     * UI data binding
+     */
     private lateinit var binding: MainPanelFragmentBinding
 
     companion object {
+        /**
+         * Gets instance of [MainPanelFragment]
+         * @return instance of [MainPanelFragment]
+         */
         fun getInstance(): MainPanelFragment {
             return MainPanelFragment()
         }

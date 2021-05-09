@@ -7,8 +7,16 @@ import cz.fjerabek.thr.data.enums.IControlProperty
 import cz.fjerabek.thr.data.midi.PresetMessage
 
 
+/**
+ * Custom UI knob implementation
+ * @param context appliaction context
+ * @param attributeSet xml attribute set
+ */
 class CustomKnob(context: Context, attributeSet: AttributeSet) :
     Knob(context, attributeSet) {
+    /**
+     * Control property that this knob controls
+     */
     var property: IControlProperty? = null
         set(value) {
             field = value
@@ -17,6 +25,9 @@ class CustomKnob(context: Context, attributeSet: AttributeSet) :
             updateKnobValue(preset, value)
         }
 
+    /**
+     * Preset for control value modification
+     */
     var preset: PresetMessage? = null
         set(newVal) {
             field = newVal
@@ -24,8 +35,16 @@ class CustomKnob(context: Context, attributeSet: AttributeSet) :
                 updateKnobValue(newVal, property)
         }
 
+    /**
+     * Value change callback
+     */
     var propertyValueChangeListener: (Byte, Int) -> Unit = { _: Byte, _: Int -> }
 
+    /**
+     * Updates knob value
+     * @param presetMessage preset message
+     * @param property modified property
+     */
     private fun updateKnobValue(presetMessage: PresetMessage?, property: IControlProperty?) {
         animateValue(
             if (presetMessage != null && property != null) {
@@ -41,7 +60,6 @@ class CustomKnob(context: Context, attributeSet: AttributeSet) :
 
     init {
         onValueChangeListener = {
-
             property?.let { it1 -> propertyValueChangeListener(it1.propertyId, value) }
         }
     }

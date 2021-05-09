@@ -29,12 +29,31 @@ import cz.fjerabek.thr.data.uart.ECharging
 import cz.fjerabek.thr.data.uart.FWVersionMessage
 import cz.fjerabek.thr.data.uart.StatusMessage
 
+/**
+ * View model containing combo state and preset values.
+ * @param application application instance
+ */
 class ControlActivityViewModel(application: Application) : AndroidViewModel(application) {
 
+    /**
+     * Firmware version
+     */
     val fwVersion: MutableLiveData<FWVersionMessage> = MutableLiveData()
+
+    /**
+     * Last hw status message received
+     */
     val hwStatus: MutableLiveData<StatusMessage> =
         MutableLiveData(StatusMessage(0, 0, ECharging.DISCHARGING, 0))
+
+    /**
+     * Available user presets
+     */
     val presets: MutableLiveData<MutableList<PresetMessage>> = MutableLiveData(mutableListOf())
+
+    /**
+     * Currently active preset
+     */
     val activePreset: MutableLiveData<PresetMessage> = MutableLiveData(
         PresetMessage(
             "Default",
@@ -78,8 +97,15 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
             )
         )
     )
+
+    /**
+     * UI value change callback
+     */
     val changeMessageCallback: MutableLiveData<((Byte, Int) -> Unit)?> = MutableLiveData()
 
+    /**
+     * Type value changed handler
+     */
     fun changeTypeCallback(id: Byte, value: Int) {
         when (id) {
             EEffect.TYPE.propertyId -> {
@@ -115,21 +141,44 @@ class ControlActivityViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
+    /**
+     * Index of active preset
+     */
     val activePresetIndex: MutableLiveData<Int> = MutableLiveData(-1)
+
+    /**
+     * Was preset changed. Show revert menu
+     */
     val presetChanged: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    /**
+     * Is THR connected
+     */
     val connected: MutableLiveData<Boolean> = MutableLiveData(false)
 
+    /**
+     * Compressor types
+     */
     val compressorTypes
         get() = ECompressorType.values().toList()
 
+    /**
+     * Reverb types
+     */
     val reverbTypes
         get() = EReverbType.values().toList()
 
+    /**
+     * Effect types
+     */
     val effectTypes
         get() = EEffectType.values().toList()
 
+    /**
+     * Adds new preset
+     */
     fun addPreset() {
-        val newPresets = presets.value?.toMutableList();
+        val newPresets = presets.value?.toMutableList()
 
         val preset: PresetMessage = if (activePreset.value != null) {
             activePreset.value!!

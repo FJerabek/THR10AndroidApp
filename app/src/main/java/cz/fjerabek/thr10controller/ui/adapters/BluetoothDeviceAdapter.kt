@@ -13,13 +13,27 @@ import androidx.lifecycle.LifecycleOwner
 import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.databinding.BluetoothListRowLayoutBinding
 
-
+/**
+ * Bluetooth device gui wrapper
+ * @param device bluetooth device
+ * @param enabled is GUI element associated with bluetooth device enabled
+ */
 data class BluetoothDeviceWrapper(val device: BluetoothDevice, var enabled: Boolean)
 
+
+/**
+ * List view adapter for bluetooth devices
+ * @param context application context
+ * @property devices initial bluetooth devices
+ */
 class BluetoothDeviceAdapter(
     context: Context,
     var devices: List<BluetoothDeviceWrapper> = emptyList(),
 ) : BaseAdapter() {
+
+    /**
+     * Layout inflater
+     */
     private val inflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -32,7 +46,8 @@ class BluetoothDeviceAdapter(
     }
 
     override fun isEnabled(position: Int) = getItem(position).enabled
-    override fun areAllItemsEnabled() = devices.none { !it.enabled }
+
+    override fun areAllItemsEnabled() = devices.all { it.enabled }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View =

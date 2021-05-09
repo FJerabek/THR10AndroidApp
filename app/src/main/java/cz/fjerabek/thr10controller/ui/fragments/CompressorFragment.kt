@@ -4,25 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import cz.fjerabek.thr.data.controls.TypeConverter
-import cz.fjerabek.thr.data.controls.compressor.Rack
-import cz.fjerabek.thr.data.controls.compressor.Stomp
-import cz.fjerabek.thr.data.enums.compressor.ECompressorType
-import cz.fjerabek.thr10controller.R
 import cz.fjerabek.thr10controller.databinding.CompressorFragmentBinding
 import cz.fjerabek.thr10controller.viewmodels.ControlActivityViewModel
-import timber.log.Timber
 
+/**
+ * Application fragment providing user interface for compressor configuration
+ */
 class CompressorFragment : Fragment() {
+    /**
+     * Control view model
+     */
     private lateinit var viewModel: ControlActivityViewModel
+
+    /**
+     * GUI data binding
+     */
     private lateinit var binding: CompressorFragmentBinding
 
     companion object {
+        /**
+         * Creates new instance of fragment
+         * @return new instance of fragment
+         */
         fun getInstance(): CompressorFragment {
             return CompressorFragment()
         }
